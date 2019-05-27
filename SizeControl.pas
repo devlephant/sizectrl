@@ -15,11 +15,6 @@ Copyright:       © 1997-2019 Angus Johnson
 interface
 
 {$R SIZECONTROL}
-{$IF DECLARED(FireMonkeyVersion)}
-  {$DEFINE HAS_FMX}
-{$ELSE}
-  {$DEFINE HAS_VCL}
-{$ENDIF}
 {$IFDEF VER80}
   {$DEFINE VER3D}
 {$ENDIF}
@@ -120,6 +115,7 @@ type
     procedure Hook;
     procedure UnHook;
     procedure NewWindowProc(var Msg: TMessage);
+    procedure NewWindowProcB(var Msg: TMessage);
   public
     constructor Create(aSizeCtrl: TSizeCtrl; aControl: TControl);
   {$IFNDEF VER3U} reintroduce; {$ENDIF}
@@ -187,6 +183,7 @@ type
     fReIgnBtn: TReSizeHideType;
     fShowFrame, fApplySizes: boolean;
     fBtnCount: TSizeCtrlBtnCount;
+    FSelKey, FDGKey: integer;
     fStartEvent: TStartEndEvent;
     fDuringEvent: TDuringEvent;
     fEndEvent: TStartEndEvent;
@@ -204,7 +201,6 @@ type
 
     procedure SetEnabled(Value: boolean);
     procedure WinProc(var Msg: TMessage);
-    procedure FormWindowProc(var Msg: TMessage);
     procedure DoWindowProc(DefaultProc: TWndMethod; var Msg: TMessage);
 
     procedure DrawRect;
@@ -227,6 +223,8 @@ type
     procedure SetBtnShape(v: TSizeBtnShapeType);
     procedure SetBtnFrameColor(v: TColor);
     procedure SetDisabledBtnFrameColor(v: TColor);
+    procedure SetSelKey(v: integer);
+    procedure SetDGKey(v: integer);
     procedure DoMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState);
     procedure DoMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState);
     procedure DoMouseMove(Sender: TObject; Shift: TShiftState);
@@ -234,7 +232,7 @@ type
   protected
     fGrid: TBitmap; // сетка
     lastW: integer;
-    lastH: integer; // последн€€ ширина и высота формы
+    lastH: integer; // последняя ширина и высота формы
     lastColor: TColor; // последний цвет формы
     procedure Hide;
     procedure Show;
@@ -250,6 +248,8 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    function KeysToShiftState(Keys: Word): TShiftState;
+    function KeyDataToShiftState(KeyData: Longint): TShiftState;
     property LastBtn: TBtnPos read fLastBtn;
     //Targets: used to access individual targets (read-only)
     property Targets[index: integer]: TControl read GetTargets;
@@ -314,6 +314,9 @@ type
     property BtnImage: TPicture read fBtnImage write setBtnImage;
     //DisabledBtnImage - you will understand
     property DisabledBtnImage: TPicture read fDisabledBtnImage write setDisabledBtnImage;
+
+    property SelectionKey: integer read FSelKey write SetSelKey;
+    property DisableGridAlignKey: integer read FDGKey write SetDGKey;
 
     property ShowGrid: boolean read FShowGrid write SetShowGrid;
     //GridSize: aligns mouse moved/resized controls to nearest grid dimensions
@@ -434,26 +437,18 @@ end;
 
 //------------------------------------------------------------------------------
 
-function ShiftKeyIsPressed: boolean;
+function KeyIsPressed(key: integer): boolean;
 begin
-  Result := GetKeyState(VK_SHIFT) < 0;
+  if key = -1 then
+    Result := false
+  else
+   if key = 0 then
+     Result := false
+    Else
+     Result := GetKeyState(key) < 0;
 end;
 
 //-----------------------------------------------------------------------
-
-function CtrlKeyIsPressed: boolean;
-begin
-  Result := GetKeyState(VK_CONTROL) < 0;
-end;
-
-//------------------------------------------------------------------------------
-
-function AltKeyIsPressed: boolean;
-begin
-  Result := GetKeyState(VK_MENU) < 0;
-end;
-
-//------------------------------------------------------------------------------
 
 procedure AlignToGrid(Ctrl: TControl; ProposedBoundsRect: TRect; GridSize: integer);
 begin
@@ -496,7 +491,10 @@ begin
     exit;
 
   fOldWindowProc := fControl.WindowProc;
-  fControl.WindowProc := NewWindowProc;
+  if fControl is TCustomForm then
+    fControl.WindowProc := NewWindowProcB
+  else
+    fControl.WindowProc := NewWindowProc;
 
   //The following is needed to block OnClick events when TSizeCtrl is enabled.
   //(If compiling with Delphi 3, you'll need to block OnClick events manually.)
@@ -548,6 +546,31 @@ end;
 
 procedure TRegisteredObj.NewWindowProc(var Msg: TMessage);
 begin
+  fSizeCtrl.DoWindowProc(fOldWindowProc, Msg);
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TRegisteredObj.NewWindowProcB(var Msg: TMessage);
+begin
+  CASE Msg.Msg of
+  WM_SYSCOMMAND:
+  case TWMSysCommand(Msg).CmdType of
+   SC_SIZE, SC_MOVE, SC_MINIMIZE, SC_MAXIMIZE, SC_CLOSE,
+   SC_MOUSEMENU, SC_KEYMENU, SC_RESTORE: TWMSysCommand(Msg).CmdType := SC_DEFAULT;
+  END;
+
+  WM_NCLBUTTONDBLCLK, WM_NCLBUTTONDOWN:
+  begin
+    if TWMNCHitMessage(Msg).HitTest <> HTCLIENT then
+      TWMNCHitMessage(Msg).HitTest := HTCLIENT;
+    if Msg.Msg = WM_NCLBUTTONDOWN then
+      Msg.Msg := WM_LBUTTONDOWN;
+  end;
+  WM_NCLBUTTONUP: Msg.Msg := WM_LBUTTONUP;
+  WM_NCRBUTTONDOWN: Msg.Msg := WM_RBUTTONDOWN;
+  WM_NCMOUSEMOVE: Msg.Msg := WM_MOUSEMOVE;
+  END;
   fSizeCtrl.DoWindowProc(fOldWindowProc, Msg);
 end;
 
@@ -1038,7 +1061,6 @@ var
   s: string;
   k: integer;
   r: TRect;
-  i: TBtnPos;
 begin
   if fTarget.Tag = 2012 then
     exit;
@@ -1116,6 +1138,8 @@ begin
   fGridSize := 8;
   fBtnAlpha := 255;
   fBtnSize := 5;
+  FSelKey := VK_SHIFT;
+  FDGKey := VK_MENU;
   fCanv.Pen.Style := psDot;
   fCanv.Pen.Mode := pmCopy;
   fCanv.Pen.Width := 1;
@@ -1197,13 +1221,6 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TSizeCtrl.FormWindowProc(var Msg: TMessage);
-begin
-  DoWindowProc(fOldWindowProc, Msg);
-end;
-
-//------------------------------------------------------------------------------
-
 //TSizeCtrl's own message handler to process CM_CUSTOM_MSE_DOWN message
 procedure TSizeCtrl.WinProc(var Msg: TMessage);
 var
@@ -1228,6 +1245,29 @@ begin
       end
     else
       Result := DefWindowProc(fHandle, Msg, wParam, lParam);
+end;
+
+//------------------------------------------------------------------------------
+
+function TSizeCtrl.KeysToShiftState(Keys: Word): TShiftState;
+begin
+  Result := [];
+  if KeyIsPressed( Self.FSelKey ) then Include(Result, ssShift);
+  if Keys and MK_CONTROL <> 0 then Include(Result, ssCtrl);
+  if Keys and MK_LBUTTON <> 0 then Include(Result, ssLeft);
+  if Keys and MK_RBUTTON <> 0 then Include(Result, ssRight);
+  if Keys and MK_MBUTTON <> 0 then Include(Result, ssMiddle);
+  if KeyIsPressed( Self.FDGKey ) then Include(Result, ssAlt);
+end;
+
+//------------------------------------------------------------------------------
+
+function TSizeCtrl.KeyDataToShiftState(KeyData: Longint): TShiftState;
+begin
+  Result := [];
+  if KeyIsPressed( Self.FSelKey ) then Include(Result, ssShift);
+  if GetKeyState(VK_CONTROL) < 0 then Include(Result, ssCtrl);
+  if KeyIsPressed( Self.FDGKey ) then Include(Result, ssAlt);
 end;
 
 //------------------------------------------------------------------------------
@@ -1271,7 +1311,7 @@ begin
 
     WM_MOUSEFIRST .. WM_MOUSELAST:
     begin
-      ShiftState := KeysToShiftState(word(TWMMouse(Msg).Keys));
+      ShiftState := Self.KeysToShiftState(word(TWMMouse(Msg).Keys));
       case Msg.Msg of
         WM_LBUTTONDOWN: PostMouseDownMessage(True, ssShift in ShiftState);
         WM_RBUTTONDOWN: DoPopupMenuStuff;
@@ -1285,7 +1325,7 @@ begin
     WM_PARENTNOTIFY:
       if not (TWMParentNotify(Msg).Event in [WM_CREATE, WM_DESTROY]) then
       begin
-        if ShiftKeyIsPressed then
+        if KeyIsPressed(Self.FSelKey) then
           ShiftState := [ssShift]
         else
           ShiftState := [];
@@ -1336,7 +1376,7 @@ begin
         exit;
       case Msg.WParam of
         VK_UP:
-          if ShiftKeyIsPressed then
+          if KeyIsPressed(Self.FSelKey) then
           begin
             SizeTargets(0, -1);
             if assigned(fEndEvent) then
@@ -1349,7 +1389,7 @@ begin
               fEndEvent(self, scsMoving);
           end;
         VK_DOWN:
-          if ShiftKeyIsPressed then
+          if KeyIsPressed(Self.FSelKey) then
           begin
             SizeTargets(0, +1);
             if assigned(fEndEvent) then
@@ -1362,7 +1402,7 @@ begin
               fEndEvent(self, scsMoving);
           end;
         VK_LEFT:
-          if ShiftKeyIsPressed then
+          if KeyIsPressed(Self.FSelKey) then
           begin
             SizeTargets(-1, 0);
             if assigned(fEndEvent) then
@@ -1375,7 +1415,7 @@ begin
               fEndEvent(self, scsMoving);
           end;
         VK_RIGHT:
-          if ShiftKeyIsPressed then
+          if KeyIsPressed(Self.FSelKey) then
           begin
             SizeTargets(+1, 0);
             if assigned(fEndEvent) then
@@ -1396,7 +1436,7 @@ begin
           else
           begin
             i := RegisteredIndex(Targets[0]);
-            if ShiftKeyIsPressed then
+            if KeyIsPressed(Self.FSelKey) then
               Dec(i)
             else
               Inc(i);
@@ -1449,7 +1489,7 @@ begin
   if Assigned(fOnKeyDown) then
     with Message do
     begin
-      ShiftState := KeyDataToShiftState(KeyData);
+      ShiftState := Self.KeyDataToShiftState(KeyData);
       fOnKeyDown(Self, CharCode, ShiftState);
       if CharCode = 0 then
         Exit;
@@ -1496,7 +1536,8 @@ begin
     exit;
 
   Result := TargetIndex(Control);
-  if not assigned(Control) or not Control.Visible or (Control is TCustomForm) or
+  if not assigned(Control) or not Control.Visible or (integer(Control) = integer(fParentForm))
+   or
     (Result >= 0) then
     exit;
   Result := fTargetList.Count;
@@ -1730,7 +1771,6 @@ begin
   end;
 
   Result := nil;
-  //Application.MainForm.Caption := Result.ClassName;
 end;
 
 //------------------------------------------------------------------------------
@@ -1983,7 +2023,7 @@ begin
       bpTop, bpBottom: dx := 0;
     end;
 
-    if (not AltKeyIsPressed) then
+    if (not KeyIsPressed(Self.FDGKey)) then
     begin
       Q := Dx mod GridSize;
       R := Dy mod GridSize;
@@ -1997,7 +2037,7 @@ begin
   else
   begin
 
-    if (not AltKeyIsPressed) then
+    if (not KeyIsPressed(Self.FDGKey)) then
     begin
       Q := Dx mod GridSize;
       R := Dy mod GridSize;
@@ -2316,7 +2356,16 @@ begin
    fDisabledBtnFrameColor := v;
   UpdateBtnCursors;
 end;
-
+procedure TSizeCtrl.SetSelKey(v: integer);
+begin
+  if v <> FSelKey then
+      FSelKey := v;
+end;
+procedure TSizeCtrl.SetDGKey(v: integer);
+begin
+  if v <> FDGKey then
+      FDGKey := v;
+end;
 //------------------------------------------------------------------------------
 
 procedure TSizeCtrl.SetPopupMenu(Value: TPopupMenu);
@@ -2377,7 +2426,7 @@ begin
 
   w := TControl(Sender).Width;
   h := TControl(Sender).Height;
-  c := TForm(Sender).Color;
+  c := TCustomForm(Sender).Color;
 
   if (fGrid <> nil) and (lastW = w) and (lastH = h) and (lastColor = c) then
   begin
@@ -2390,7 +2439,7 @@ begin
   lastW := w;
   lastH := h;
   lastColor := c;
-  g := GetGValue(TForm(fForm).Color);
+  g := GetGValue(TCustomForm(fForm).Color);
 
   if fGrid = nil then
     fGrid := TBitmap.Create;
@@ -2409,7 +2458,7 @@ begin
         fGrid.Canvas.Pixels[I * GridSize, J * GridSize] := fGridBlack;
     end;
 
-  TForm(Sender).Canvas.Draw(0, 0, fGrid);
+  TCustomForm(Sender).Canvas.Draw(0, 0, fGrid);
 
   //fGrid.Canvas.CopyRect(Rect(0,0,w,h), TForm(Sender).Canvas, Rect(0,0,w,h));
 
