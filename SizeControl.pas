@@ -29,6 +29,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes,
   Controls, Graphics,
+  Dialogs,
   Menus,   //To hook the TSizeCtrl.PopupMenu
   ComCtrls, //To check the TTabSheet, TPageControl
  {$IFDEF VER3UP} TypInfo, {$ENDIF} //To hook the OnClick event
@@ -231,9 +232,11 @@ type
     procedure SetShowGrid(const Value: boolean);
   protected
     fGrid: TBitmap; // сетка
+    fGridForm: TForm;
     lastW: integer;
     lastH: integer; // последняя ширина и высота формы
     lastColor: TColor; // последний цвет формы
+    procedure CreateGrid;
     procedure Hide;
     procedure Show;
     procedure UpdateGrid;
@@ -1164,7 +1167,11 @@ begin
   fHandle := AllocateHWnd(WinProc);
   fForm := TWinControl(AOwner);
   if fForm is TForm then
-    TForm(fForm).OnPaint := Self.formPaint;
+    TForm(fForm).OnPaint := Self.formPaint
+  else
+    begin
+      CreateGrid;
+    end;
 {$IFDEF VER3D}
   screen.Cursors[crSize] := loadcursor(hInstance, 'NSEW');
 {$ENDIF}
@@ -1181,7 +1188,31 @@ begin
     fTargetList.Free;
     fRegList.Free;
   end;
+  if Assigned(fGrid) then
+    fGrid.Free;
+
+  if Assigned(fGridForm) then
+    fGridForm := nil;
+
   inherited Destroy;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TSizeCtrl.CreateGrid;
+begin
+      fGridForm := TForm.CreateNew(Self);
+      fGridForm.Parent := fForm;
+      fGridForm.Position := poDesigned;
+      fGridForm.BorderStyle := bsNone;
+      fGridForm.Color := ((fGridWhite + fGridBlack) div 5) + 17 + 28;
+      fGridForm.TransparentColorValue := fGridForm.Color;
+      fGridForm.TransparentColor := True;
+      fGridForm.Anchors := [akLeft, akTop, akRight, akBottom];
+      fGridForm.FormStyle := fsNormal;
+      fGridForm.OnPaint := Self.formPaint;
+      fGridForm.SendToBack;
+      fGridForm.Visible := True;
 end;
 
 //------------------------------------------------------------------------------
@@ -1600,7 +1631,8 @@ function TSizeCtrl.RegisterControl(Control: TControl): integer;
 var
   RegisteredObj: TRegisteredObj;
 begin
-  if Control is TMovePanel then //b.f with 1000 objects selected
+  if Control is TMovePanel or
+  (Assigned(fGridForm) and (integer(Control) = integer(fGridForm))) then //b.f with 1000 objects selected
     Exit;
 
   if RegisteredIndex(Control) >= 0 then
@@ -2234,6 +2266,13 @@ begin
   begin
      if TWinControl(Owner).Visible then
         TWinControl(Owner).Repaint;
+     if not (fForm is TCustomForm) then
+     begin
+       if Assigned(fGridForm) then
+          fGridForm.Repaint
+       else
+        CreateGrid;
+     end;
   end;
 
 end;
@@ -2415,6 +2454,7 @@ procedure TSizeCtrl.formPaint(Sender: TObject);
 var
   i, j, w, h: integer;
   c, g: TColor;
+  obj: TWinControl;
 begin
   if not Assigned(Self) then
     exit;
@@ -2424,9 +2464,24 @@ begin
   if GridSize < 5 then
     exit;
 
-  w := TControl(Sender).Width;
-  h := TControl(Sender).Height;
-  c := TCustomForm(Sender).Color;
+  w := TControl(fForm).Width;
+  h := TControl(fForm).Height;
+  if fForm is TForm then
+    c := TForm(fForm).Color
+  else
+  begin
+  obj := TWinControl(Sender);
+  while not (obj is TCustomForm) and Assigned(obj) do
+      obj := obj.parent;
+    if obj is TCustomForm then
+      begin
+        c := TCustomForm(obj).Color;
+        TForm(Sender).Top := 0;
+        TForm(Sender).Left := 0;
+        TForm(Sender).Width := TWinControl(fForm).Width;
+        TForm(Sender).Height := TWinControl(fForm).Height;
+      end;
+  end;
 
   if (fGrid <> nil) and (lastW = w) and (lastH = h) and (lastColor = c) then
   begin
@@ -2439,7 +2494,10 @@ begin
   lastW := w;
   lastH := h;
   lastColor := c;
-  g := GetGValue(TCustomForm(fForm).Color);
+  if fForm is TForm then
+  g := GetGValue(TForm(fForm).Color)
+   else if Assigned(fParentForm) then
+      g := GetGValue(c);
 
   if fGrid = nil then
     fGrid := TBitmap.Create;
@@ -2458,7 +2516,7 @@ begin
         fGrid.Canvas.Pixels[I * GridSize, J * GridSize] := fGridBlack;
     end;
 
-  TCustomForm(Sender).Canvas.Draw(0, 0, fGrid);
+  TForm(Sender).Canvas.Draw(0, 0, fGrid);
 
   //fGrid.Canvas.CopyRect(Rect(0,0,w,h), TForm(Sender).Canvas, Rect(0,0,w,h));
 
