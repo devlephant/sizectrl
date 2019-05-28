@@ -122,6 +122,15 @@ type
     Label29: TLabel;
     Label30: TLabel;
     Label31: TLabel;
+    Panel29: TPanel;
+    Label32: TLabel;
+    BitBtn11: TBitBtn;
+    Panel30: TPanel;
+    Label33: TLabel;
+    BitBtn12: TBitBtn;
+    Panel31: TPanel;
+    Label34: TLabel;
+    BitBtn13: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -167,6 +176,9 @@ type
     procedure SpinEdit7Change(Sender: TObject);
     procedure Panel3Resize(Sender: TObject);
     procedure Label29Click(Sender: TObject);
+    procedure BitBtn11Click(Sender: TObject);
+    procedure BitBtn13Click(Sender: TObject);
+    procedure BitBtn12Click(Sender: TObject);
   private
     SizeCtrl: TSizeCtrl;
     procedure SizeCtrlDuring(Sender: TObject; dx, dy: integer; State: TSCState);
@@ -421,6 +433,21 @@ procedure TForm1.BitBtn10Click(Sender: TObject);
 begin
   SizeCtrl.movePanelCanvas.Brush.Color := selectColor( SizeCtrl.movePanelCanvas.Brush.Color  );
   ComboBox7.ItemIndex := integer( SizeCtrl.movePanelCanvas.Brush.Style );
+end;
+
+procedure TForm1.BitBtn11Click(Sender: TObject);
+begin
+   Form2.Execute( SizeCtrl.HoverBtnImage );
+end;
+
+procedure TForm1.BitBtn12Click(Sender: TObject);
+begin
+  SizeCtrl.HoverBtnFrameColor := selectColor( SizeCtrl.HoverBtnFrameColor );
+end;
+
+procedure TForm1.BitBtn13Click(Sender: TObject);
+begin
+  SizeCtrl.HoverBtnColor := selectColor( SizeCtrl.HoverBtnColor );
 end;
 
 procedure TForm1.BitBtn1Click(Sender: TObject);
