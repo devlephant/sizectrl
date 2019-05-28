@@ -30,6 +30,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes,
   Controls, Graphics,
+  Dialogs,
   Menus,   //To hook the TSizeCtrl.PopupMenu
   ComCtrls, //To check the TTabSheet, TPageControl
  {$IFDEF VER3U} TypInfo, {$ENDIF} //To hook the OnClick event
@@ -75,6 +76,7 @@ type
     fLeft, fTop: integer;
     fColor, fPen: TColor;
     fImage: TPicture;
+    fOldWindow: TWndMethod;
   protected
     procedure DrawTriangle(l, t:integer);
     procedure PaintAs(l,t:integer);
@@ -244,7 +246,12 @@ type
     fReIgnBtn: TReSizeHideType;
     fShowFrame, fApplySizes: boolean;
     fBtnCount: TSizeCtrlBtnCount;
-    FSelKey, FDGKey: integer;
+    FSelKey,
+      fSelActionCancelKey,
+      fSelToggleKey,
+      fMoveLeftKey, fMoveTopKey,
+      fMoveRightKey, fMoveBottomKey,
+     FDGKey: integer;
     fStartEvent: TStartEndEvent;
     fDuringEvent: TDuringEvent;
     fEndEvent: TStartEndEvent;
@@ -266,6 +273,7 @@ type
 
     procedure SetEnabled(Value: boolean);
     procedure WinProc(var Msg: TMessage);
+    procedure FormWindowProc(var Msg: TMessage);
     procedure DoWindowProc(DefaultProc: TWndMethod; var Msg: TMessage);
 
     procedure DrawRect;
@@ -402,8 +410,17 @@ type
     //BtnImage eg grab buttons along 8 edges of target controls
     property StretchBtnImage: Boolean read fStretchBtnImage write setStretchBtnImage;
 
-    property SelectionKey: integer read FSelKey write SetSelKey;
-    property DisableGridAlignKey: integer read FDGKey write SetDGKey;
+    //Custom keymaps
+    property SelectionKey: integer read FSelKey write FSelKey;
+    property SelectionCancelActionKey:
+      integer read fSelActionCancelKey write fSelActionCancelKey;
+    property SelectionTabKey:
+      integer read  fSelToggleKey write fSelToggleKey;
+    property MoveLeftKey: integer read fMoveLeftKey write fMoveLeftKey;
+    property MoveRightKey:integer read fMoveRightKey write fMoveRightKey;
+    property MoveUpKey:integer read  fMoveTopKey write fMoveTopKey;
+    property MoveDownKey:integer read fMoveBottomKey write fMoveBottomKey;
+    property DisableGridAlignKey: integer read FDGKey write FDGKey;
 
     property ShowGrid: boolean read FShowGrid write SetShowGrid;
     //GridSize: aligns mouse moved/resized controls to nearest grid dimensions
@@ -533,7 +550,7 @@ end;
 function KeyIsPressed(key: integer): boolean;
 begin
   if key = -1 then
-    Result := false
+    Result := true
   else
    if key = 0 then
      Result := false
@@ -1358,14 +1375,26 @@ begin
   fBtnCount := TSizeCtrlBtnCount.szctrl8btns;
   fLastBtn := bpBottomLeft;
   fTags.DenyMove := 2011;
-  fTags.DenyChange := 2012;
-  fTags.DenyResize := 2013;
-  fTags.DenyMultiResize := 2014;
+  fTags.DenyChange := fTags.DenyChange + 1;
+  fTags.DenyResize := fTags.DenyChange + 2;
+  fTags.DenyMultiResize := fTags.DenyChange + 3;
   fGridSize := 8;
   fBtnAlpha := 255;
   fMovePanelAlpha := 255;
   fBtnSize := 5;
   FSelKey := VK_SHIFT;
+  //Multi-escape key
+  fSelActionCancelKey := VK_ESCAPE;
+
+  //Tabulation key
+  fSelToggleKey := VK_TAB;
+
+  //Awwwrows keys
+  fMoveLeftKey  := VK_LEFT;
+  fMoveTopKey   := VK_LEFT + 1;
+  fMoveRightKey := VK_LEFT + 2;
+  fMoveBottomKey:= VK_LEFT + 3;
+
   FDGKey := VK_MENU;
   fCanv.Pen.Style := psDot;
   fCanv.Pen.Mode := pmCopy;
@@ -1493,7 +1522,7 @@ begin
       TRegisteredObj(fRegList[i]).Hook;
     //hook the parent form too ...
     fOldWindowProc := fParentForm.WindowProc;
-    //fParentForm.WindowProc := FormWindowProc;
+    fParentForm.WindowProc := FormWindowProc;
   end
   else
   begin
@@ -1501,8 +1530,14 @@ begin
     for i := 0 to fRegList.Count - 1 do
       TRegisteredObj(fRegList[i]).UnHook;
     //unhook the parent form too ...
-    //fParentForm.WindowProc := fOldWindowProc;
+    fParentForm.WindowProc := fOldWindowProc;
   end;
+end;
+
+procedure TSizeCtrl.FormWindowProc(var Msg: TMessage);
+begin
+  if Msg.Msg <> WM_PARENTNOTIFY then
+  DoWindowProc(fOldWindowProc, Msg);
 end;
 
 //------------------------------------------------------------------------------
@@ -1595,6 +1630,7 @@ var
 
 begin
   case Msg.Msg of
+
     WM_MOUSEFIRST .. WM_MOUSELAST:
     begin
       ShiftState := Self.KeysToShiftState(word(TWMMouse(Msg).Keys));
@@ -1622,6 +1658,7 @@ begin
       end;
 
     WM_SETCURSOR:
+    Begin
       if (HIWORD(Msg.lParam) <> 0) then
       begin
         Msg.Result := 1;
@@ -1652,68 +1689,67 @@ begin
       end
       else
         DefaultProc(Msg);
+    End;
 
-    WM_GETDLGCODE: Msg.Result := DLGC_WANTTAB;
-
+    WM_GETDLGCODE: Msg.Result :=  DLGC_WANTTAB or DLGC_WANTARROWS;
     WM_KEYDOWN:
     begin
       Msg.Result := 0;
       if DoKeyDown(TWMKey(Msg)) then
         exit;
-      case Msg.WParam of
-        VK_UP:
+        if Msg.WParam = fMoveTopKey then
           if KeyIsPressed(Self.FSelKey) then
           begin
-            SizeTargets(0, -1);
+            SizeTargets(0, -GridSize);
             if assigned(fEndEvent) then
               fEndEvent(self, scsSizing);
           end
           else
           begin
-            MoveTargets(0, -1);
+            MoveTargets(0, -GridSize);
             if assigned(fEndEvent) then
               fEndEvent(self, scsMoving);
           end;
-        VK_DOWN:
+        if Msg.WParam = fMoveBottomKey then
           if KeyIsPressed(Self.FSelKey) then
           begin
-            SizeTargets(0, +1);
+            SizeTargets(0, +GridSize);
             if assigned(fEndEvent) then
               fEndEvent(self, scsSizing);
           end
           else
           begin
-            MoveTargets(0, +1);
+            MoveTargets(0, +Gridsize);
             if assigned(fEndEvent) then
               fEndEvent(self, scsMoving);
           end;
-        VK_LEFT:
+        if Msg.WParam = fMoveLeftKey then
           if KeyIsPressed(Self.FSelKey) then
           begin
-            SizeTargets(-1, 0);
+            SizeTargets(-GridSize, 0);
             if assigned(fEndEvent) then
               fEndEvent(self, scsSizing);
           end
           else
           begin
-            MoveTargets(-1, 0);
+            MoveTargets(-GridSize, 0);
             if assigned(fEndEvent) then
               fEndEvent(self, scsMoving);
           end;
-        VK_RIGHT:
+        if Msg.WParam = fMoveRightKey then
           if KeyIsPressed(Self.FSelKey) then
           begin
-            SizeTargets(+1, 0);
+            SizeTargets(+GridSize, 0);
             if assigned(fEndEvent) then
               fEndEvent(self, scsSizing);
           end
           else
           begin
-            MoveTargets(+1, 0);
+            MoveTargets(+GridSize, 0);
             if assigned(fEndEvent) then
               fEndEvent(self, scsMoving);
           end;
-        VK_TAB:
+        if Msg.WParam = fSelToggleKey then
         begin
           if fRegList.Count = 0 then
             exit
@@ -1734,7 +1770,7 @@ begin
             AddTarget(TRegisteredObj(fRegList[i]).fControl);
           end;
         end;
-        VK_ESCAPE:
+        if Msg.WParam = fSelActionCancelKey then
           //ESCAPE is used for both -
           //  1. cancelling a mouse move/resize operation, and
           //  2. selecting the parent of the currenctly selected target
@@ -1752,7 +1788,6 @@ begin
             if i >= 0 then
               AddTarget(TRegisteredObj(fRegList[i]).fControl);
           end;
-      end;
     end;
 
     WM_KEYUP: Msg.Result := 0;
@@ -1760,7 +1795,10 @@ begin
     WM_CANCELMODE: //Cancel all modal operations
     //What is that? Do you ask me? You'd better ask Embarcadero,
       //Because they do not supplied truely focus-lose event
-      if (GetForegroundWindow <> fParentForm.Handle)
+      //P.s thanks to "furious programming" from Lazarus forum,
+      //Because now i'm know, that in FP i do not have to
+      //do this...
+      if ( GetForegroundWindow <> fParentForm.Handle)
           and (fState <> scsReady) then
       begin
         fState := scsReady;
@@ -2089,17 +2127,13 @@ end;
 
 procedure TSizeCtrl.MoveTargets(dx, dy: integer);
 var
-  i, q, r: integer;
+  i: integer;       //ihere
 begin
-  if not IsValidMove then
-    exit;
-  for i := 0 to fTargetList.Count - 1 do
+  if not IsValidMove then exit;
+  for i := 0 to fTargetList.Count -1 do
     with TTargetObj(fTargetList[i]) do
     begin
-      q := (fTarget.Left + dx) mod GridSize;
-      r := (fTarget.Top + dy) mod GridSize;
-      with fTarget do
-        SetBounds(Left + dx - q, Top + dy - r, Width, Height);
+      with fTarget do SetBounds(Left + dx, Top + dy, Width, Height);
       Update;
     end;
 end;
@@ -2120,13 +2154,9 @@ begin
   for i := 0 to fTargetList.Count - 1 do
     with TTargetObj(fTargetList[i]) do
     begin
-
-      q := (fTarget.Width + dx) mod GridSize;
-      r := (fTarget.Height + dy) mod GridSize;
-
       with fTarget do
         SetBounds(Left, Top,
-          FixSize(Width + dx,0) - q, FixSize(Height + dy,1) - r);
+          FixSize(Width + dx,0), FixSize(Height + dy,1));
       Update;
     end;
 end;
@@ -2725,16 +2755,7 @@ begin
    fDisabledBtnFrameColor := v;
   UpdateBtnCursors;
 end;
-procedure TSizeCtrl.SetSelKey(v: integer);
-begin
-  if v <> FSelKey then
-      FSelKey := v;
-end;
-procedure TSizeCtrl.SetDGKey(v: integer);
-begin
-  if v <> FDGKey then
-      FDGKey := v;
-end;
+
 //------------------------------------------------------------------------------
 
 procedure TSizeCtrl.SetPopupMenu(Value: TPopupMenu);
@@ -3004,6 +3025,5 @@ begin
   Else
     Canvas.Rectangle(0, 0, Width, Height);
 end;
-
 
 end.

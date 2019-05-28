@@ -24,7 +24,7 @@ TSizeCtrl is a non-visual VCL component, which allows you to resize, select and 
 <li> Different resize-during button hide options: none (buttons are visible, but static), hide (buttons are hidden), move (buttons will be moved in case of moving, but hidden in case of sizing)</ul></ul>
 <ul><li> Additional options:</li><ul>
 <li> Stretch properties supplied with every Image(TPicture) properties, to specify which images you would like to store in the original size </li>
-<li> Customizable modification keys (selection, align-ignoring keys)
+<li> Customizable modification keys (selection, moving/sizing, align-ignoring keys)
 <li> OnHover events for TSizeBtns (sizing grips/handles) </li>
 <li> ApplySizes property - to apply sizes to the object immediately </li></ul></ul>
 
@@ -45,7 +45,6 @@ TSizeCtrl is a non-visual VCL component, which allows you to resize, select and 
 <li> 1. Selection of disabled objects (cursrtom property)
 <li> 2. Align with lines (function, ef)
 <li> 3. Detect control polygon to draw shape to fit the form
-<li> 4. Add hotkey + arrow keys controlling to sizing/moving procedures
   </ul></ul>
 <ul><li> Refactorings:</li><ul>
 <li>1. Flipping control, when its sizes is too small
