@@ -2,3 +2,12 @@ __history/
 __history\
 __recovery\
 __recovery/
+SizeControl8_src.zip
+*.dcu
+*.stat
+*.dproj_local
+*.identcache
+DemoSizeCtrl/
+DemoSizeCtrl\
+Win32/
+Win32\
