@@ -28,7 +28,6 @@ interface
 {$IFDEF VER3U} {$IFNDEF VER100} {$DEFINE VER3UP} {$ENDIF} {$ENDIF}
 uses
   Windows, Messages, SysUtils, Classes,
-  Dialogs,
   Controls, Graphics,
   Menus,   //To hook the TSizeCtrl.PopupMenu
   ComCtrls, //To check the TTabSheet, TPageControl
@@ -1757,10 +1756,8 @@ begin
 
     WM_KEYUP: Msg.Result := 0;
     WM_CHAR: Msg.Result := 0;
-
-    else
-    begin
-      //What is that? Do you ask me? You'd better ask Embarcadero,
+    WM_CANCELMODE: //Cancel all modal operations
+    //What is that? Do you ask me? You'd better ask Embarcadero,
       //Because they do not supplied truely focus-lose event
       if (GetForegroundWindow <> fParentForm.Handle)
           and (fState <> scsReady) then
@@ -1777,8 +1774,8 @@ begin
             list.Clear;
           end;
       end;
+    else
       DefaultProc(Msg);
-    end;
   end;
 end;
 
