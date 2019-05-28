@@ -7,10 +7,10 @@ TSizeCtrl is a non-visual VCL component, which allows you to resize, select and 
 ##### Features:
 <ul> Fully customizable buttons: you can change count (from 4 to 8), colour, size, transparency, shape, and if you want to - you can set button image
 <li>5 shape types: Square, Circle, Rhombus, Triangle and RoundRect</li></ul>
-<ul> Customizable selection frame: movePanelCanvas property to access all selection frame's canvases at once, with transparency (Brush.Style := bsClear) support</ul>
+<ul> Customizable selection frame: movePanelCanvas property to access all of the selection frames canvases at once, with transparency (Brush.Style := bsClear) support</ul>
 <ul> ShowFrame property to show/hide selection frame</ul>
 <ul> MovePanelAlphaBlend property to specify alpha-channel of the sizing/selection frame </ul>
-<ul> MovePanelImage property to set Selection Frame image </ul>
+<ul> MovePanelImage property to set the Selection Frame image </ul>
 <ul> TCustomForms support: when form is resized with TSizeCtrl, it cannot be closed or maximized/minimized </ul>
 <ul>Grid support, with properties: gridSize, showGrid, gridColor, gridColorContrast </ul>
 <ul> Resizing options:<ul>
