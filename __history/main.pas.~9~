@@ -113,6 +113,12 @@ type
     CheckBox6: TCheckBox;
     CheckBox7: TCheckBox;
     Label26: TLabel;
+    Panel27: TPanel;
+    Label27: TLabel;
+    SpinEdit6: TSpinEdit;
+    Panel28: TPanel;
+    Label28: TLabel;
+    SpinEdit7: TSpinEdit;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -154,6 +160,9 @@ type
     procedure CheckBox7Click(Sender: TObject);
     procedure Label26MouseEnter(Sender: TObject);
     procedure Label26MouseLeave(Sender: TObject);
+    procedure SpinEdit6Change(Sender: TObject);
+    procedure SpinEdit7Change(Sender: TObject);
+    procedure Panel3Resize(Sender: TObject);
   private
     SizeCtrl: TSizeCtrl;
     procedure SizeCtrlDuring(Sender: TObject; dx, dy: integer; State: TSCState);
@@ -497,12 +506,22 @@ end;
 
 procedure TForm1.SpinEdit4Change(Sender: TObject);
 begin
-  SizeCtrl.MinHeight := TSpinEdit(Sender).Value;;
+  SizeCtrl.Constraints.MinHeight := TSpinEdit(Sender).Value;;
 end;
 
 procedure TForm1.SpinEdit5Change(Sender: TObject);
 begin
-  SizeCtrl.MinWidth := TSpinEdit(Sender).Value;
+  SizeCtrl.Constraints.MinWidth := TSpinEdit(Sender).Value;
+end;
+
+procedure TForm1.SpinEdit6Change(Sender: TObject);
+begin
+  SizeCtrl.Constraints.MaxWidth := TSpinEdit(Sender).Value;
+end;
+
+procedure TForm1.SpinEdit7Change(Sender: TObject);
+begin
+  SizeCtrl.Constraints.MaxHeight := TSpinEdit(Sender).Value;
 end;
 
 //------------------------------------------------------------------------------
@@ -620,6 +639,22 @@ begin
     else
        Panel3.Caption := pCollapsed;
     SizeCtrl.Update;
+end;
+
+procedure TForm1.Panel3Resize(Sender: TObject);
+var c: TControlCanvas;
+begin
+    c := TControlCanvas.Create;
+    c.Control := Panel3;
+    if sets.Visible then
+    begin
+      Label26.Left := (Panel3.Width div 2) + (c.TextWidth(pExpanded) div 2) + 3;
+    end
+    else
+    begin
+      Label26.Left := (Panel3.Width div 2) + (c.TextWidth(pCollapsed) div 2) + 3;
+    end;
+    FreeAndNil(c);
 end;
 
 procedure TForm1.sizePopsPopup(Sender: TObject);

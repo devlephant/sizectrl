@@ -120,8 +120,6 @@ type
     Label28: TLabel;
     SpinEdit7: TSpinEdit;
     Label29: TLabel;
-    Label30: TLabel;
-    Label31: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -203,7 +201,7 @@ var
 begin
   for i := 0 to aParent.ControlCount -1 do
   begin
-    //In this demo, Tag = 1 prevents a control becoming a SizeCtrl target ...
+    //In this demo, Tag <> 0 prevents a control becoming a SizeCtrl target ...
     if aParent.Controls[i].Tag <> 1 then
       SizeCtrl.RegisterControl(aParent.Controls[i]);
     if aParent.Controls[i] is TWinControl then
@@ -239,8 +237,6 @@ begin
   //All of this would normally be done in the IDE's Object Inspector
   //if SizeCtrl was installed into the IDE.
   SizeCtrl := TSizeCtrl.Create(Panel1);
-  SizeCtrl.HoverBtnColor := clYellow;
-  SizeCtrl.HoverBtnFrameColor := clNavy;
   SizeCtrl.movePanelCanvas.Brush.Style := bsClear;
   SizeCtrl.OnTargetChange := SizeCtrlTargetChange;
   SizeCtrl.OnDuringSizeMove := SizeCtrlDuring;

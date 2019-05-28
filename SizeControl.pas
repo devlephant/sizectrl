@@ -5,7 +5,7 @@ unit SizeControl;
 Component Name:  TSizeCtrl
 Module:          SizeControl
 Description:     Enables both moving and resizing of controls at runtime.
-Version:         8.0
+Version:         8.1
 Date:            19-MAY-2019
 Author:          Angus Johnson, angusj-AT-myrealbox-DOT-com
                  Leu Zenin, kashaket@protonmail.com
@@ -29,7 +29,6 @@ interface
 uses
   Windows, Messages, SysUtils, Classes,
   Controls, Graphics,
-  Dialogs,
   Menus,   //To hook the TSizeCtrl.PopupMenu
   ComCtrls, //To check the TTabSheet, TPageControl
  {$IFDEF VER3D} TypInfo, {$ENDIF} //To hook the OnClick event
@@ -71,6 +70,7 @@ type
   private
     fTargetObj: TTargetObj;
     fPos: TBtnPos;
+    fHoverDown, fHover: boolean;
     fLeft, fTop: integer;
     fColor, fPen: TColor;
     fImage: TPicture;
@@ -78,9 +78,12 @@ type
     procedure DrawTriangle(l, t:integer);
     procedure PaintAs(l,t:integer);
     procedure doPaint(Sender:TObject);
+    procedure mEnter(Sender:TObject);
+    procedure mLeave(Sender:TObject);
     procedure UpdateBtnCursorAndColor;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X, Y: integer); override;
+    procedure dMouseUp;
     function GetTop: integer;
     function GetLeft: integer;
     procedure setLeft(value: integer);
@@ -150,6 +153,40 @@ type
     destructor Destroy; override;
     procedure ReconfButtons;
   end;
+  TSizeCtrlTags = record
+  private
+    var
+    FMove, fNMove, fnTop, fnLeft, fNChange,
+    fnWidth, fnHeight, fResize, fNResize,
+    fnTopLeft, fnTopHeight, fnTopWidth,
+    fnLeftHeight, fnLeftWidth, fnHeightWidth,
+    fnTLWH, fnTLW, fnTLH,
+    fMResize, fNMResize: integer;
+  public
+    property AllowMove: integer read fMove write fMove;
+    property DenyMove: integer read fNMove write fNMove;
+
+    property DenyChange: integer read fNChange write fNChange;
+
+    property ChangeTop: integer read fnTop write fnTop;
+    property ChangeLeft: integer read fnLeft write fnLeft;
+    property ChangeWidth: integer read fnWidth write fnWidth;
+    property ChangeHeight: integer read fnHeight write fnHeight;
+    property ChangeTopLeft: integer read fnTopLeft write fnTopLeft;
+    property ChangeTopHeight: integer read fnTopHeight write fnTopHeight;
+    property ChangeTopWidth: integer read fnTopWidth write fnTopWidth;
+    property ChangeLeftHeight: integer read fnLeftHeight write fnLeftHeight;
+    property ChangeLeftWidth: integer read fnLeftWidth write fnLeftWidth;
+    property ChangeHeightWidth: integer read fnHeightWidth write fnHeightWidth;
+    property ChangeTopLeftWidth: integer read fnTLW write fnTLW;
+    property ChangeTopLeftHeight: integer read fnTLH write fnTLH;
+    property ChangeTopLeftWidthHeight: integer read fnTLWH write fnTLWH;
+    property AllowResize:  integer read fResize write fResize;
+    property DenyResize: integer read fNResize write fNResize;
+
+    property AllowMultiResize: integer read fMResize write fMResize;
+    property DenyMultiResize: integer read fNMResize write fNMresize;
+  end;
 
   TSizeCtrl = class(TComponent)
   private
@@ -162,6 +199,7 @@ type
     fClipRec: TRect;
     fStartPt: TPoint;
     fEnabledBtnColor: TColor;
+    fHoverBtnColor: TColor;
     fDisabledBtnColor: TColor;
     fValidBtns: TBtnPosSet;
     fMultiResize: boolean;
@@ -177,9 +215,11 @@ type
     fOnContextPopup: TContextPopupEvent;
     fLMouseDownPending: boolean;
     fForm: TWinControl;
+    fTags: TSizeCtrlTags;
     fGridWhite: TColor;
     fGridBlack: TColor;
     fBtnFrameColor: TColor;
+    fHoverBtnFrameColor: TColor;
     fDisabledBtnFrameColor: TColor;
     fBtnShape: TSizeBtnShapeType;
     fReSizeType: TReSizeFrameType;
@@ -199,7 +239,9 @@ type
     fCanv: TCanvas;
     fMovePanelAlpha: integer;
     fBtnImage: TPicture;
+    fHoverBtnImage: TPicture;
     fDisabledBtnImage: TPicture;
+    fStretchBtnImage: boolean;
     function GetTargets(index: integer): TControl;
     function GetTargetCount: integer;
 
@@ -222,11 +264,15 @@ type
     procedure setBtnAlphaBlend(Value: integer);
     procedure setMovePanelAlphaBlend(Value: integer);
     procedure setBtnImage(Value: TPicture);
+    procedure setHoverBtnImage(Value: TPicture);
     procedure setDisabledBtnImage(Value: TPicture);
+    procedure setStretchBtnImage(Value: boolean);
     procedure SetEnabledBtnColor(aColor: TColor);
+    procedure SetHoverBtnColor(aColor: TColor);
     procedure SetDisabledBtnColor(aColor: TColor);
     procedure SetBtnShape(v: TSizeBtnShapeType);
     procedure SetBtnFrameColor(v: TColor);
+    procedure SetHoverBtnFrameColor(v: TColor);
     procedure SetDisabledBtnFrameColor(v: TColor);
     procedure SetSelKey(v: integer);
     procedure SetDGKey(v: integer);
@@ -306,6 +352,7 @@ type
     //MaxWidth: maximal target (resizing) width
     //MaxHeight: maximal target (resizing) height
     property Constraints: TSizeConstraints read FConstraints write FConstraints;
+    property TagOptions: TSizeCtrlTags read fTags write fTags;
     //MoveOnly: ie prevents resizing
     property MoveOnly: boolean read fMoveOnly write SetMoveOnly;
     //BtnCount: Count of the grab buttons
@@ -316,15 +363,24 @@ type
     property BtnAlphaBlend: integer read fBtnAlpha write setBtnAlphaBlend;
     //BtnColor: Color of grab-handle buttons
     property BtnColor: TColor read fEnabledBtnColor write SetEnabledBtnColor;
+    //BtnColor: Color of grab-handle buttons
+    property HoverBtnColor: TColor read fHoverBtnColor write SetHoverBtnColor;
+
     //BtnColorDisabled: eg grab buttons along aligned edges of target controls
     property DisabledBtnColor: TColor read fDisabledBtnColor write SetDisabledBtnColor;
     property BtnShape: TSizeBtnShapeType read fBtnShape write setBtnShape;
     property BtnFrameColor: TColor read fBtnFrameColor write setBtnFrameColor;
+    property HoverBtnFrameColor: TColor read fHoverBtnFrameColor write setHoverBtnFrameColor;
     property DisabledBtnFrameColor: TColor read fDisabledBtnFrameColor write setDisabledBtnFrameColor;
     //BtnImage eg grab buttons along 8 edges of target controls
     property BtnImage: TPicture read fBtnImage write setBtnImage;
+    //Hover-state button(s)
+    property HoverBtnImage: TPicture read fHoverBtnImage write setHoverBtnImage;
     //DisabledBtnImage - you will understand
     property DisabledBtnImage: TPicture read fDisabledBtnImage write setDisabledBtnImage;
+
+    //BtnImage eg grab buttons along 8 edges of target controls
+    property StretchBtnImage: Boolean read fStretchBtnImage write setStretchBtnImage;
 
     property SelectionKey: integer read FSelKey write SetSelKey;
     property DisableGridAlignKey: integer read FDGKey write SetDGKey;
@@ -461,6 +517,20 @@ begin
      Result := GetKeyState(key) < 0;
 end;
 
+//------------------------------------------------------------------------------
+
+function inSizeTag(key: integer;arr: array of integer): boolean;
+var i: integer;
+begin
+  Result := False;
+  for i in arr do
+    if i = key then
+    begin
+      Result := true;
+      Exit;
+    end;
+end;
+ //P.s Delphi compiler is kind of a shit
 //-----------------------------------------------------------------------
 
 procedure AlignToGrid(Ctrl: TControl; ProposedBoundsRect: TRect; GridSize: integer);
@@ -612,7 +682,11 @@ begin
   FormStyle := fsStayOnTop;
   BorderIcons := [];
   BorderStyle := bsNone;
+  fHover := false;
+  fHoverDown := false;
   OnPaint := doPaint;
+  OnMouseEnter := mEnter;
+  OnMouseLeave := mLeave;
   fPos := BtnPos;
   UpdateBtnCursorAndColor;
 end;
@@ -622,10 +696,12 @@ end;
 procedure TSizeBtn.UpdateBtnCursorAndColor;
 begin
   if not (fPos in fTargetObj.fSizeCtrl.fValidBtns) or
-    fTargetObj.fSizeCtrl.fMoveOnly or (fTargetObj.fTarget.Tag = 2012) then
+    fTargetObj.fSizeCtrl.fMoveOnly or
+     inSizeTag(fTargetObj.fTarget.Tag,
+     [fTargetObj.fSizeCtrl.TagOptions.DenyChange, fTargetObj.fSizeCtrl.TagOptions.DenyResize]) then
   begin
     Cursor := crDefault;
-    fColor := fTargetObj.fSizeCtrl.fDisabledBtnColor;
+    fColor := fTargetObj.fSizeCtrl.DisabledBtnColor;
     fPen := fTargetObj.fSizeCtrl.DisabledBtnFrameColor;
     fImage := fTargetObj.fSizeCtrl.DisabledBtnImage;
   end
@@ -637,9 +713,18 @@ begin
       bpTopLeft, bpBottomRight: Cursor := crSizeNWSE;
       bpTopRight, bpBottomLeft: Cursor := crSizeNESW;
     end;
-    fColor := fTargetObj.fSizeCtrl.fEnabledBtnColor;
-    fPen := fTargetObj.fSizeCtrl.BtnFrameColor;
-    fImage := fTargetObj.fSizeCtrl.BtnImage;
+    if (fHover) or (fHoverDown) then
+    Begin
+      fColor := fTargetObj.fSizeCtrl.HoverBtnColor;
+      fPen := fTargetObj.fSizeCtrl.HoverBtnFrameColor;
+      fImage := fTargetObj.fSizeCtrl.HoverBtnImage;
+    END
+    ELSE
+    Begin
+      fColor := fTargetObj.fSizeCtrl.BtnColor;
+      fPen := fTargetObj.fSizeCtrl.BtnFrameColor;
+      fImage := fTargetObj.fSizeCtrl.BtnImage;
+    End;
   end;
   if ParentWindow <> 0 then
   Repaint;
@@ -647,7 +732,9 @@ end;
 
 //------------------------------------------------------------------------------
 
-function TSizeBtn.GetTop;
+function TSizeBtn.GetTop; //1/2 Top-position flickering fix
+                        //in delphi XE8 developers removed
+                        //duplicate value checking from VCL...
 begin
   Result := inherited Top;
 end;
@@ -673,7 +760,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TSizeBtn.SetTop(value: integer);
+procedure TSizeBtn.SetTop(value: integer);//2/2 Top-position flickering fix
 begin
   if fTop <> value then
   begin
@@ -687,7 +774,19 @@ end;
 procedure TSizeBtn.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 begin
   if Button = mbLeft then
+  begin
+    fHoverDown := True;
     fTargetObj.fSizeCtrl.DoMouseDown(self, Button, Shift);
+  end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TSizeBtn.dMouseUp;
+begin
+  fHover := False;
+  fHoverDown := False;
+  UpdateBtnCursorAndColor;
 end;
 
 //------------------------------------------------------------------------------
@@ -763,7 +862,7 @@ begin
       DrawTriangle(l,t);
      end;
      tszbRoundRect:
-      Canvas.RoundRect(l,t,l+Width,t+Height,Width,Height);
+      Canvas.RoundRect(l,t,l+Width,t+Height, (Width+Height) div 4,(Width+Height) div 4);
      tszbRhombus:
       Canvas.Polygon(
       [Point(l,t+Ceil(Height/2)-1),
@@ -793,6 +892,22 @@ begin
   else
     Canvas.Pen.Color := fPen;
   PaintAs(0,0);
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TSizeBtn.mEnter(Sender:TObject);
+begin
+  fHover := True;
+  UpdateBtnCursorAndColor;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TSizeBtn.mLeave(Sender:TObject);
+begin
+  fHover := False;
+  UpdateBtnCursorAndColor;
 end;
 
 //------------------------------------------------------------------------------
@@ -986,7 +1101,7 @@ function TTargetObj.MoveFocus(dx, dy: integer): boolean;
 var
   L, T: integer;
 begin
-  if fTarget.Tag = 2012 then
+  if fTarget.Tag = fSizeCtrl.TagOptions.DenyChange then
     exit;
 
   L := fFocusRect.Left;
@@ -1002,7 +1117,7 @@ function TTargetObj.SizeFocus(dx, dy: integer; BtnPos: TBtnPos): boolean;
 var
   L, T, R, B: integer;
 begin
-  if fTarget.Tag = 2012 then
+  if fTarget.Tag = fSizeCtrl.TagOptions.DenyChange then
     exit;
 
   L := fFocusRect.Left;
@@ -1046,7 +1161,10 @@ end;
 procedure TTargetObj.EndFocus;
 var
   w, h: integer;
+  i: TBtnPos;
 begin
+  for i := bpLeft to fSizeCtrl.fLastBtn do
+    fBtns[i].dMouseUp;
   if not fSizeCtrl.ApplySizes then
   begin
     //update target position ...
@@ -1075,7 +1193,7 @@ var
   k: integer;
   r: TRect;
 begin
-  if fTarget.Tag = 2012 then
+  if fTarget.Tag = fSizeCtrl.TagOptions.DenyChange then
     exit;
 
   fLastRect := fFocusRect;
@@ -1153,6 +1271,10 @@ begin
   fCanv.Pen.Color := clBlack;
   fBtnCount := TSizeCtrlBtnCount.szctrl8btns;
   fLastBtn := bpBottomLeft;
+  fTags.DenyMove := 2011;
+  fTags.DenyChange := 2012;
+  fTags.DenyResize := 2013;
+  fTags.DenyMultiResize := 2014;
   fGridSize := 8;
   fBtnAlpha := 255;
   fMovePanelAlpha := 255;
@@ -1169,14 +1291,18 @@ begin
   fGridBlack := clGray;
   fBtnShape := tszbCircle;
   fEnabledBtnColor := clAqua;
+  fHoverBtnColor := clAqua;
   fDisabledBtnColor := clGray;
   fApplySizes:= False;
   fShowFrame := True;
   fReSizeType:= TReSizeFrameType.tszfNone;
   fBtnFrameColor := clBlue;
+  fHoverBtnFrameColor := clBlue;
   fDisabledBtnFrameColor := clNone;
   fBtnImage := TPicture.Create;
+  fHoverBtnImage := TPicture.Create;
   fDisabledBtnImage := TPicture.Create;
+  fStretchBtnImage := True;
   fMultiResize := True;
   FConstraints := TSizeConstraints.Create(TControl(Self));
   fValidBtns := [bpLeft, bpTopLeft, bpTop, bpTopRight, bpRight,
@@ -1213,6 +1339,9 @@ begin
 
   if Assigned(fBtnImage) then
     fBtnImage.Free;
+
+  if Assigned(fHoverBtnImage) then
+    fHoverBtnImage.Free;
 
   if Assigned(fDisabledBtnImage) then
     fDisabledBtnImage.Free;
@@ -2281,6 +2410,26 @@ end;
 
 //------------------------------------------------------------------------------
 
+procedure TSizeCtrl.SetHoverBtnColor(aColor: TColor);
+begin
+  if fHoverBtnColor = aColor then
+    exit;
+  fHoverBtnColor := aColor;
+  UpdateBtnCursors;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TSizeCtrl.SetHoverBtnFrameColor(v: TColor);
+begin
+  if fHoverBtnFrameColor = v then
+    exit;
+  fHoverBtnFrameColor := v;
+  UpdateBtnCursors;
+end;
+
+//------------------------------------------------------------------------------
+
 procedure TSizeCtrl.SetDisabledBtnColor(aColor: TColor);
 begin
   if fDisabledBtnColor = aColor then
@@ -2413,11 +2562,31 @@ end;
 
 //------------------------------------------------------------------------------
 
+procedure TSizeCtrl.SetHoverBtnImage(Value: TPicture);
+begin
+  if  Value = fHoverBtnImage then
+  Exit;
+  fHoverBtnImage.Assign( Value );
+  HardReset;
+end;
+
+//------------------------------------------------------------------------------
+
 procedure TSizeCtrl.SetDisabledBtnImage(Value: TPicture);
 begin
   if  Value = fDisabledBtnImage then
   Exit;
   fDisabledBtnImage.Assign( Value );
+  HardReset;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TSizeCtrl.SetStretchBtnImage(Value: boolean);
+begin
+  if  Value = fStretchBtnImage then
+  Exit;
+  fStretchBtnImage := Value;
   HardReset;
 end;
 
