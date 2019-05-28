@@ -5,7 +5,7 @@ Updated TSizeCtrl (v8), which originally performed by Angus Johnson, so... it's 
 TSizeCtrl is a non-visual VCL component, which allows you to resize, select and move TControl decadents
 
 ##### Features:
-<ul> <li>Fully customizable buttons: you can change count (from 4 to 8), colour, size, transparency, shape, and if you want to - you can set button image</li>
+<ul> <li>Fully customizable buttons: you can change count (from 4 to 8), colour, size, transparency, shape, and if you want to - you can set the button image</li>
 <li>5 shape types: Square, Circle, Rhombus, Triangle and RoundRect</li>
 <li> Customizable selection frame: movePanelCanvas property to access all of the selection frames canvases at once, with transparency (Brush.Style := bsClear) support</li>
 <li> ShowFrame property to show/hide selection frame</li>
