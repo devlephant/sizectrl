@@ -36,7 +36,7 @@ uses
   Forms, Math;
   (* [TSizeBtn reqs]
     To make transparent and topmost at the same time...
-    Another way is to use TPictureControl, but, it doesn't gives ability
+    Another way is to use TGraphicControl, but, it doesn't gives ability
     to use the Alpha-Blending :)
   *)
 
@@ -156,7 +156,7 @@ type
     fRegList: TList;    //list of TRegisteredObj (possible targets)
     fState: TSCState;
     fMoveOnly: boolean;
-    _mW, _mH, fBtnAlpha, fBtnSize: integer;
+    fBtnAlpha, fBtnSize: integer;
     fClipRec: TRect;
     fStartPt: TPoint;
     fEnabledBtnColor: TColor;
@@ -1192,6 +1192,18 @@ begin
     fTargetList.Free;
     fRegList.Free;
   end;
+  if Assigned(fCanv) then
+    fCanv.Free;
+
+  if Assigned(FConstraints) then
+    FConstraints.Free;
+
+  if Assigned(fBtnImage) then
+    fBtnImage.Free;
+
+  if Assigned(fDisabledBtnImage) then
+    fDisabledBtnImage.Free;
+
   if Assigned(fGrid) then
     fGrid.Free;
 

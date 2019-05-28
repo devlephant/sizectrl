@@ -32,11 +32,11 @@ uses
   Dialogs,
   Menus,   //To hook the TSizeCtrl.PopupMenu
   ComCtrls, //To check the TTabSheet, TPageControl
- {$IFDEF VER3UP} TypInfo, {$ENDIF} //To hook the OnClick event
+ {$IFDEF VER3D} TypInfo, {$ENDIF} //To hook the OnClick event
   Forms, Math;
   (* [TSizeBtn reqs]
     To make transparent and topmost at the same time...
-    Another way is to use TPictureControl, but, it doesn't gives ability
+    Another way is to use TGraphicControl, but, it doesn't gives ability
     to use the Alpha-Blending :)
   *)
 
@@ -95,12 +95,14 @@ type
 
   TMovePanel = class(TCustomForm)
   private
+    fSizeCtrl: TSizeCtrl;
     procedure setfcanvas(fCanvas: TCanvas);
   protected
     procedure SetBoundsRect(Sender: TObject);
     procedure DoPaint(Sender: TObject);
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(AOwner: TComponent;AsizeCtrl:TSizeCtrl);
+    {$IFNDEF VER3U} reintroduce; {$ENDIF}
     property RectCanvas: TCanvas write setfCanvas;
   end;
 
@@ -156,7 +158,7 @@ type
     fRegList: TList;    //list of TRegisteredObj (possible targets)
     fState: TSCState;
     fMoveOnly: boolean;
-    _mW, _mH, fBtnAlpha, fBtnSize: integer;
+    fBtnAlpha, fBtnSize: integer;
     fClipRec: TRect;
     fStartPt: TPoint;
     fEnabledBtnColor: TColor;
@@ -195,6 +197,7 @@ type
     fOnKeyDown: TKeyEvent;
     FShowGrid: boolean;
     fCanv: TCanvas;
+    fMovePanelAlpha: integer;
     fBtnImage: TPicture;
     fDisabledBtnImage: TPicture;
     function GetTargets(index: integer): TControl;
@@ -217,6 +220,7 @@ type
     procedure SetBtnCount(Value: TSizeCtrlBtnCount);
     procedure setBtnSize(Value: integer);
     procedure setBtnAlphaBlend(Value: integer);
+    procedure setMovePanelAlphaBlend(Value: integer);
     procedure setBtnImage(Value: TPicture);
     procedure setDisabledBtnImage(Value: TPicture);
     procedure SetEnabledBtnColor(aColor: TColor);
@@ -252,6 +256,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    function FixSize(input, wh: integer): integer;
     function KeysToShiftState(Keys: Word): TShiftState;
     function KeyDataToShiftState(KeyData: Longint): TShiftState;
     property LastBtn: TBtnPos read fLastBtn;
@@ -298,9 +303,8 @@ type
     //MinWidth: minimal target (resizing) width
     //MinHeight: minimal target (resizing) height
     //MaxWidth: maximal target (resizing) width
-    //MinHeight: maximal target (resizing) height
+    //MaxHeight: maximal target (resizing) height
     property Constraints: TSizeConstraints read FConstraints write FConstraints;
-
     //MoveOnly: ie prevents resizing
     property MoveOnly: boolean read fMoveOnly write SetMoveOnly;
     //BtnCount: Count of the grab buttons
@@ -334,6 +338,8 @@ type
     property MultiTargetResize: boolean read fMultiResize write SetMultiResize;
     //The TMovePanel canvases (applicable to all descedants)
     property movePanelCanvas: TCanvas read fCanv;
+    //The TMovePanel alphachannel (applicable to all descedants)
+    property MovePanelAlphaBlend: Integer read fMovePanelAlpha write setMovePanelAlphaBlend;
     //Apply sizes when moving
     property ApplySizes: boolean read fApplySizes write fApplySizes default false;
     //Show selection frame
@@ -504,7 +510,7 @@ begin
 
   //The following is needed to block OnClick events when TSizeCtrl is enabled.
   //(If compiling with Delphi 3, you'll need to block OnClick events manually.)
-  {$IFDEF VER3UP}
+  {$IFDEF VER3D}
   if IsPublishedProp(fControl, 'OnClick') then
   begin
     meth := GetMethodProp(fControl, 'OnClick');
@@ -533,7 +539,7 @@ begin
 
   fControl.WindowProc := fOldWindowProc;
 
-  {$IFDEF VER3UP}
+  {$IFDEF VER3D}
   try
     if IsPublishedProp(fControl, 'OnClick') then
     begin
@@ -1052,8 +1058,8 @@ begin
     fFocusRect.Bottom := fFocusRect.Top + h;
   end;
   with fFocusRect do
-    AlignToGrid(fTarget, Rect(Left, top, max(fSizeCtrl.Constraints.MinWidth, right - left),
-      max(fSizeCtrl.Constraints.MinHeight, bottom - top)), fSizeCtrl.fGridSize);
+    AlignToGrid(fTarget, Rect(Left, top, fSizeCtrl.FixSize(right - left,0),
+      fSizeCtrl.FixSize(bottom - top,1)), fSizeCtrl.fGridSize);
   Update;
   fTarget.Invalidate;
 end;
@@ -1095,8 +1101,8 @@ begin
   r.BottomRight := fFocusRect.BottomRight;
   if fSizeCtrl.ApplySizes then
   begin
-    obj.Width := max(fSizeCtrl.Constraints.MinWidth, fFocusRect.Right - fFocusRect.Left);
-    obj.Height := max(fSizeCtrl.Constraints.MinHeight, fFocusRect.Bottom - fFocusRect.Top);
+    obj.Width := fSizeCtrl.FixSize(fFocusRect.Right - fFocusRect.Left,0);
+    obj.Height := fSizeCtrl.FixSize(fFocusRect.Bottom - fFocusRect.Top,0);
     obj.Left := fFocusRect.Left;
     obj.Top := fFocusRect.Top;
   end;
@@ -1143,6 +1149,7 @@ begin
   fLastBtn := bpBottomLeft;
   fGridSize := 8;
   fBtnAlpha := 255;
+  fMovePanelAlpha := 255;
   fBtnSize := 5;
   FSelKey := VK_SHIFT;
   FDGKey := VK_MENU;
@@ -1165,7 +1172,7 @@ begin
   fBtnImage := TPicture.Create;
   fDisabledBtnImage := TPicture.Create;
   fMultiResize := True;
-  FConstraints := TSizeConstraints.Create;
+  FConstraints := TSizeConstraints.Create(TControl(Self));
   fValidBtns := [bpLeft, bpTopLeft, bpTop, bpTopRight, bpRight,
     bpBottomRight, bpBottom, bpBottomLeft];
   fHandle := AllocateHWnd(WinProc);
@@ -1192,6 +1199,18 @@ begin
     fTargetList.Free;
     fRegList.Free;
   end;
+  if Assigned(fCanv) then
+    fCanv.Free;
+
+  if Assigned(FConstraints) then
+    FConstraints.Free;
+
+  if Assigned(fBtnImage) then
+    fBtnImage.Free;
+
+  if Assigned(fDisabledBtnImage) then
+    fDisabledBtnImage.Free;
+
   if Assigned(fGrid) then
     fGrid.Free;
 
@@ -1218,6 +1237,25 @@ begin
       fGridForm.SendToBack;
       fGridForm.Visible := True;
 end;
+
+//------------------------------------------------------------------------------
+
+function TSizeCtrl.FixSize(input, wh: integer): integer;
+begin
+      if wh = 0 then
+      begin
+        Result := max(Constraints.MinWidth, input);
+        if Constraints.MaxWidth > 0 then
+          Result := min(Result, Constraints.MaxWidth);
+      end
+      else
+      begin
+        Result := max(Constraints.MinHeight, input);
+        if Constraints.MaxHeight > 0 then
+          Result := min(Result, Constraints.MaxHeight);
+      end;
+end;
+
 
 //------------------------------------------------------------------------------
 
@@ -1857,7 +1895,7 @@ begin
 
       with fTarget do
         SetBounds(Left, Top,
-          max(Constraints.MinWidth, Width + dx) - q, max(Constraints.MinHeight, Height + dy) - r);
+          FixSize(Width + dx,0) - q, FixSize(Height + dy,1) - r);
       Update;
     end;
 end;
@@ -2351,6 +2389,14 @@ end;
 
 //------------------------------------------------------------------------------
 
+procedure TSizeCtrl.setMovePanelAlphaBlend(Value: integer);
+begin
+  if (fMovePanelAlpha <> Value) and (0 <= Value) and (Value <= 255) then
+    fMovePanelAlpha := Value;
+end;
+
+//------------------------------------------------------------------------------
+
 procedure TSizeCtrl.SetBtnImage(Value: TPicture);
 begin
   if  Value = fBtnImage then
@@ -2618,7 +2664,7 @@ end;
 
 { TMovePanel }
 
-constructor TMovePanel.Create(AOwner: TComponent);
+constructor TMovePanel.Create(AOwner: TComponent;AsizeCtrl:TSizeCtrl);
 begin
   inherited CreateNew(nil);
   Loaded;
@@ -2630,6 +2676,7 @@ begin
   Visible := False;
   Parent := TWinControl(AOwner);
   TransparentColor := true;
+  fSizeCtrl := AsizeCtrl;
   OnPaint := DoPaint;
   OnResize := SetBoundsRect;
 end;
@@ -2651,6 +2698,7 @@ end;
 
 procedure TMovePanel.DoPaint(Sender: TObject);
 begin
+  setfcanvas(fSizeCtrl.movePanelCanvas);
   if Canvas.Brush.Style = bsClear then
   begin
     TransparentColor := True;
@@ -2660,6 +2708,8 @@ begin
   begin
     TransparentColor := False;
   end;
+  AlphaBlend := fSizeCtrl.MovePanelAlphaBlend < 255;
+  AlphaBlendValue := fSizeCtrl.MovePanelAlphaBlend;
   Canvas.Rectangle(0, 0, Width, Height);
 end;
 

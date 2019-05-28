@@ -32,11 +32,11 @@ uses
   Dialogs,
   Menus,   //To hook the TSizeCtrl.PopupMenu
   ComCtrls, //To check the TTabSheet, TPageControl
- {$IFDEF VER3UP} TypInfo, {$ENDIF} //To hook the OnClick event
+ {$IFDEF VER3D} TypInfo, {$ENDIF} //To hook the OnClick event
   Forms, Math;
   (* [TSizeBtn reqs]
     To make transparent and topmost at the same time...
-    Another way is to use TPictureControl, but, it doesn't gives ability
+    Another way is to use TGraphicControl, but, it doesn't gives ability
     to use the Alpha-Blending :)
   *)
 
@@ -156,7 +156,7 @@ type
     fRegList: TList;    //list of TRegisteredObj (possible targets)
     fState: TSCState;
     fMoveOnly: boolean;
-    _mW, _mH, fBtnAlpha, fBtnSize: integer;
+    fBtnAlpha, fBtnSize: integer;
     fClipRec: TRect;
     fStartPt: TPoint;
     fEnabledBtnColor: TColor;
@@ -299,7 +299,7 @@ type
     //MinWidth: minimal target (resizing) width
     //MinHeight: minimal target (resizing) height
     //MaxWidth: maximal target (resizing) width
-    //MinHeight: maximal target (resizing) height
+    //MaxHeight: maximal target (resizing) height
     property Constraints: TSizeConstraints read FConstraints write FConstraints;
     //MoveOnly: ie prevents resizing
     property MoveOnly: boolean read fMoveOnly write SetMoveOnly;
@@ -504,7 +504,7 @@ begin
 
   //The following is needed to block OnClick events when TSizeCtrl is enabled.
   //(If compiling with Delphi 3, you'll need to block OnClick events manually.)
-  {$IFDEF VER3UP}
+  {$IFDEF VER3D}
   if IsPublishedProp(fControl, 'OnClick') then
   begin
     meth := GetMethodProp(fControl, 'OnClick');
@@ -533,7 +533,7 @@ begin
 
   fControl.WindowProc := fOldWindowProc;
 
-  {$IFDEF VER3UP}
+  {$IFDEF VER3D}
   try
     if IsPublishedProp(fControl, 'OnClick') then
     begin
@@ -1192,6 +1192,18 @@ begin
     fTargetList.Free;
     fRegList.Free;
   end;
+  if Assigned(fCanv) then
+    fCanv.Free;
+
+  if Assigned(FConstraints) then
+    FConstraints.Free;
+
+  if Assigned(fBtnImage) then
+    fBtnImage.Free;
+
+  if Assigned(fDisabledBtnImage) then
+    fDisabledBtnImage.Free;
+
   if Assigned(fGrid) then
     fGrid.Free;
 

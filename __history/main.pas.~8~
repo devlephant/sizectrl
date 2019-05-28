@@ -162,7 +162,6 @@ type
     procedure Label26MouseLeave(Sender: TObject);
     procedure SpinEdit6Change(Sender: TObject);
     procedure SpinEdit7Change(Sender: TObject);
-    procedure Panel3Resize(Sender: TObject);
   private
     SizeCtrl: TSizeCtrl;
     procedure SizeCtrlDuring(Sender: TObject; dx, dy: integer; State: TSCState);
@@ -639,22 +638,6 @@ begin
     else
        Panel3.Caption := pCollapsed;
     SizeCtrl.Update;
-end;
-
-procedure TForm1.Panel3Resize(Sender: TObject);
-var c: TControlCanvas;
-begin
-    c := TControlCanvas.Create;
-    c.Control := Panel3;
-    if sets.Visible then
-    begin
-      Label26.Left := (Panel3.Width div 2) + (c.TextWidth(pExpanded) div 2) + 3;
-    end
-    else
-    begin
-      Label26.Left := (Panel3.Width div 2) + (c.TextWidth(pCollapsed) div 2) + 3;
-    end;
-    FreeAndNil(c);
 end;
 
 procedure TForm1.sizePopsPopup(Sender: TObject);
