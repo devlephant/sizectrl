@@ -1832,6 +1832,7 @@ end;
 function TSizeCtrl.AddTarget(Control: TControl): integer;
 var
   TargetObj: TTargetObj;
+  r: TRect;
 begin
 
   Result := -1;
@@ -1846,12 +1847,12 @@ begin
   Result := fTargetList.Count;
   TargetObj := TTargetObj.Create(self, Control);
   fTargetList.Add(TargetObj);
-
-  UpdateBtnCursors;
-  TargetObj.Update;
-  //TargetObj.Show;
   RegisterControl(Control);
   fParentForm.ActiveControl := nil;
+  UpdateBtnCursors;
+  TargetObj.Update;
+  TargetObj.Update; //b.f: TCustomForm cannot be placed right after show
+                    //Delphi VCL bug?
   if assigned(fTargetChangeEvent) then
     fTargetChangeEvent(self);
 
