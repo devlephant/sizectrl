@@ -131,6 +131,11 @@ type
     Panel31: TPanel;
     Label34: TLabel;
     BitBtn13: TBitBtn;
+    Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
+    Label35: TLabel;
+    Label36: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -253,6 +258,7 @@ begin
   SizeCtrl := TSizeCtrl.Create(Panel1);
   SizeCtrl.HoverBtnColor := clYellow;
   SizeCtrl.HoverBtnFrameColor := clNavy;
+  SizeCtrl.SelectionKey := VK_CONTROL;
   SizeCtrl.movePanelCanvas.Brush.Style := bsClear;
   SizeCtrl.OnTargetChange := SizeCtrlTargetChange;
   SizeCtrl.OnDuringSizeMove := SizeCtrlDuring;

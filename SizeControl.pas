@@ -31,7 +31,7 @@ uses
   Controls, Graphics,
   Menus,   //To hook the TSizeCtrl.PopupMenu
   ComCtrls, //To check the TTabSheet, TPageControl
- {$IFDEF VER3D} TypInfo, {$ENDIF} //To hook the OnClick event
+ {$IFDEF VER3U} TypInfo, {$ENDIF} //To hook the OnClick event
   Forms, Math;
   (* [TSizeBtn reqs]
     To make transparent and topmost at the same time...
@@ -113,6 +113,7 @@ type
   //TRegisteredObj is used internally by TSizeCtrl. Each TRegisteredObj
   //contains info about a possible target control.
   TRegisteredObj = class
+  protected
     fSizeCtrl: TSizeCtrl; //the owner of TRegisteredObj
     fControl: TControl;
     fHooked: boolean;
@@ -156,31 +157,47 @@ type
   TSizeCtrlTags = record
   private
     var
-    FMove, fNMove, fnTop, fnLeft, fNChange,
-    fnWidth, fnHeight, fResize, fNResize,
-    fnTopLeft, fnTopHeight, fnTopWidth,
-    fnLeftHeight, fnLeftWidth, fnHeightWidth,
-    fnTLWH, fnTLW, fnTLH,
-    fMResize, fNMResize: integer;
+    fMove, fNMove,   //Move  --/ /-- fTopLeft
+    fmMove, fnmMove,   //Multi-Move
+    fResize, fnResize,  //Resize  --/ /-- fHeightWidth
+    fMResize, fNMResize,  //Multi-Resize
+     fChange, fnChange,    //Any change
+     fMChange, fnMChange,   //Any change in selected group
+      { x; y; w; h; }
+    fLeft, fTop, fWidth, fHeight,
+      { x, h; x, w; }
+    fLeftHeight, fLeftWidth,
+      { y, h; y, w; }
+    fTopHeight, fTopWidth,
+      { x, y, w, h; x, y, w; x, y, h; }
+    fTLWH, fTLW, fTLH: integer;
   public
+    //ChangeTopLeft: integer read fnTopLeft write fnTopLeft;
     property AllowMove: integer read fMove write fMove;
     property DenyMove: integer read fNMove write fNMove;
+    property AllowMultiMove: integer read fMMove write fMMove;
+    property DenyMultiMove: integer read fNMMove write fNMMove;
 
+    property AllowChange: integer read fChange write fChange;
     property DenyChange: integer read fNChange write fNChange;
+    property AllowMultiChange: integer read fmChange write fmChange;
+    property DenyMultiChange: integer read fnMChange write fnMChange;
 
-    property ChangeTop: integer read fnTop write fnTop;
-    property ChangeLeft: integer read fnLeft write fnLeft;
-    property ChangeWidth: integer read fnWidth write fnWidth;
-    property ChangeHeight: integer read fnHeight write fnHeight;
-    property ChangeTopLeft: integer read fnTopLeft write fnTopLeft;
-    property ChangeTopHeight: integer read fnTopHeight write fnTopHeight;
-    property ChangeTopWidth: integer read fnTopWidth write fnTopWidth;
-    property ChangeLeftHeight: integer read fnLeftHeight write fnLeftHeight;
-    property ChangeLeftWidth: integer read fnLeftWidth write fnLeftWidth;
-    property ChangeHeightWidth: integer read fnHeightWidth write fnHeightWidth;
-    property ChangeTopLeftWidth: integer read fnTLW write fnTLW;
-    property ChangeTopLeftHeight: integer read fnTLH write fnTLH;
-    property ChangeTopLeftWidthHeight: integer read fnTLWH write fnTLWH;
+    property ChangeTop: integer read fTop write fTop;
+    property ChangeLeft: integer read fLeft write fLeft;
+    property ChangeWidth: integer read fWidth write fWidth;
+    property ChangeHeight: integer read fHeight write fHeight;
+
+    property ChangeTopHeight: integer read fTopHeight write fTopHeight;
+    property ChangeTopWidth: integer read fTopWidth write fTopWidth;
+    property ChangeLeftHeight: integer read fLeftHeight write fLeftHeight;
+    property ChangeLeftWidth: integer read fLeftWidth write fLeftWidth;
+
+    property ChangeTopLeftWidth: integer read fTLW write fTLW;
+    property ChangeTopLeftHeight: integer read fTLH write fTLH;
+    property ChangeTopLeftWidthHeight: integer read fTLWH write fTLWH;
+
+    // ChangeHeightWidth: integer read fnHeightWidth write fnHeightWidth;
     property AllowResize:  integer read fResize write fResize;
     property DenyResize: integer read fNResize write fNResize;
 
@@ -238,10 +255,11 @@ type
     FShowGrid: boolean;
     fCanv: TCanvas;
     fMovePanelAlpha: integer;
+    fPanelImage: TPicture;
     fBtnImage: TPicture;
     fHoverBtnImage: TPicture;
     fDisabledBtnImage: TPicture;
-    fStretchBtnImage: boolean;
+    fStretchBtnImage, fStretchPanelImage: boolean;
     function GetTargets(index: integer): TControl;
     function GetTargetCount: integer;
 
@@ -263,6 +281,7 @@ type
     procedure setBtnSize(Value: integer);
     procedure setBtnAlphaBlend(Value: integer);
     procedure setMovePanelAlphaBlend(Value: integer);
+    procedure setPanelImage(Value: TPicture);
     procedure setBtnImage(Value: TPicture);
     procedure setHoverBtnImage(Value: TPicture);
     procedure setDisabledBtnImage(Value: TPicture);
@@ -394,7 +413,9 @@ type
     //as long as this isn't impeded by specific Target control alignments
     property MultiTargetResize: boolean read fMultiResize write SetMultiResize;
     //The TMovePanel canvases (applicable to all descedants)
-    property movePanelCanvas: TCanvas read fCanv;
+    property MovePanelCanvas: TCanvas read fCanv;
+    property MovePanelImage: TPicture read fPanelImage write setPanelImage;
+    property StretchMovePanelImage: boolean read fStretchPanelImage write fStretchPanelImage;
     //The TMovePanel alphachannel (applicable to all descedants)
     property MovePanelAlphaBlend: Integer read fMovePanelAlpha write setMovePanelAlphaBlend;
     //Apply sizes when moving
@@ -520,7 +541,7 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-
+{
 function inSizeTag(key: integer;arr: array of integer): boolean;
 var i: integer;
 begin
@@ -533,7 +554,57 @@ begin
     end;
 end;
  //P.s Delphi compiler is kind of a shit
+}
 //-----------------------------------------------------------------------
+
+function checkTag(tag: integer; _pi: TBtnPos; ts: TSizeCtrlTags;tCount:integer):boolean;
+begin
+If Tag = 0 then
+  Result := False
+Else
+Result :=
+    (Tag = ts.DenyChange)
+    or
+    (Tag = ts.DenyResize)
+    or
+    ((Tag = ts.DenyMultiResize) and (tCount > 1))
+    or
+    ((Tag = ts.DenyMultiChange) and (tCount > 1))
+    or
+    ((Tag = ts.ChangeTop) and (_pi <> bpTop))
+    or
+    ((Tag = ts.ChangeLeft) and (_pi <> bpLeft))
+    or
+    ((Tag = ts.ChangeHeight) and (_pi <> bpBottom))
+    or
+    ((Tag = ts.ChangeWidth) and (_pi <> bpRight))
+    or
+    ((Tag = ts.ChangeTopHeight) and
+      (_pi <> bpTop) and (_pi <> bpBottom))
+    or
+    ((Tag = ts.ChangeTopWidth) and
+      (_pi <> bpTop) and (_pi <> bpRight))
+    or
+    ((Tag = ts.ChangeLeftHeight) and
+      (_pi <> bpLeft) and (_pi <> bpBottom))
+    or
+    ((Tag = ts.ChangeLeftWidth) and
+      (_pi <> bpLeft) and (_pi <> bpRight))
+    or
+    ((Tag = ts.ChangeTopLeftWidth) and
+      (_pi <> bpTop) and (_pi <> bpLeft) and (_pi<>bpRight))
+    or
+    ((Tag = ts.ChangeTopLeftHeight) and
+      (_pi <> bpTop) and (_pi <> bpLeft) and (_pi<>bpBottom))
+    or
+    ((Tag = ts.ChangeTopLeftWidthHeight) and
+       (_pi <> bpTop) and (_pi <> bpLeft)
+       and
+       (_pi <> bpBottom) and (_pi <> bpRight));
+
+end;
+
+//------------------------------------------------------------------------------
 
 procedure AlignToGrid(Ctrl: TControl; ProposedBoundsRect: TRect; GridSize: integer);
 begin
@@ -583,7 +654,7 @@ begin
 
   //The following is needed to block OnClick events when TSizeCtrl is enabled.
   //(If compiling with Delphi 3, you'll need to block OnClick events manually.)
-  {$IFDEF VER3D}
+  {$IFDEF VER3U}
   if IsPublishedProp(fControl, 'OnClick') then
   begin
     meth := GetMethodProp(fControl, 'OnClick');
@@ -612,7 +683,7 @@ begin
 
   fControl.WindowProc := fOldWindowProc;
 
-  {$IFDEF VER3D}
+  {$IFDEF VER3U}
   try
     if IsPublishedProp(fControl, 'OnClick') then
     begin
@@ -699,8 +770,9 @@ procedure TSizeBtn.UpdateBtnCursorAndColor;
 begin
   if not (fPos in fTargetObj.fSizeCtrl.fValidBtns) or
     fTargetObj.fSizeCtrl.fMoveOnly or
-     inSizeTag(fTargetObj.fTarget.Tag,
-     [fTargetObj.fSizeCtrl.TagOptions.DenyChange, fTargetObj.fSizeCtrl.TagOptions.DenyResize]) then
+    checkTag(fTargetObj.fTarget.Tag, fPos, fTargetObj.fSizeCtrl.TagOptions,
+    fTargetObj.fSizeCtrl.TargetCount)
+     then
   begin
     Cursor := crDefault;
     fColor := fTargetObj.fSizeCtrl.DisabledBtnColor;
@@ -850,8 +922,13 @@ end;
 
 procedure TSizeBtn.PaintAs(l,t:integer);
 begin
-  if Assigned(fImage.Graphic) and (not fImage.Graphic.Empty) then
-    Canvas.Draw(l,t,fImage.Graphic)
+  if Assigned(fImage.Graphic) and not(fImage.Graphic.Empty) then
+  begin
+    if fTargetObj.fSizeCtrl.StretchBtnImage then
+      Canvas.StretchDraw(Rect(l,t, width, height), fImage.Graphic)
+    else
+      Canvas.Draw(l,t, fImage.Graphic);
+  end
   else
   case fTargetObj.fSizeCtrl.BtnShape of
      tszbSquare:
@@ -1307,10 +1384,12 @@ begin
   fBtnFrameColor := clBlue;
   fHoverBtnFrameColor := clBlue;
   fDisabledBtnFrameColor := clNone;
+  fPanelImage := TPicture.Create;
   fBtnImage := TPicture.Create;
   fHoverBtnImage := TPicture.Create;
   fDisabledBtnImage := TPicture.Create;
   fStretchBtnImage := True;
+  fStretchPanelImage := True;
   fMultiResize := True;
   FConstraints := TSizeConstraints.Create(TControl(Self));
   fValidBtns := [bpLeft, bpTopLeft, bpTop, bpTopRight, bpRight,
@@ -1338,24 +1417,14 @@ begin
     UnRegisterAll;
     fTargetList.Free;
     fRegList.Free;
-  end;
-  if Assigned(fCanv) then
-    fCanv.Free;
-
-  if Assigned(FConstraints) then
     FConstraints.Free;
-
-  if Assigned(fBtnImage) then
+    fCanv.Free;
+    fPanelImage.Free;
     fBtnImage.Free;
-
-  if Assigned(fHoverBtnImage) then
     fHoverBtnImage.Free;
-
-  if Assigned(fDisabledBtnImage) then
     fDisabledBtnImage.Free;
-
-  if Assigned(fGrid) then
     fGrid.Free;
+  end;
 
   if Assigned(fGridForm) then
     fGridForm := nil;
@@ -2560,6 +2629,15 @@ end;
 
 //------------------------------------------------------------------------------
 
+procedure TSizeCtrl.setPanelImage(Value: TPicture);
+begin
+  if  Value = fPanelImage then
+  Exit;
+  fPanelImage.Assign( Value );
+end;
+
+//------------------------------------------------------------------------------
+
 procedure TSizeCtrl.SetBtnImage(Value: TPicture);
 begin
   if  Value = fBtnImage then
@@ -2895,7 +2973,17 @@ begin
   end;
   AlphaBlend := fSizeCtrl.MovePanelAlphaBlend < 255;
   AlphaBlendValue := fSizeCtrl.MovePanelAlphaBlend;
-  Canvas.Rectangle(0, 0, Width, Height);
+
+  If Assigned(fSizeCtrl.MovePanelImage.Graphic)
+  and not(fSizeCtrl.MovePanelImage.Graphic.Empty) then
+  begin
+     if fSizeCtrl.StretchMovePanelImage then
+      Canvas.StretchDraw(Rect(0,0,Width,Height), fSizeCtrl.MovePanelImage.Graphic)
+     Else
+      Canvas.Draw(0,0,fSizeCtrl.MovePanelImage.Graphic);
+  End
+  Else
+    Canvas.Rectangle(0, 0, Width, Height);
 end;
 
 
