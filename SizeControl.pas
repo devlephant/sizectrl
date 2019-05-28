@@ -300,6 +300,7 @@ type
     //Used for getting targets count
     //</summary>
     property TargetCount: integer read GetTargetCount;
+    property Parent:TWinControl read FForm;
     //MinWidth: minimal target (resizing) width
     //MinHeight: minimal target (resizing) height
     //MaxWidth: maximal target (resizing) width
@@ -1104,6 +1105,12 @@ begin
     obj.Height := fSizeCtrl.FixSize(fFocusRect.Bottom - fFocusRect.Top,0);
     obj.Left := fFocusRect.Left;
     obj.Top := fFocusRect.Top;
+     if fSizeCtrl.Parent.DoubleBuffered then
+    begin
+         fSizeCtrl.Parent.Update;
+         obj.Repaint;
+         panel.Repaint;
+    end;
   end;
   //fix for poly-parenthed controls
   while obj.Parent <> fSizeCtrl.fParentForm  do

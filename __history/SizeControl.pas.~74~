@@ -101,7 +101,8 @@ type
     procedure SetBoundsRect(Sender: TObject);
     procedure DoPaint(Sender: TObject);
   public
-    constructor Create(AOwner: TComponent;AsizeCtrl:TSizeCtrl); override;
+    constructor Create(AOwner: TComponent;AsizeCtrl:TSizeCtrl);
+    {$IFNDEF VER3U} reintroduce; {$ENDIF}
     property RectCanvas: TCanvas write setfCanvas;
   end;
 
@@ -1085,8 +1086,7 @@ begin
     panel := TMovePanel(fPanels[k])
   else
   begin
-    panel := TMovePanel.Create(pr);
-    panel.RectCanvas := fSizeCtrl.movePanelCanvas;
+    panel := TMovePanel.Create(pr, fSizeCtrl);
     fPanelsNames.Add(IntToStr(integer(obj)));
     fPanels.Add(panel);
   end;
@@ -1104,6 +1104,11 @@ begin
     obj.Height := fSizeCtrl.FixSize(fFocusRect.Bottom - fFocusRect.Top,0);
     obj.Left := fFocusRect.Left;
     obj.Top := fFocusRect.Top;
+     if TWinControl(fSizeCtrl.Owner).DoubleBuffered then
+    begin
+         TWinControl(fSizeCtrl.Owner).Update;
+         obj.Repaint;
+    end;
   end;
   //fix for poly-parenthed controls
   while obj.Parent <> fSizeCtrl.fParentForm  do
@@ -2674,7 +2679,6 @@ begin
   FormStyle := fsStayOnTop;
   Visible := False;
   Parent := TWinControl(AOwner);
-  TransparentColor := true;
   fSizeCtrl := AsizeCtrl;
   OnPaint := DoPaint;
   OnResize := SetBoundsRect;
@@ -2686,7 +2690,10 @@ procedure TMovePanel.setfcanvas(fCanvas: TCanvas);
 begin
   Canvas.Pen.Assign(fCanvas.Pen);
   Canvas.Brush.Assign(fCanvas.Brush);
+  Color := fCanvas.Brush.Color;
 end;
+
+//------------------------------------------------------------------------------
 
 procedure TMovePanel.SetBoundsRect;
 begin

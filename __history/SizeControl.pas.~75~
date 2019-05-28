@@ -95,12 +95,14 @@ type
 
   TMovePanel = class(TCustomForm)
   private
+    fSizeCtrl: TSizeCtrl;
     procedure setfcanvas(fCanvas: TCanvas);
   protected
     procedure SetBoundsRect(Sender: TObject);
     procedure DoPaint(Sender: TObject);
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(AOwner: TComponent;AsizeCtrl:TSizeCtrl);
+    {$IFNDEF VER3U} reintroduce; {$ENDIF}
     property RectCanvas: TCanvas write setfCanvas;
   end;
 
@@ -195,6 +197,7 @@ type
     fOnKeyDown: TKeyEvent;
     FShowGrid: boolean;
     fCanv: TCanvas;
+    fMovePanelAlpha: integer;
     fBtnImage: TPicture;
     fDisabledBtnImage: TPicture;
     function GetTargets(index: integer): TControl;
@@ -217,6 +220,7 @@ type
     procedure SetBtnCount(Value: TSizeCtrlBtnCount);
     procedure setBtnSize(Value: integer);
     procedure setBtnAlphaBlend(Value: integer);
+    procedure setMovePanelAlphaBlend(Value: integer);
     procedure setBtnImage(Value: TPicture);
     procedure setDisabledBtnImage(Value: TPicture);
     procedure SetEnabledBtnColor(aColor: TColor);
@@ -334,6 +338,8 @@ type
     property MultiTargetResize: boolean read fMultiResize write SetMultiResize;
     //The TMovePanel canvases (applicable to all descedants)
     property movePanelCanvas: TCanvas read fCanv;
+    //The TMovePanel alphachannel (applicable to all descedants)
+    property MovePanelAlphaBlend: Integer read fMovePanelAlpha write setMovePanelAlphaBlend;
     //Apply sizes when moving
     property ApplySizes: boolean read fApplySizes write fApplySizes default false;
     //Show selection frame
@@ -1080,8 +1086,7 @@ begin
     panel := TMovePanel(fPanels[k])
   else
   begin
-    panel := TMovePanel.Create(pr);
-    panel.RectCanvas := fSizeCtrl.movePanelCanvas;
+    panel := TMovePanel.Create(pr, fSizeCtrl);
     fPanelsNames.Add(IntToStr(integer(obj)));
     fPanels.Add(panel);
   end;
@@ -1099,6 +1104,11 @@ begin
     obj.Height := fSizeCtrl.FixSize(fFocusRect.Bottom - fFocusRect.Top,0);
     obj.Left := fFocusRect.Left;
     obj.Top := fFocusRect.Top;
+     if fSizeCtrl.fForm.DoubleBuffered then
+    begin
+         fSizeCtrl.fForm..Update;
+         obj.Repaint;
+    end;
   end;
   //fix for poly-parenthed controls
   while obj.Parent <> fSizeCtrl.fParentForm  do
@@ -1143,6 +1153,7 @@ begin
   fLastBtn := bpBottomLeft;
   fGridSize := 8;
   fBtnAlpha := 255;
+  fMovePanelAlpha := 255;
   fBtnSize := 5;
   FSelKey := VK_SHIFT;
   FDGKey := VK_MENU;
@@ -2382,6 +2393,14 @@ end;
 
 //------------------------------------------------------------------------------
 
+procedure TSizeCtrl.setMovePanelAlphaBlend(Value: integer);
+begin
+  if (fMovePanelAlpha <> Value) and (0 <= Value) and (Value <= 255) then
+    fMovePanelAlpha := Value;
+end;
+
+//------------------------------------------------------------------------------
+
 procedure TSizeCtrl.SetBtnImage(Value: TPicture);
 begin
   if  Value = fBtnImage then
@@ -2649,7 +2668,7 @@ end;
 
 { TMovePanel }
 
-constructor TMovePanel.Create(AOwner: TComponent);
+constructor TMovePanel.Create(AOwner: TComponent;AsizeCtrl:TSizeCtrl);
 begin
   inherited CreateNew(nil);
   Loaded;
@@ -2660,7 +2679,7 @@ begin
   FormStyle := fsStayOnTop;
   Visible := False;
   Parent := TWinControl(AOwner);
-  TransparentColor := true;
+  fSizeCtrl := AsizeCtrl;
   OnPaint := DoPaint;
   OnResize := SetBoundsRect;
 end;
@@ -2671,7 +2690,10 @@ procedure TMovePanel.setfcanvas(fCanvas: TCanvas);
 begin
   Canvas.Pen.Assign(fCanvas.Pen);
   Canvas.Brush.Assign(fCanvas.Brush);
+  Color := fCanvas.Brush.Color;
 end;
+
+//------------------------------------------------------------------------------
 
 procedure TMovePanel.SetBoundsRect;
 begin
@@ -2682,6 +2704,7 @@ end;
 
 procedure TMovePanel.DoPaint(Sender: TObject);
 begin
+  setfcanvas(fSizeCtrl.movePanelCanvas);
   if Canvas.Brush.Style = bsClear then
   begin
     TransparentColor := True;
@@ -2691,6 +2714,8 @@ begin
   begin
     TransparentColor := False;
   end;
+  AlphaBlend := fSizeCtrl.MovePanelAlphaBlend < 255;
+  AlphaBlendValue := fSizeCtrl.MovePanelAlphaBlend;
   Canvas.Rectangle(0, 0, Width, Height);
 end;
 
