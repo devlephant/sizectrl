@@ -287,7 +287,7 @@ end;
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
   //it's important to disable SizeCtrl before destroying the form
-  //because any SizeCtrl registered controls need to be 'unhooked' ...
+  //because any SizeCtrl registered controls needs to be 'unhooked' ...
   SizeCtrl.Enabled := false;
 end;
 //------------------------------------------------------------------------------

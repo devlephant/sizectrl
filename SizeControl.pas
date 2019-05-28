@@ -28,6 +28,7 @@ interface
 {$IFDEF VER3U} {$IFNDEF VER100} {$DEFINE VER3UP} {$ENDIF} {$ENDIF}
 uses
   Windows, Messages, SysUtils, Classes,
+  Dialogs,
   Controls, Graphics,
   Menus,   //To hook the TSizeCtrl.PopupMenu
   ComCtrls, //To check the TTabSheet, TPageControl
@@ -1560,7 +1561,8 @@ end;
 //WindowProc for the 'hooked' form and all 'hooked' controls
 procedure TSizeCtrl.DoWindowProc(DefaultProc: TWndMethod; var Msg: TMessage);
 var
-  i: integer;
+  i, k: integer;
+  list: TList;
   ShiftState: TShiftState;
   controlPt, screenPt: TPoint;
   regCtrl: TControl;
@@ -1593,7 +1595,6 @@ var
 
 begin
   case Msg.Msg of
-
     WM_MOUSEFIRST .. WM_MOUSELAST:
     begin
       ShiftState := Self.KeysToShiftState(word(TWMMouse(Msg).Keys));
@@ -1758,7 +1759,26 @@ begin
     WM_CHAR: Msg.Result := 0;
 
     else
+    begin
+      //What is that? Do you ask me? You'd better ask Embarcadero,
+      //Because they do not supplied truely focus-lose event
+      if (GetForegroundWindow <> fParentForm.Handle)
+          and (fState <> scsReady) then
+      begin
+        fState := scsReady;
+        if TargetCount > 0 then
+        for i := 0 to TargetCount - 1 do
+          begin
+            TTargetObj(fTargetList[i]).EndFocus;
+            TTargetObj(fTargetList[i]).fPanelsNames.Clear;
+            list := TTargetObj(fTargetList[i]).fPanels;
+            for k := 0 to list.Count - 1 do
+              TObject(list[k]).Free();
+            list.Clear;
+          end;
+      end;
       DefaultProc(Msg);
+    end;
   end;
 end;
 
