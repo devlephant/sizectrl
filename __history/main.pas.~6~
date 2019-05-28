@@ -497,12 +497,12 @@ end;
 
 procedure TForm1.SpinEdit4Change(Sender: TObject);
 begin
-  SizeCtrl.Constraints.MinHeight := TSpinEdit(Sender).Value;;
+  SizeCtrl.MinHeight := TSpinEdit(Sender).Value;;
 end;
 
 procedure TForm1.SpinEdit5Change(Sender: TObject);
 begin
-  SizeCtrl.Constraints.MinWidth := TSpinEdit(Sender).Value;
+  SizeCtrl.MinWidth := TSpinEdit(Sender).Value;
 end;
 
 //------------------------------------------------------------------------------

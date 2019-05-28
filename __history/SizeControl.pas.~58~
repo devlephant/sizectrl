@@ -156,7 +156,7 @@ type
     fRegList: TList;    //list of TRegisteredObj (possible targets)
     fState: TSCState;
     fMoveOnly: boolean;
-    fBtnAlpha, fBtnSize: integer;
+    _mW, _mH, fBtnAlpha, fBtnSize: integer;
     fClipRec: TRect;
     fStartPt: TPoint;
     fEnabledBtnColor: TColor;
@@ -299,7 +299,7 @@ type
     //MinWidth: minimal target (resizing) width
     //MinHeight: minimal target (resizing) height
     //MaxWidth: maximal target (resizing) width
-    //MaxHeight: maximal target (resizing) height
+    //MinHeight: maximal target (resizing) height
     property Constraints: TSizeConstraints read FConstraints write FConstraints;
     //MoveOnly: ie prevents resizing
     property MoveOnly: boolean read fMoveOnly write SetMoveOnly;
@@ -1192,18 +1192,6 @@ begin
     fTargetList.Free;
     fRegList.Free;
   end;
-  if Assigned(fCanv) then
-    fCanv.Free;
-
-  if Assigned(FConstraints) then
-    FConstraints.Free;
-
-  if Assigned(fBtnImage) then
-    fBtnImage.Free;
-
-  if Assigned(fDisabledBtnImage) then
-    fDisabledBtnImage.Free;
-
   if Assigned(fGrid) then
     fGrid.Free;
 

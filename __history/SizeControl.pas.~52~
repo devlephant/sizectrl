@@ -236,6 +236,8 @@ type
     lastW: integer;
     lastH: integer; // последняя ширина и высота формы
     lastColor: TColor; // последний цвет формы
+    FConstraints: TSizeConstraints;
+    procedure CreateGrid;
     procedure Hide;
     procedure Show;
     procedure UpdateGrid;
@@ -294,9 +296,11 @@ type
     //</summary>
     property TargetCount: integer read GetTargetCount;
     //MinWidth: minimal target (resizing) width
-    property MinWidth: integer read _mW write _mW default 0;
     //MinHeight: minimal target (resizing) height
-    property MinHeight: integer read _mH write _mH default 0;
+    //MaxWidth: maximal target (resizing) width
+    //MinHeight: maximal target (resizing) height
+    property Constraints: TSizeConstraints read FConstraints write FConstraints;
+
     //MoveOnly: ie prevents resizing
     property MoveOnly: boolean read fMoveOnly write SetMoveOnly;
     //BtnCount: Count of the grab buttons
@@ -1161,6 +1165,7 @@ begin
   fBtnImage := TPicture.Create;
   fDisabledBtnImage := TPicture.Create;
   fMultiResize := True;
+  FConstraints := TSizeConstraints.Create;
   fValidBtns := [bpLeft, bpTopLeft, bpTop, bpTopRight, bpRight,
     bpBottomRight, bpBottom, bpBottomLeft];
   fHandle := AllocateHWnd(WinProc);
@@ -1169,18 +1174,7 @@ begin
     TForm(fForm).OnPaint := Self.formPaint
   else
     begin
-      fGridForm := TForm.CreateNew(Self);
-      fGridForm.Parent := fForm;
-      fGridForm.Position := poDesigned;
-      fGridForm.BorderStyle := bsNone;
-      fGridForm.Color := ((fGridWhite + fGridBlack) div 5) + 17 + 28;
-      fGridForm.TransparentColorValue := fGridForm.Color;
-      fGridForm.TransparentColor := True;
-      fGridForm.Anchors := [akLeft, akTop, akRight, akBottom];
-      fGridForm.FormStyle := fsNormal;
-      fGridForm.OnPaint := Self.formPaint;
-      fGridForm.SendToBack;
-      fGridForm.Visible := True;
+      CreateGrid;
     end;
 {$IFDEF VER3D}
   screen.Cursors[crSize] := loadcursor(hInstance, 'NSEW');
@@ -1199,10 +1193,30 @@ begin
     fRegList.Free;
   end;
   if Assigned(fGrid) then
-    FreeAndNil( fGrid );
+    fGrid.Free;
+
   if Assigned(fGridForm) then
-    FreeAndNil( fGridForm );
+    fGridForm := nil;
+
   inherited Destroy;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TSizeCtrl.CreateGrid;
+begin
+      fGridForm := TForm.CreateNew(Self);
+      fGridForm.Parent := fForm;
+      fGridForm.Position := poDesigned;
+      fGridForm.BorderStyle := bsNone;
+      fGridForm.Color := ((fGridWhite + fGridBlack) div 5) + 17 + 28;
+      fGridForm.TransparentColorValue := fGridForm.Color;
+      fGridForm.TransparentColor := True;
+      fGridForm.Anchors := [akLeft, akTop, akRight, akBottom];
+      fGridForm.FormStyle := fsNormal;
+      fGridForm.OnPaint := Self.formPaint;
+      fGridForm.SendToBack;
+      fGridForm.Visible := True;
 end;
 
 //------------------------------------------------------------------------------
@@ -2256,8 +2270,13 @@ begin
   begin
      if TWinControl(Owner).Visible then
         TWinControl(Owner).Repaint;
-     if Assigned(fGridForm) then
-        fGridForm.Repaint;
+     if not (fForm is TCustomForm) then
+     begin
+       if Assigned(fGridForm) then
+          fGridForm.Repaint
+       else
+        CreateGrid;
+     end;
   end;
 
 end;

@@ -236,6 +236,8 @@ type
     lastW: integer;
     lastH: integer; // последняя ширина и высота формы
     lastColor: TColor; // последний цвет формы
+    FConstraints: TSizeConstraints;
+    procedure CreateGrid;
     procedure Hide;
     procedure Show;
     procedure UpdateGrid;
@@ -250,6 +252,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    function FixSize(input, wh: integer): integer;
     function KeysToShiftState(Keys: Word): TShiftState;
     function KeyDataToShiftState(KeyData: Longint): TShiftState;
     property LastBtn: TBtnPos read fLastBtn;
@@ -294,9 +297,10 @@ type
     //</summary>
     property TargetCount: integer read GetTargetCount;
     //MinWidth: minimal target (resizing) width
-    property MinWidth: integer read _mW write _mW default 0;
     //MinHeight: minimal target (resizing) height
-    property MinHeight: integer read _mH write _mH default 0;
+    //MaxWidth: maximal target (resizing) width
+    //MaxHeight: maximal target (resizing) height
+    property Constraints: TSizeConstraints read FConstraints write FConstraints;
     //MoveOnly: ie prevents resizing
     property MoveOnly: boolean read fMoveOnly write SetMoveOnly;
     //BtnCount: Count of the grab buttons
@@ -1048,8 +1052,8 @@ begin
     fFocusRect.Bottom := fFocusRect.Top + h;
   end;
   with fFocusRect do
-    AlignToGrid(fTarget, Rect(Left, top, max(fSizeCtrl.MinWidth, right - left),
-      max(fSizeCtrl.MinHeight, bottom - top)), fSizeCtrl.fGridSize);
+    AlignToGrid(fTarget, Rect(Left, top, fSizeCtrl.FixSize(right - left,0),
+      fSizeCtrl.FixSize(bottom - top,1)), fSizeCtrl.fGridSize);
   Update;
   fTarget.Invalidate;
 end;
@@ -1091,8 +1095,8 @@ begin
   r.BottomRight := fFocusRect.BottomRight;
   if fSizeCtrl.ApplySizes then
   begin
-    obj.Width := fFocusRect.Right - fFocusRect.Left;
-    obj.Height := fFocusRect.Bottom - fFocusRect.Top;
+    obj.Width := fSizeCtrl.FixSize(fFocusRect.Right - fFocusRect.Left,0);
+    obj.Height := fSizeCtrl.FixSize(fFocusRect.Bottom - fFocusRect.Top,0);
     obj.Left := fFocusRect.Left;
     obj.Top := fFocusRect.Top;
   end;
@@ -1161,6 +1165,7 @@ begin
   fBtnImage := TPicture.Create;
   fDisabledBtnImage := TPicture.Create;
   fMultiResize := True;
+  FConstraints := TSizeConstraints.Create(TControl(Self));
   fValidBtns := [bpLeft, bpTopLeft, bpTop, bpTopRight, bpRight,
     bpBottomRight, bpBottom, bpBottomLeft];
   fHandle := AllocateHWnd(WinProc);
@@ -1169,18 +1174,7 @@ begin
     TForm(fForm).OnPaint := Self.formPaint
   else
     begin
-      fGridForm := TForm.CreateNew(Self);
-      fGridForm.Parent := fForm;
-      fGridForm.Position := poDesigned;
-      fGridForm.BorderStyle := bsNone;
-      fGridForm.Color := ((fGridWhite + fGridBlack) div 5) + 17 + 28;
-      fGridForm.TransparentColorValue := fGridForm.Color;
-      fGridForm.TransparentColor := True;
-      fGridForm.Anchors := [akLeft, akTop, akRight, akBottom];
-      fGridForm.FormStyle := fsNormal;
-      fGridForm.OnPaint := Self.formPaint;
-      fGridForm.SendToBack;
-      fGridForm.Visible := True;
+      CreateGrid;
     end;
 {$IFDEF VER3D}
   screen.Cursors[crSize] := loadcursor(hInstance, 'NSEW');
@@ -1202,10 +1196,47 @@ begin
     fGrid.Free;
 
   if Assigned(fGridForm) then
-    fGridForm.Free;
+    fGridForm := nil;
 
   inherited Destroy;
 end;
+
+//------------------------------------------------------------------------------
+
+procedure TSizeCtrl.CreateGrid;
+begin
+      fGridForm := TForm.CreateNew(Self);
+      fGridForm.Parent := fForm;
+      fGridForm.Position := poDesigned;
+      fGridForm.BorderStyle := bsNone;
+      fGridForm.Color := ((fGridWhite + fGridBlack) div 5) + 17 + 28;
+      fGridForm.TransparentColorValue := fGridForm.Color;
+      fGridForm.TransparentColor := True;
+      fGridForm.Anchors := [akLeft, akTop, akRight, akBottom];
+      fGridForm.FormStyle := fsNormal;
+      fGridForm.OnPaint := Self.formPaint;
+      fGridForm.SendToBack;
+      fGridForm.Visible := True;
+end;
+
+//------------------------------------------------------------------------------
+
+function TSizeCtrl.FixSize(input, wh: integer): integer;
+begin
+      if wh = 0 then
+      begin
+        Result := max(Constraints.MinWidth, input);
+        if Constraints.MaxWidth > 0 then
+          Result := min(Result, Constraints.MaxWidth);
+      end
+      else
+      begin
+        Result := max(Constraints.MinHeight, input);
+        if Constraints.MaxHeight > 0 then
+          Result := min(Result, Constraints.MaxHeight);
+      end;
+end;
+
 
 //------------------------------------------------------------------------------
 
@@ -1845,7 +1876,7 @@ begin
 
       with fTarget do
         SetBounds(Left, Top,
-          max(MinWidth, Width + dx) - q, max(MinHeight, Height + dy) - r);
+          FixSize(Width + dx,0) - q, FixSize(Height + dy,1) - r);
       Update;
     end;
 end;
@@ -2258,8 +2289,13 @@ begin
   begin
      if TWinControl(Owner).Visible then
         TWinControl(Owner).Repaint;
-     if Assigned(fGridForm) then
-        fGridForm.Repaint;
+     if not (fForm is TCustomForm) then
+     begin
+       if Assigned(fGridForm) then
+          fGridForm.Repaint
+       else
+        CreateGrid;
+     end;
   end;
 
 end;
