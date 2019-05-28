@@ -6,10 +6,11 @@ Component Name:  TSizeCtrl
 Module:          SizeControl
 Description:     Enables both moving and resizing of controls at runtime.
 Version:         8.1
-Date:            19-MAY-2019
-Author:          Angus Johnson, angusj-AT-myrealbox-DOT-com
-                 Leu Zenin, kashaket@protonmail.com
-Copyright:       © 1997-2019 Angus Johnson
+Date:            28-MAY-2019
+Author:          Leu Zenin, kashaket@protonmail.com
+Copyright:      © 2019 Leu Zenin
+                {near 90% code is refactored}
+                © 1997-2007 Angus Johnson
  --------------------------------------------------------------------------- *)
 
 interface
