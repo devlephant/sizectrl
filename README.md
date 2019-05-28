@@ -38,3 +38,19 @@ TSizeCtrl is a non-visual VCL component, which allows you to resize, select and 
 <ul> Known modern bugs:<ul>
 <li> Bug with BtnSize, when the value can be easily divided by 2 </li>
 </ul> </ul>
+
+##### Nearly plans:
+<ul> New Features:<ul>
+<li> 1. Selection of disabled objects (cursrtom property)
+<li> 2. Align with lines (function, ef)
+<li> 3. Detect control polygon to draw shape to fit the form
+<li> 4. Add hotkey + arrow keys controlling to sizing/moving procedures
+  </ul></ul>
+<ul> Bug Fixes: <ul>
+<li>1. Fix bug with btn size, which can be easily divided on 2(rwo)
+  </ul></ul>
+<ul> Refactorings: <ul>
+<li>1. Flipping control, when its sizes is too small
+  (Changing position + resizing)</li>
+<li>2. Regenerate Frame topmost settings(Add FrameOnTop property, e.g make the TMovePanel parent the same as TSizeBtn parent, if needed)
+  </ul></ul>
