@@ -230,7 +230,7 @@ type
     fStartEvent: TStartEndEvent;
     fDuringEvent: TDuringEvent;
     fEndEvent: TStartEndEvent;
-    fTargetChangeEvent: TNotifyEvent;
+    fTargetChangeEvent, fOnBh, fOnBtnUh: TNotifyEvent;
     fOnMouseDown: TMouseDownEvent;
     fOnMouseEnter: TMouseDownEvent;
     fOnSetCursor: TSetCursorEvent;
@@ -412,6 +412,8 @@ type
     property OnEndSizeMove: TStartEndEvent read fEndEvent write fEndEvent;
     property OnTargetChange: TNotifyEvent read fTargetChangeEvent
       write fTargetChangeEvent;
+    property onButtonHover: TNotifyEvent read fOnBH write fOnBH;
+    property onButtonUnhover: TNotifyEvent read fOnBtnUh write fOnBtnUh;
     property OnKeyDown: TKeyEvent read fOnKeyDown write fOnKeyDown;
     property OnMouseDown: TMouseDownEvent read fOnMouseDown write fOnMouseDown;
     property OnMouseEnter: TMouseDownEvent read fOnMouseEnter write fOnMouseEnter;
@@ -786,6 +788,8 @@ procedure TSizeBtn.dMouseUp;
 begin
   fHover := False;
   fHoverDown := False;
+  if Assigned( fTargetObj.fSizeCtrl.onButtonUnhover) then
+    fTargetObj.fSizeCtrl.onButtonUnhover(Self as TObject);
   UpdateBtnCursorAndColor;
 end;
 
@@ -907,6 +911,10 @@ end;
 procedure TSizeBtn.mLeave(Sender:TObject);
 begin
   fHover := False;
+  if not fHoverDown then
+    if Assigned( fTargetObj.fSizeCtrl.onButtonUnhover) then
+      fTargetObj.fSizeCtrl.onButtonUnhover(Sender);
+
   UpdateBtnCursorAndColor;
 end;
 
