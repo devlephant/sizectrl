@@ -35,8 +35,8 @@ uses
   Menus,   //To hook the TSizeCtrl.PopupMenu
   ComCtrls, //To check the TTabSheet, TPageControl
  {$IFDEF VER3U} TypInfo, {$ENDIF} //To hook the OnClick event
- {$IFDEF VER3UP} System.UITypes, {$ENDIF}//TO expand the GetColor funct
-  Forms, Math;
+ {$IFDEF VER3UP} Math, System.UITypes, {$ENDIF}//TO expand the GetColor funct
+  Forms;
   (* [TSizeBtn reqs]
     To make transparent and topmost at the same time...
     Another way is to use TGraphicControl, but, it doesn't gives ability
@@ -45,7 +45,12 @@ uses
 
 function getAbsoluteX(cntrl: TControl; LastControl: TControl): integer;
 function getAbsoluteY(cntrl: TControl; LastControl: TControl): integer;
-
+{$IFNDEF VER3UP}
+function Floor(const X: Extended): Integer;
+function Ceil(const X: Extended): Integer;
+function min(const X, Y: Integer): Integer;
+function max(const X, Y: Integer): Integer;
+{$ENDIF}
 type
   TSizeCtrl = class;
   TTargetObj = class;
@@ -492,7 +497,34 @@ end;
 //------------------------------------------------------------------------------
 // Miscellaneous functions
 //------------------------------------------------------------------------------
-
+{$IFNDEF VER3UP}
+function Floor(const X: Extended): integer;
+begin
+  Result := Integer(Trunc(X));
+  if Frac(X) < 0 then
+    Dec(Result);
+end;
+function Ceil(const X: Extended): Integer;
+begin
+  Result := Integer(Trunc(X));
+  if Frac(X) > 0 then
+    Inc(Result);
+end;
+function Min(const X, Y: Integer): Integer;
+begin
+  if X < Y then
+    Result := X
+  else
+    Result := Y;
+end;
+function Max(const X, Y: Integer): Integer;
+begin
+  if X > Y then
+    Result := X
+  else
+    Result := Y;
+end;
+{$ENDIF}
 function getAbsoluteX(cntrl: TControl; LastControl: TControl): integer;
 begin
   Result := cntrl.Left;
@@ -764,6 +796,7 @@ begin
   FormStyle := fsStayOnTop;
   Width := fTargetObj.fSizeCtrl.BtnSize;
   Height := fTargetObj.fSizeCtrl.BtnSize;
+  {$IFDEF VER3UP}
   Color :=
   Floor(
   (fTargetObj.fSizeCtrl.BtnColor + fTargetObj.fSizeCtrl.DisabledBtnColor
@@ -771,6 +804,9 @@ begin
   /4) + 1;
   TransparentColorValue := Color;
   TransparentColor := true;
+  {$ELSE}
+  Color := fTargetObj.fSizeCtrl.fParentForm.Color;
+  {$ENDIF}
   FormStyle := fsStayOnTop;
   BorderIcons := [];
   BorderStyle := bsNone;
@@ -984,8 +1020,10 @@ end;
 
 procedure TSizeBtn.DoPaint(Sender:TObject);
 begin
+  {$IFDEF VER3UP}
   AlphaBlend := fTargetObj.fSizeCtrl.BtnAlphaBlend <> 255;
   AlphaBlendValue := fTargetObj.fSizeCtrl.BtnAlphaBlend;
+  {$ENDIF}
   Canvas.Brush.Color := fColor;
   if fPen = clNone then
     Canvas.Pen.Color := fColor
@@ -1474,9 +1512,13 @@ begin
       fGridForm.Parent := fForm;
       fGridForm.Position := poDesigned;
       fGridForm.BorderStyle := bsNone;
+      {$IFDEF VER3UP}
       fGridForm.Color := ((fGridWhite + fGridBlack) div 5) + 17 + 28;
       fGridForm.TransparentColorValue := fGridForm.Color;
       fGridForm.TransparentColor := True;
+      {$ELSE}
+      fGridForm.Color := fParentForm.Color;
+      {$ENDIF}
       fGridForm.Anchors := [akLeft, akTop, akRight, akBottom];
       fGridForm.FormStyle := fsNormal;
       fGridForm.OnPaint := Self.formPaint;
@@ -3017,6 +3059,7 @@ end;
 procedure TMovePanel.DoPaint(Sender: TObject);
 begin
   setfcanvas(fSizeCtrl.movePanelCanvas);
+ {$IFDEF VER3UP}
   if Canvas.Brush.Style = bsClear then
   begin
     TransparentColor := True;
@@ -3026,9 +3069,13 @@ begin
   begin
     TransparentColor := False;
   end;
+
   AlphaBlend := fSizeCtrl.MovePanelAlphaBlend < 255;
   AlphaBlendValue := fSizeCtrl.MovePanelAlphaBlend;
-
+  {$ELSE}
+   if Canvas.Brush.Style = bsClear then
+      Color := fSizeCtrl.fParentForm.Color;
+  {$ENDIF}
   If Assigned(fSizeCtrl.MovePanelImage.Graphic)
   and not(fSizeCtrl.MovePanelImage.Graphic.Empty) then
   begin
