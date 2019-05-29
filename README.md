@@ -34,11 +34,11 @@ TSizeCtrl is a non-visual VCL component, which allows you to resize, select and 
 <li> Bug with Sizing Grid (ShowGrid) on non-TForm controls
 <li> Selection bug with Form focus (when you trying to change the form, and TSizeCtrl still handles events)
 <li> Selection bug with Forms (when you size form, its Caption Bar with action buttons is still available, which is kinda irritating)
-<li> Moving bugs with DOubleBuffering Enabled</li>
+<li> Moving bugs with DoubleBuffering Enabled</li>
 <li> Bug with btn size, when object Left+Top = Btn Diameter(Size)</li></ul></ul>
 
 <ul><li> Known modern bugs:</li><ul>
-<li> {Nothing} </li>
+<li> 1. Keys moving doesn't responses on the limints ({e.g moveonly, custom tags, align limits)} </li>
 </ul> </ul>
 
 ##### Nearly plans:
