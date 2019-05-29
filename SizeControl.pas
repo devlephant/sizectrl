@@ -28,6 +28,7 @@ interface
 {$ENDIF}
 {$IFNDEF VER80} {$IFNDEF VER90} {$DEFINE VER3U} {$ENDIF} {$ENDIF}
 {$IFDEF VER3U} {$IFNDEF VER100} {$DEFINE VER3UP} {$ENDIF} {$ENDIF}
+{$IFNDEF VER3UP} {$MESSAGE WARN 'AlphaTransparency is not supported under Delphi < 5'} {$ENDIF}
 uses
   Windows, Messages, SysUtils, Classes,
   Controls, Graphics,
@@ -1516,8 +1517,6 @@ begin
       fGridForm.Color := ((fGridWhite + fGridBlack) div 5) + 17 + 28;
       fGridForm.TransparentColorValue := fGridForm.Color;
       fGridForm.TransparentColor := True;
-      {$ELSE}
-      fGridForm.Color := fParentForm.Color;
       {$ENDIF}
       fGridForm.Anchors := [akLeft, akTop, akRight, akBottom];
       fGridForm.FormStyle := fsNormal;

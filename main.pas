@@ -1,12 +1,23 @@
 unit main;
 
 interface
-
+{$IFDEF VER80}
+  {$DEFINE VER3D}
+{$ENDIF}
+{$IFDEF VER90}
+  {$DEFINE VER3D}
+{$ENDIF}
+{$IFDEF VER100}
+  {$DEFINE VER3D}
+{$ENDIF}
+{$IFNDEF VER80} {$IFNDEF VER90} {$DEFINE VER3U} {$ENDIF} {$ENDIF}
+{$IFDEF VER3U} {$IFNDEF VER100} {$DEFINE VER3UP} {$ENDIF} {$ENDIF}
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, SizeControl, ExtCtrls, ComCtrls, StdCtrls, Menus, CommCtrl,
   Vcl.Buttons,
   imageselect,
+  {$IFDEF VER3UP} UITypes, Types, {$ENDIF}
   Vcl.Samples.Spin;
 
 type
