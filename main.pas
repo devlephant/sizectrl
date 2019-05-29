@@ -258,6 +258,7 @@ begin
   //All of this would normally be done in the IDE's Object Inspector
   //if SizeCtrl was installed into the IDE.
   SizeCtrl := TSizeCtrl.Create(Panel1);
+  SizeCtrl.EditDisabled := True;
   SizeCtrl.HoverBtnColor := clYellow;
   SizeCtrl.HoverBtnFrameColor := clNavy;
   SizeCtrl.SelectionKey := VK_CONTROL;

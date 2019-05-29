@@ -16,6 +16,7 @@ Copyright:      © 2019 Leu Zenin
 interface
 
 {$R SIZECONTROL}
+{$WARN HIDDEN_VIRTUAL OFF}
 {$IFDEF VER80}
   {$DEFINE VER3D}
 {$ENDIF}
@@ -34,6 +35,7 @@ uses
   Menus,   //To hook the TSizeCtrl.PopupMenu
   ComCtrls, //To check the TTabSheet, TPageControl
  {$IFDEF VER3U} TypInfo, {$ENDIF} //To hook the OnClick event
+ {$IFDEF VER3UP} System.UITypes, {$ENDIF}//TO expand the GetColor funct
   Forms, Math;
   (* [TSizeBtn reqs]
     To make transparent and topmost at the same time...
@@ -1884,7 +1886,6 @@ end;
 function TSizeCtrl.AddTarget(Control: TControl): integer;
 var
   TargetObj: TTargetObj;
-  r: TRect;
 begin
 
   Result := -1;
@@ -2156,7 +2157,7 @@ end;
 
 procedure TSizeCtrl.SizeTargets(dx, dy: integer);
 var
-  i, q, r: integer;
+  i: integer;
 begin
   if MoveOnly then
     exit;
