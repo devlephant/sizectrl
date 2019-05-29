@@ -20,13 +20,14 @@ TSizeCtrl is a non-visual VCL component, which allows you to resize, select and 
 <li> MoveOnly property to deny/allow resizing of an objects
 <li> Objects tag support, to deny object from selecting
 <li> Customizable buttons: colours ({content-fill, border}) and images for Enabled, Hovered and Disabled states 
+<li> ApplySizes property - to apply sizes to the object immediately </li>
+<li> EditDisabled property to allow (Enabled := False)->Disabled components editing
 <li> Different resize-during button styles: none (buttons are hidden),  buttons (all buttons are visible), line, single button
 <li> Different resize-during button hide options: none (buttons are visible, but static), hide (buttons are hidden), move (buttons will be moved in case of moving, but hidden in case of sizing)</ul></ul>
 <ul><li> Additional options:</li><ul>
 <li> Stretch properties supplied with every Image(TPicture) properties, to specify which images you would like to store in the original size </li>
 <li> Customizable modification keys (selection, moving/sizing, align-ignoring keys)
-<li> OnHover events for TSizeBtns (sizing grips/handles) </li>
-<li> ApplySizes property - to apply sizes to the object immediately </li></ul></ul>
+<li> OnHover events for TSizeBtns (sizing grips/handles)</ul></ul>
 
 ##### Fixed bugs:
 <ul><li> Fixed common bugs:</li><ul>
@@ -42,9 +43,8 @@ TSizeCtrl is a non-visual VCL component, which allows you to resize, select and 
 
 ##### Nearly plans:
 <ul><li> New Features:</li><ul>
-<li> 1. Selection of disabled objects (cursrtom property)
-<li> 2. Align with lines (function, ef)
-<li> 3. Detect control polygon to draw shape to fit the form
+<li> 1. Align with lines (function, ef)
+<li> 2. Detect control polygon to draw shape to fit the form
   </ul></ul>
 <ul><li> Refactorings:</li><ul>
 <li>1. Flipping control, when its sizes is too small

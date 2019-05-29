@@ -214,7 +214,7 @@ type
     fTargetList: TList; //list of TTargetObj (current targets)
     fRegList: TList;    //list of TRegisteredObj (possible targets)
     fState: TSCState;
-    fMoveOnly: boolean;
+    fMoveOnly, fEditDisabled: boolean;
     fBtnAlpha, fBtnSize: integer;
     fClipRec: TRect;
     fStartPt: TPoint;
@@ -302,8 +302,6 @@ type
     procedure SetBtnFrameColor(v: TColor);
     procedure SetHoverBtnFrameColor(v: TColor);
     procedure SetDisabledBtnFrameColor(v: TColor);
-    procedure SetSelKey(v: integer);
-    procedure SetDGKey(v: integer);
     procedure DoMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState);
     procedure DoMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState);
     procedure DoMouseMove(Sender: TObject; Shift: TShiftState);
@@ -383,6 +381,8 @@ type
     property TagOptions: TSizeCtrlTags read fTags write fTags;
     //MoveOnly: ie prevents resizing
     property MoveOnly: boolean read fMoveOnly write SetMoveOnly;
+    //EditDisabled: ie allows disabled control(s) editing
+    property EditDisabled: boolean read fEditDisabled write fEditDisabled;
     //BtnCount: Count of the grab buttons
     property BtnCount: TSizeCtrlBtnCount read fBtnCount write setBtnCount;
     //BtnSize: Size of a grab-handle buttons
@@ -1536,7 +1536,8 @@ end;
 
 procedure TSizeCtrl.FormWindowProc(var Msg: TMessage);
 begin
-  if Msg.Msg <> WM_PARENTNOTIFY then
+  if (Msg.Msg <> WM_PARENTNOTIFY) or
+      ((Msg.Msg = WM_PARENTNOTIFY) and (fEditDisabled)) then
   DoWindowProc(fOldWindowProc, Msg);
 end;
 
@@ -1605,7 +1606,8 @@ var
 
   //this seems the only reasonably simple way of managing both 'owned' and
   //'notified' WM_LBUTTONDOWN messages ...
-  procedure PostMouseDownMessage(isLeftBtn, shiftKeyPressed: boolean);
+  procedure PostMouseDownMessage(isLeftBtn, shiftKeyPressed: boolean;
+  isVirtual:boolean=false);
   begin
     if fLMouseDownPending then
       exit;
@@ -1613,7 +1615,7 @@ var
     if assigned(fOnMouseDown) then
     begin
       getCursorPos(screenPt);
-      regCtrl := RegisteredCtrlFromPt(screenPt);
+      regCtrl := RegisteredCtrlFromPt(screenPt, nil);
       if assigned(regCtrl) then
       begin
         handled := False;
@@ -1621,7 +1623,8 @@ var
         fOnMouseDown(self, regCtrl, controlPt, handled);
         if handled then
           exit;
-      end;
+      end else if isVirtual then exit;
+
     end;
 
     fLMouseDownPending := True;
@@ -1652,7 +1655,7 @@ begin
         else
           ShiftState := [];
         case TWMParentNotify(Msg).Event of
-          WM_LBUTTONDOWN: PostMouseDownMessage(True, ssShift in ShiftState);
+          WM_LBUTTONDOWN: PostMouseDownMessage(True, ssShift in ShiftState, true);
         end;
         Msg.Result := 0;
       end;

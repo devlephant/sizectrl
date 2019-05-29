@@ -136,6 +136,7 @@ type
     Button4: TButton;
     Label35: TLabel;
     Label36: TLabel;
+    CheckBox8: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -184,6 +185,7 @@ type
     procedure BitBtn11Click(Sender: TObject);
     procedure BitBtn13Click(Sender: TObject);
     procedure BitBtn12Click(Sender: TObject);
+    procedure CheckBox8Click(Sender: TObject);
   private
     SizeCtrl: TSizeCtrl;
     procedure SizeCtrlDuring(Sender: TObject; dx, dy: integer; State: TSCState);
@@ -206,7 +208,7 @@ var
   GRIDSIZE: integer = 8; //try changing this too.
   //PanelSizeCaption
 const
-  pCollapsed: string = 'Show';
+  pCollapsed: string = 'Show Properties';
   pExpanded: string = 'Hide';
 implementation
 
@@ -338,6 +340,11 @@ end;
 procedure TForm1.CheckBox7Click(Sender: TObject);
 begin
   SizeCtrl.ApplySizes := TCheckBox(Sender).Checked;
+end;
+
+procedure TForm1.CheckBox8Click(Sender: TObject);
+begin
+  SizeCtrl.EditDisabled := CheckBox8.Checked;
 end;
 
 procedure TForm1.ComboBox1Change(Sender: TObject);
@@ -676,12 +683,22 @@ var
   popupMousePos: TPoint; //A workaround for older versions of Delphi (see below)
 
 procedure TForm1.Panel3Click(Sender: TObject);
+var c: TControlCanvas;
 begin
+    c := TControlCanvas.Create;
+    c.Control := Panel3;
     sets.Visible := not sets.Visible;
     if sets.Visible then
-      Panel3.Caption := pExpanded
+    begin
+      Panel3.Caption := pExpanded;
+      Label26.Left := (Panel3.Width div 2) + (c.TextWidth(pExpanded) div 2) + 3;
+    end
     else
+    begin
        Panel3.Caption := pCollapsed;
+       Label26.Left := (Panel3.Width div 2) + (c.TextWidth(pCollapsed) div 2) + 3;
+    end;
+    FreeAndNil(c);
     SizeCtrl.Update;
 end;
 
