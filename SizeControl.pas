@@ -76,7 +76,6 @@ type
     fLeft, fTop: integer;
     fColor, fPen: TColor;
     fImage: TPicture;
-    fOldWindow: TWndMethod;
   protected
     procedure DrawTriangle(l, t:integer);
     procedure PaintAs(l,t:integer);
@@ -1383,6 +1382,7 @@ begin
   fMovePanelAlpha := 255;
   fBtnSize := 5;
   FSelKey := VK_SHIFT;
+  fEditDisabled := False;
   //Multi-escape key
   fSelActionCancelKey := VK_ESCAPE;
 
@@ -1441,6 +1441,8 @@ end;
 
 destructor TSizeCtrl.Destroy;
 begin
+  //To prevent recursion with WindowProc'es
+  fParentForm.WindowProc := fOldWindowProc;
   if assigned(fTargetList) then
   begin
     DeallocateHWnd(fHandle);
@@ -1521,8 +1523,8 @@ begin
     for i := 0 to fRegList.Count - 1 do
       TRegisteredObj(fRegList[i]).Hook;
     //hook the parent form too ...
-    fOldWindowProc := fParentForm.WindowProc;
-    fParentForm.WindowProc := FormWindowProc;
+    fOldWindowProc := fParentForm.WindowProc;//Backup actual WindProc
+    fParentForm.WindowProc := Self.FormWindowProc;//Load modified WindProc
   end
   else
   begin
@@ -1538,7 +1540,9 @@ procedure TSizeCtrl.FormWindowProc(var Msg: TMessage);
 begin
   if (Msg.Msg <> WM_PARENTNOTIFY) or
       ((Msg.Msg = WM_PARENTNOTIFY) and (fEditDisabled)) then
-  DoWindowProc(fOldWindowProc, Msg);
+  DoWindowProc(fOldWindowProc, Msg)
+    Else if Assigned(fOldWindowProc) then
+         fOldWindowProc(Msg);
 end;
 
 //------------------------------------------------------------------------------
@@ -1648,17 +1652,17 @@ begin
     end;
 
     WM_PARENTNOTIFY:
-      if not (TWMParentNotify(Msg).Event in [WM_CREATE, WM_DESTROY]) then
+      if (TWMParentNotify(Msg).Event = WM_LBUTTONDOWN) then
       begin
         if KeyIsPressed(Self.FSelKey) then
           ShiftState := [ssShift]
         else
           ShiftState := [];
-        case TWMParentNotify(Msg).Event of
-          WM_LBUTTONDOWN: PostMouseDownMessage(True, ssShift in ShiftState, true);
-        end;
+        PostMouseDownMessage(True, ssShift in ShiftState, true);
         Msg.Result := 0;
-      end;
+      end
+      Else if Assigned(fOldWindowProc) then
+           fOldWindowProc(Msg);
 
     WM_SETCURSOR:
     Begin
@@ -1680,7 +1684,10 @@ begin
         begin
 
           if not IsValidMove then
-            DefaultProc(Msg)
+          begin
+            if Assigned(DefaultProc) then
+            DefaultProc(Msg);
+          end
           else
             Windows.SetCursor(screen.Cursors[crSize]);
 
@@ -1690,7 +1697,7 @@ begin
         else
           DefaultProc(Msg);
       end
-      else
+      else if Assigned(DefaultProc) then
         DefaultProc(Msg);
     End;
 
@@ -1796,6 +1803,7 @@ begin
     WM_KEYUP: Msg.Result := 0;
     WM_CHAR: Msg.Result := 0;
     WM_CANCELMODE: //Cancel all modal operations
+    Begin
     //What is that? Do you ask me? You'd better ask Embarcadero,
       //Because they do not supplied truely focus-lose event
       //P.s thanks to "furious programming" from Lazarus forum,
@@ -1815,8 +1823,11 @@ begin
               TObject(list[k]).Free();
             list.Clear;
           end;
-      end;
-    else
+          Msg.Result := 0;
+      end else
+      DefaultProc(Msg);
+    end
+    else if Assigned(DefaultProc) then
       DefaultProc(Msg);
   end;
 end;

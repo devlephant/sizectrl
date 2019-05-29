@@ -36,9 +36,9 @@ TSizeCtrl is a non-visual VCL component, which allows you to resize, select and 
 <li> Selection bug with Forms (when you size form, its Caption Bar with action buttons is still available, which is kinda irritating)
 <li> Moving bugs with DoubleBuffering Enabled</li>
 <li> Bug with btn size, when object Left+Top = Btn Diameter(Size)</li></ul></ul>
-
+<li> Bug with recursion in DefWindowProc -- FormWindowProc </li>
 <ul><li> Known modern bugs:</li><ul>
-<li> 1. Keys moving doesn't responses on the limints ({e.g moveonly, custom tags, align limits)} </li>
+<li> 1. Moving with keys doesn't count on the limits ({e.g moveonly, custom tags, align limits)} </li>
 </ul> </ul>
 
 ##### Nearly plans:
