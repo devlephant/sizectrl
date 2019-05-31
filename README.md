@@ -56,7 +56,9 @@ Unlike original realization, current version supports both Delphi and Lazarus
 <ul><li> New Features:</li><ul>
 <li> 1. Align with lines (function, ef)
 <li> 2. Detect control polygon to draw shape to fit the form
-<li> 3. Custom tag(s) support </li>
+<li> 3. Custom tag(s) support 
+<li> 4. D/L CL real transparency fast support with DrawFocusRect method and Focus rect type, which can specify how to draw the focus rect
+<li> 5. Property to hide focus rect only when resizing </li>
   </ul></ul>
 <ul><li> Refactorings:</li><ul>
 <li>1. Flipping control, when its sizes is too small
