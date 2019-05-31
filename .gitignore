@@ -16,7 +16,9 @@ Win32/
 Win32\
 DemoSizeCtrl.res
 DemoSizeCtrl_Icon.res
+DemoSizeCtrl_Icon.exe
 *.lrs
 *.local
 mainlaz.lfm
 mainlaz.pas
+*.db

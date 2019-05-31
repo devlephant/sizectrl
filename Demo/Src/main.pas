@@ -24,7 +24,7 @@ uses
   LCLIntf, LCLType,
 {$ENDIF}
 SysUtils, Classes, Graphics, Controls, Forms,
-  Dialogs, SizeControl, ExtCtrls, ComCtrls, StdCtrls, Menus, CommCtrl,
+  Dialogs, ExtCtrls, ComCtrls, StdCtrls, Menus, CommCtrl,
   imageselect,
   {$IFnDEF FPC}
   Vcl.Buttons,
@@ -32,7 +32,12 @@ SysUtils, Classes, Graphics, Controls, Forms,
   Buttons,
 {$ENDIF}
   {$IFDEF VER3UP} {$IFnDEF FPC}UITypes, {$ENDIF} Types, {$ENDIF}
- {$IFDEF FPC}Spin{$ELSE} Vcl.Samples.Spin{$ENDIF};
+ {$IFDEF FPC}Spin{$ELSE} Vcl.Samples.Spin{$ENDIF},
+ {$IFDEF FPC}
+  SizeControl in '..\..\Source\SizeControl.pas'
+ {$ELSE}
+ SizeControl
+ {$ENDIF};
 
 type
 
