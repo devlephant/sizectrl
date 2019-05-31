@@ -2521,6 +2521,8 @@ begin
   end
   else
   begin
+    if (fState = TSCState.scsSizing) and (fCapturedBtnPos <> bpNone) then //b.f
+    Exit;
     fCapturedBtnPos := bpNone;
     //First find the top-most control that's clicked ...
     //nb: It's so much simpler to do this here than try and work it out from
@@ -3093,7 +3095,9 @@ procedure TSizeCtrl.formPaint(Sender: TObject);
 var
   i, j, w, h: integer;
   c, g: TColor;
+  {$IFNDEF FPC}
   obj: TWinControl;
+  {$ENDIF}
 begin
   if not Assigned(Self) then
     exit;

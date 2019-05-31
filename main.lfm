@@ -1,10 +1,10 @@
 object MainForm: TMainForm
   Left = 0
-  Height = 386
+  Height = 536
   Top = 0
   Width = 496
   Caption = 'Demo SizeCtrl'
-  ClientHeight = 386
+  ClientHeight = 536
   ClientWidth = 496
   Color = clBtnFace
   DoubleBuffered = True
@@ -22,7 +22,7 @@ object MainForm: TMainForm
   object StatusBar1: TStatusBar
     Left = 0
     Height = 23
-    Top = 363
+    Top = 513
     Width = 496
     Panels = <>
   end
@@ -1143,12 +1143,12 @@ object MainForm: TMainForm
   end
   object Panel1: TPanel
     Left = 0
-    Height = 163
+    Height = 313
     Top = 200
     Width = 496
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 163
+    ClientHeight = 313
     ClientWidth = 496
     DoubleBuffered = True
     ParentBackground = False
@@ -1247,17 +1247,17 @@ object MainForm: TMainForm
     end
     object Panel2: TPanel
       Left = 195
-      Height = 135
-      Top = 106
+      Height = 109
+      Top = 132
       Width = 183
-      ClientHeight = 135
+      ClientHeight = 109
       ClientWidth = 183
       TabOrder = 1
       object Label2: TLabel
         Tag = 1
         Left = 37
         Height = 26
-        Top = 22
+        Top = 18
         Width = 104
         Alignment = taCenter
         AutoSize = False
@@ -1268,10 +1268,11 @@ object MainForm: TMainForm
         Transparent = False
       end
       object Label3: TLabel
-        Left = 8
+        Left = 1
         Height = 55
-        Top = 63
-        Width = 161
+        Top = 53
+        Width = 181
+        Align = alBottom
         Alignment = taCenter
         AutoSize = False
         Caption = 'Aligned controls can only be resized, the available to resize sides will be marked with the enabled grab handles'
@@ -1363,7 +1364,7 @@ object MainForm: TMainForm
     object ComboBox3: TComboBox
       Left = 195
       Height = 21
-      Top = 81
+      Top = 112
       Width = 181
       AutoSelect = False
       AutoSize = False
@@ -1375,7 +1376,7 @@ object MainForm: TMainForm
     object Panel4: TPanel
       Left = 0
       Height = 60
-      Top = 103
+      Top = 253
       Width = 496
       Align = alBottom
       ClientHeight = 60
@@ -1445,6 +1446,20 @@ object MainForm: TMainForm
         Caption = 'Controls'
         TabOrder = 4
       end
+    end
+    object Label37: TLabel
+      Cursor = crHandPoint
+      Left = 195
+      Height = 24
+      Top = 83
+      Width = 181
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Unvisible controls cannot be selected or changed'
+      Layout = tlCenter
+      ParentColor = False
+      Visible = False
+      WordWrap = True
     end
   end
   object MainMenu1: TMainMenu

@@ -164,6 +164,7 @@ type
     Button4: TButton;
     Label35: TLabel;
     Label36: TLabel;
+    Label37: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -613,14 +614,16 @@ end;
 
 //2. During target resizing or moving ...
 procedure TMainForm.SizeCtrlDuring(Sender: TObject; dx,dy: integer; State: TSCState);
+var C: TControl;
 begin
-  with SizeCtrl.Targets[0] do
+  C := SizeCtrl.Targets[0];
+  if not Assigned(C) then Exit;
     if State = scsMoving then
       StatusBar1.SimpleText := format('  %s -  left:%d  top:%d, width:%d  height:%d',
-        [Name, left+dx, top+dy, width, height])
+        [C.Name, C.Left+dx, C.Top+dy, C.Width, C.Height])
     else {State = scsSizing}
       StatusBar1.SimpleText := format('  %s -  left:%d  top:%d, width:%d  height:%d',
-        [Name,left, top, width+dx, height+dy]);
+        [C.Name, C.Left, C.top, C.Width+dx, C.Height+dy]);
 end;
 //------------------------------------------------------------------------------
 
