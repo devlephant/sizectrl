@@ -30,7 +30,7 @@ Unlike original realization, current version supports both Delphi and Lazarus, s
 <li> OnHover events for TSizeBtns (sizing grips/handles) </li>
 	</ul></ul>
 
-##### Fixed bugs:
+##### Errors and bugs:
 <ul><li> Fixed common bugs:</li><ul>
 <li> Bug with Sizing Grid (ShowGrid) on non-TForm controls
 <li> Selection bug with Form focus (when you trying to change the form, and TSizeCtrl still handles events)
