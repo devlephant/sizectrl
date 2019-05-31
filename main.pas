@@ -35,7 +35,11 @@ SysUtils, Classes, Graphics, Controls, Forms,
  {$IFDEF FPC}Spin{$ELSE} Vcl.Samples.Spin{$ENDIF};
 
 type
+
+  { TMainForm }
+
   TMainForm = class(TForm)
+    ComboBox3: TComboBox;
     MainMenu1: TMainMenu;
     File1: TMenuItem;
     EnableSizeControl1: TMenuItem;
@@ -113,7 +117,6 @@ type
     Label5: TLabel;
     ComboBox1: TComboBox;
     ColorDialog1: TColorDialog;
-    ComboBox3: TComboBox;
     Panel8: TPanel;
     lap8: TLabel;
     ComboBox4: TComboBox;
@@ -161,7 +164,6 @@ type
     Button4: TButton;
     Label35: TLabel;
     Label36: TLabel;
-    CheckBox8: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -210,7 +212,6 @@ type
     procedure BitBtn11Click(Sender: TObject);
     procedure BitBtn13Click(Sender: TObject);
     procedure BitBtn12Click(Sender: TObject);
-    procedure CheckBox8Click(Sender: TObject);
   private
     SizeCtrl: TSizeCtrl;
     procedure SizeCtrlDuring(Sender: TObject; dx, dy: integer; State: TSCState);
@@ -295,7 +296,6 @@ begin
   //All of this would normally be done in the IDE's Object Inspector
   //if SizeCtrl was installed into the IDE.
   SizeCtrl := TSizeCtrl.Create(Panel1);
-  SizeCtrl.EditDisabled := True;
   SizeCtrl.HoverBtnColor := clYellow;
   SizeCtrl.HoverBtnFrameColor := clNavy;
   SizeCtrl.SelectionKey := VK_CONTROL;
@@ -312,7 +312,6 @@ begin
 
   RegComponents(Panel1, SizeCtrl);
   SizeCtrl.Enabled := true;
-
   //ALSO, TRY OUT TSizeCtrl.movePanelCanvas
   //IT GIVES ACCES TO THE SIZING FRAME STYLE!!!
 end;
@@ -378,11 +377,6 @@ end;
 procedure TMainForm.CheckBox7Click(Sender: TObject);
 begin
   SizeCtrl.ApplySizes := TCheckBox(Sender).Checked;
-end;
-
-procedure TMainForm.CheckBox8Click(Sender: TObject);
-begin
-  SizeCtrl.EditDisabled := CheckBox8.Checked;
 end;
 
 procedure TMainForm.ComboBox1Change(Sender: TObject);

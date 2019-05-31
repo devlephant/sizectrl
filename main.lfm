@@ -49,7 +49,7 @@ object MainForm: TMainForm
     object Panel6: TPanel
       Left = 0
       Height = 24
-      Top = 86
+      Top = 67
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -85,7 +85,7 @@ object MainForm: TMainForm
     object Panel7: TPanel
       Left = 0
       Height = 24
-      Top = 38
+      Top = 19
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -129,7 +129,7 @@ object MainForm: TMainForm
     object Panel9: TPanel
       Left = 0
       Height = 24
-      Top = 522
+      Top = 503
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -163,7 +163,7 @@ object MainForm: TMainForm
     object Panel10: TPanel
       Left = 0
       Height = 24
-      Top = 498
+      Top = 479
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -197,7 +197,7 @@ object MainForm: TMainForm
     object Panel11: TPanel
       Left = 0
       Height = 24
-      Top = 417
+      Top = 398
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -230,7 +230,7 @@ object MainForm: TMainForm
     object Panel12: TPanel
       Left = 0
       Height = 24
-      Top = 393
+      Top = 374
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -263,7 +263,7 @@ object MainForm: TMainForm
     object Panel13: TPanel
       Left = 0
       Height = 24
-      Top = 369
+      Top = 350
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -299,7 +299,7 @@ object MainForm: TMainForm
     object Panel15: TPanel
       Left = 0
       Height = 24
-      Top = 326
+      Top = 307
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -332,7 +332,7 @@ object MainForm: TMainForm
     object Panel16: TPanel
       Left = 0
       Height = 24
-      Top = 278
+      Top = 259
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -365,7 +365,7 @@ object MainForm: TMainForm
     object Panel17: TPanel
       Left = 0
       Height = 24
-      Top = 254
+      Top = 235
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -398,7 +398,7 @@ object MainForm: TMainForm
     object Panel18: TPanel
       Left = 0
       Height = 24
-      Top = 230
+      Top = 211
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -431,7 +431,7 @@ object MainForm: TMainForm
     object Panel19: TPanel
       Left = 0
       Height = 24
-      Top = 158
+      Top = 139
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -464,7 +464,7 @@ object MainForm: TMainForm
     object Panel20: TPanel
       Left = 0
       Height = 24
-      Top = 134
+      Top = 115
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -497,7 +497,7 @@ object MainForm: TMainForm
     object Panel21: TPanel
       Left = 0
       Height = 24
-      Top = 110
+      Top = 91
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -532,7 +532,7 @@ object MainForm: TMainForm
     object CheckBox2: TCheckBox
       Left = 0
       Height = 19
-      Top = 350
+      Top = 331
       Width = 479
       Align = alTop
       Caption = 'Show Grid'
@@ -542,7 +542,7 @@ object MainForm: TMainForm
     object CheckBox3: TCheckBox
       Left = 0
       Height = 19
-      Top = 441
+      Top = 422
       Width = 479
       Align = alTop
       Caption = 'Move Only'
@@ -552,7 +552,7 @@ object MainForm: TMainForm
     object CheckBox4: TCheckBox
       Left = 0
       Height = 19
-      Top = 460
+      Top = 441
       Width = 479
       Align = alTop
       Caption = 'Multi-Target Resize'
@@ -579,7 +579,7 @@ object MainForm: TMainForm
     object Panel5: TPanel
       Left = 0
       Height = 24
-      Top = 62
+      Top = 43
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -619,7 +619,7 @@ object MainForm: TMainForm
     object Panel8: TPanel
       Left = 0
       Height = 24
-      Top = 613
+      Top = 594
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -662,7 +662,7 @@ object MainForm: TMainForm
     object Panel14: TPanel
       Left = 0
       Height = 24
-      Top = 661
+      Top = 642
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -709,7 +709,7 @@ object MainForm: TMainForm
     object Panel22: TPanel
       Left = 0
       Height = 24
-      Top = 685
+      Top = 666
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -764,7 +764,7 @@ object MainForm: TMainForm
     object Panel23: TPanel
       Left = 0
       Height = 24
-      Top = 709
+      Top = 690
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -798,7 +798,7 @@ object MainForm: TMainForm
     object Panel24: TPanel
       Left = 0
       Height = 24
-      Top = 733
+      Top = 714
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -845,7 +845,7 @@ object MainForm: TMainForm
     object Panel25: TPanel
       Left = 0
       Height = 24
-      Top = 757
+      Top = 738
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -879,7 +879,7 @@ object MainForm: TMainForm
     object Panel26: TPanel
       Left = 0
       Height = 24
-      Top = 637
+      Top = 618
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -921,7 +921,7 @@ object MainForm: TMainForm
     object CheckBox6: TCheckBox
       Left = 0
       Height = 19
-      Top = 594
+      Top = 575
       Width = 479
       Align = alTop
       Caption = 'Show Selection/Sizing Frame'
@@ -933,7 +933,7 @@ object MainForm: TMainForm
     object CheckBox7: TCheckBox
       Left = 0
       Height = 19
-      Top = 479
+      Top = 460
       Width = 479
       Align = alTop
       Caption = 'Apply Sizes Immediately'
@@ -943,7 +943,7 @@ object MainForm: TMainForm
     object Panel27: TPanel
       Left = 0
       Height = 24
-      Top = 546
+      Top = 527
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -977,7 +977,7 @@ object MainForm: TMainForm
     object Panel28: TPanel
       Left = 0
       Height = 24
-      Top = 570
+      Top = 551
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -1011,7 +1011,7 @@ object MainForm: TMainForm
     object Panel29: TPanel
       Left = 0
       Height = 24
-      Top = 302
+      Top = 283
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -1044,7 +1044,7 @@ object MainForm: TMainForm
     object Panel30: TPanel
       Left = 0
       Height = 24
-      Top = 206
+      Top = 187
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -1077,7 +1077,7 @@ object MainForm: TMainForm
     object Panel31: TPanel
       Left = 0
       Height = 24
-      Top = 182
+      Top = 163
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -1106,21 +1106,6 @@ object MainForm: TMainForm
         OnClick = BitBtn13Click
         TabOrder = 0
       end
-    end
-    object CheckBox8: TCheckBox
-      Tag = 1
-      Left = 0
-      Height = 19
-      Top = 19
-      Width = 479
-      Align = alTop
-      Caption = '&Allow Disabled Object Editing'
-      Checked = True
-      Color = clYellow
-      OnClick = CheckBox8Click
-      ParentColor = False
-      State = cbChecked
-      TabOrder = 33
     end
   end
   object Panel3: TPanel
@@ -1163,7 +1148,6 @@ object MainForm: TMainForm
     Width = 496
     Align = alClient
     BevelOuter = bvNone
-    Caption = 'Objects'
     ClientHeight = 163
     ClientWidth = 496
     DoubleBuffered = True
@@ -1376,6 +1360,18 @@ object MainForm: TMainForm
         end
       end
     end
+    object ComboBox3: TComboBox
+      Left = 195
+      Height = 21
+      Top = 81
+      Width = 181
+      AutoSelect = False
+      AutoSize = False
+      Enabled = False
+      ItemHeight = 13
+      TabOrder = 4
+      Text = 'Not impelled into Lazarus'
+    end
     object Panel4: TPanel
       Left = 0
       Height = 60
@@ -1449,20 +1445,6 @@ object MainForm: TMainForm
         Caption = 'Controls'
         TabOrder = 4
       end
-    end
-    object ComboBox3: TComboBox
-      Left = 195
-      Height = 21
-      Top = 79
-      Width = 183
-      Enabled = False
-      ItemHeight = 13
-      ItemIndex = 0
-      Items.Strings = (
-        '{Not implemented in LAZ}'
-      )
-      TabOrder = 4
-      Text = '{Not implemented in LAZ}'
     end
   end
   object MainMenu1: TMainMenu

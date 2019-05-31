@@ -274,7 +274,7 @@ type
     fTargetList: TList; //list of TTargetObj (current targets)
     fRegList: TList;    //list of TRegisteredObj (possible targets)
     fState: TSCState;
-    fMoveOnly, fEditDisabled: boolean;
+    fMoveOnly: boolean;
     fBtnAlpha, fBtnSize: integer;
     fClipRec: TRect;
     fStartPt: TPoint;
@@ -457,8 +457,6 @@ type
     property Constraints: TSizeConstraints read FConstraints write FConstraints;
     //MoveOnly: ie prevents resizing
     property MoveOnly: boolean read fMoveOnly write SetMoveOnly;
-    //EditDisabled: ie allows disabled control(s) editing
-    property EditDisabled: boolean read fEditDisabled write fEditDisabled;
     //BtnCount: Count of the grab buttons
     property BtnCount: TSizeCtrlBtnCount read fBtnCount write setBtnCount;
     //BtnSize: Size of a grab-handle buttons
@@ -1522,8 +1520,6 @@ begin
     r.BottomRight := obj.ClientToParent(r.BottomRight)
   end;
   case fSizeCtrl.ResizeFrameType of
-    tszfNone:
-      self.UpdateExtra(r, 3);
     tszfButtons:
       self.UpdateExtra(r,0);
     tzfRButtons:
@@ -1552,15 +1548,14 @@ end;
 
 constructor TSizeCtrl.Create(TheOwner: TComponent);
 begin
-{$IFDEF FPC}
-inherited CreateNew(TheOwner);
-{$ENDIF}
  if (TheOwner = nil) then
     raise Exception.Create('TSizeCtrl Owner is nil!!!');
 
  if not (TheOwner is TWinControl) then
     raise Exception.Create('TSizeCtrl.Create: Owner must be a TWinControl');
-{$IFNDEF FPC}
+{$IFDEF FPC}
+  inherited CreateNew(TheOwner);
+ {$else}
   inherited Create(TheOwner);
 {$ENDIF}
   fTargetList := TList.Create;
@@ -1580,7 +1575,6 @@ inherited CreateNew(TheOwner);
   fMovePanelAlpha := 255;
   fBtnSize := 5;
   FSelKey := VK_SHIFT;
-  fEditDisabled := False;
   //Multi-escape key
   fSelActionCancelKey := VK_ESCAPE;
 
