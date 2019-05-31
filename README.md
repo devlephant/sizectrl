@@ -64,4 +64,5 @@ Unlike original realization, current version supports both Delphi and Lazarus
 <li>1. Flipping control, when its sizes is too small
   (Changing position + resizing)
 <li>2. Regenerate Frame topmost settings(Add FrameOnTop property, e.g make the TMovePanel parent the same as TSizeBtn parent, if needed) [Delphi]</li>
+<li>3. Limit resizing when control is inserted in aligned or when control contains both aligned and unaligned sub-ctrls (childs)
   </ul></ul>
