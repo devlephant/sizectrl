@@ -33,11 +33,7 @@ SysUtils, Classes, Graphics, Controls, Forms,
 {$ENDIF}
   {$IFDEF VER3UP} {$IFnDEF FPC}UITypes, {$ENDIF} Types, {$ENDIF}
  {$IFDEF FPC}Spin{$ELSE} Vcl.Samples.Spin{$ENDIF},
- {$IFDEF FPC}
-  SizeControl in '..\..\Source\SizeControl.pas'
- {$ELSE}
- SizeControl
- {$ENDIF};
+ SizeControl;
 
 type
 
@@ -170,6 +166,8 @@ type
     Label35: TLabel;
     Label36: TLabel;
     Label37: TLabel;
+    Button5: TButton;
+    procedure Button5Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -247,6 +245,7 @@ var
   MainForm: TMainForm;
   pv: boolean = true;
   GRIDSIZE: integer = 8; //try changing this too.
+
   //PanelSizeCaption
 const
   pCollapsed: string = 'Show Properties';
@@ -321,6 +320,17 @@ begin
   //ALSO, TRY OUT TSizeCtrl.movePanelCanvas
   //IT GIVES ACCES TO THE SIZING FRAME STYLE!!!
 end;
+
+procedure TMainForm.Button5Click(Sender: TObject);
+var f: TFOrm;
+begin
+    f := TForm.Create(Panel1);
+    f.Parent := Panel1;
+    f.show;
+    SIZEctrl.RegisterControl(f);
+
+end;
+
 //------------------------------------------------------------------------------
 
 procedure TMainForm.FormClick(Sender: TObject);
