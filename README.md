@@ -36,8 +36,8 @@ Unlike original realisation, current version supports both Delphi and Lazarus
 <li> Selection bug with Form focus (when you trying to change the form, and TSizeCtrl still handles events)
 <li> Selection bug with Forms (when you size form, its Caption Bar with action buttons is still available, which is kinda irritating)
 <li> Moving bugs with DoubleBuffering Enabled</li>
-<li> Bug with btn size, when object Left+Top = Btn Diameter(Size)</li></ul></ul>
-<li> Bug with recursion in DefWindowProc -- FormWindowProc </li>
+<li> Bug with btn size, when object Left+Top = Btn Diameter(Size)</li>
+<li> Bug with recursion in DefWindowProc -- FormWindowProc </li></ul></ul>
 <ul><li> Known modern bugs:</li><ul>
 <li> 1. Moving with keys doesn't count on the limits ({e.g moveonly, custom tags, align limits)} </li>
 <li> 2. Cursor sometimes won't change, when the moving is started (with TShape, for example) </li>
