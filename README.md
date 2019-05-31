@@ -1,9 +1,7 @@
-# sizectrl
-Updated TSizeCtrl (v8), which originally performed by Angus Johnson, so... it's inspired by original, but, now it's not the same as legacy/old version :)
-
 ## Description
 TSizeCtrl is a non-visual V+LCL component, which allows you to resize, select and move TControl decadents
-Unlike original realization, current version supports both Delphi and Lazarus
+
+Unlike original realization, current version supports both Delphi and Lazarus, so it's inspired by original version by Angus Johnson, but, now it's not the same as legacy/old version :)
 
 ##### Features:
 <ul> <li>Fully customizable buttons: you can change count (from 4 to 8), colour, size, transparency, shape, and if you want to - you can set the button image</li>
