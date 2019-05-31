@@ -1292,7 +1292,11 @@ begin
       fBtns[i].Top, fBtns[i].Left + fBtns[i].Width, fBtns[i].Left + fBtns[i].Top,
       SWP_NOACTIVATE or SWP_NOACTIVATE or SWP_NOMOVE or SWP_NOSIZE);
    end;
+    if not fBtns[i].Visible then
     fBtns[i].Visible := True;
+    {$IFDEF FPC}
+    fBtns[i].Repaint;
+    {$ENDIF}
   end;
 end;
 
@@ -1363,6 +1367,9 @@ begin
         fBtns[i].Top := lTop + Rectange.Height - 1;
       else fBtns[i].Top := lTop;
     end;
+    {$IFDEF FPC}
+    fBtns[i].Repaint;
+    {$ENDIF}
   end;
 end;
 

@@ -25,7 +25,6 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="24"/>
         <CursorPos X="41" Y="38"/>
         <UsageCount Value="30"/>
@@ -207,9 +206,10 @@
       </Unit>
       <Unit>
         <Filename Value="..\..\Source\SizeControl.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="2450"/>
-        <CursorPos X="14" Y="2455"/>
+        <TopLine Value="1288"/>
+        <CursorPos X="13" Y="1299"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit>
@@ -226,123 +226,123 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="main.lfm"/>
-        <Caret Line="394" Column="23" TopLine="378"/>
+        <Caret Line="594" Column="23" TopLine="578"/>
       </Position1>
       <Position2>
         <Filename Value="main.lfm"/>
-        <Caret Line="416" Column="25" TopLine="400"/>
+        <Caret Line="1112" Column="2" TopLine="24"/>
       </Position2>
       <Position3>
         <Filename Value="main.lfm"/>
-        <Caret Line="429" Column="23" TopLine="413"/>
+        <Caret Line="1123" Column="21" TopLine="26"/>
       </Position3>
       <Position4>
         <Filename Value="main.lfm"/>
-        <Caret Line="451" Column="25" TopLine="435"/>
+        <Caret Line="1158" Column="21" TopLine="1142"/>
       </Position4>
       <Position5>
         <Filename Value="main.lfm"/>
-        <Caret Line="464" Column="23" TopLine="448"/>
+        <Caret Line="1249" Column="23" TopLine="1233"/>
       </Position5>
       <Position6>
         <Filename Value="main.lfm"/>
-        <Caret Line="486" Column="25" TopLine="470"/>
+        <Caret Line="1260" Column="23" TopLine="1244"/>
       </Position6>
       <Position7>
         <Filename Value="main.lfm"/>
-        <Caret Line="499" Column="23" TopLine="483"/>
+        <Caret Line="1297" Column="23" TopLine="1281"/>
       </Position7>
       <Position8>
         <Filename Value="main.lfm"/>
-        <Caret Line="521" Column="25" TopLine="505"/>
+        <Caret Line="1308" Column="27" TopLine="1292"/>
       </Position8>
       <Position9>
         <Filename Value="main.lfm"/>
-        <Caret Line="534" Column="23" TopLine="518"/>
+        <Caret Line="1332" Column="27" TopLine="1316"/>
       </Position9>
       <Position10>
         <Filename Value="main.lfm"/>
-        <Caret Line="557" Column="25" TopLine="541"/>
+        <Caret Line="1361" Column="27" TopLine="1345"/>
       </Position10>
       <Position11>
         <Filename Value="main.lfm"/>
-        <Caret Line="570" Column="23" TopLine="554"/>
+        <Caret Line="1370" Column="27" TopLine="1354"/>
       </Position11>
       <Position12>
         <Filename Value="main.lfm"/>
-        <Caret Line="581" Column="23" TopLine="565"/>
+        <Caret Line="1384" Column="23" TopLine="1368"/>
       </Position12>
       <Position13>
         <Filename Value="main.lfm"/>
-        <Caret Line="594" Column="23" TopLine="578"/>
+        <Caret Line="1396" Column="23" TopLine="1380"/>
       </Position13>
       <Position14>
         <Filename Value="main.lfm"/>
-        <Caret Line="1112" Column="2" TopLine="24"/>
+        <Caret Line="1427" Column="25" TopLine="1411"/>
       </Position14>
       <Position15>
         <Filename Value="main.lfm"/>
-        <Caret Line="1123" Column="21" TopLine="26"/>
+        <Caret Line="1437" Column="25" TopLine="1421"/>
       </Position15>
       <Position16>
         <Filename Value="main.lfm"/>
-        <Caret Line="1158" Column="21" TopLine="1142"/>
+        <Caret Line="1446" Column="25" TopLine="1430"/>
       </Position16>
       <Position17>
         <Filename Value="main.lfm"/>
-        <Caret Line="1249" Column="23" TopLine="1233"/>
+        <Caret Line="1455" Column="25" TopLine="1439"/>
       </Position17>
       <Position18>
         <Filename Value="main.lfm"/>
-        <Caret Line="1260" Column="23" TopLine="1244"/>
+        <Caret Line="1464" Column="25" TopLine="1448"/>
       </Position18>
       <Position19>
-        <Filename Value="main.lfm"/>
-        <Caret Line="1297" Column="23" TopLine="1281"/>
+        <Filename Value="..\..\Source\SizeControl.pas"/>
+        <Caret Line="7" Column="55"/>
       </Position19>
       <Position20>
-        <Filename Value="main.lfm"/>
-        <Caret Line="1308" Column="27" TopLine="1292"/>
+        <Filename Value="..\..\Source\SizeControl.pas"/>
+        <Caret Line="105" Column="25" TopLine="95"/>
       </Position20>
       <Position21>
-        <Filename Value="main.lfm"/>
-        <Caret Line="1332" Column="27" TopLine="1316"/>
+        <Filename Value="..\..\Source\SizeControl.pas"/>
+        <Caret Line="200" Column="10" TopLine="185"/>
       </Position21>
       <Position22>
-        <Filename Value="main.lfm"/>
-        <Caret Line="1361" Column="27" TopLine="1345"/>
+        <Filename Value="..\..\Source\SizeControl.pas"/>
+        <Caret Line="278" Column="21" TopLine="263"/>
       </Position22>
       <Position23>
-        <Filename Value="main.lfm"/>
-        <Caret Line="1370" Column="27" TopLine="1354"/>
+        <Filename Value="..\..\Source\SizeControl.pas"/>
+        <Caret Line="308" Column="10" TopLine="295"/>
       </Position23>
       <Position24>
-        <Filename Value="main.lfm"/>
-        <Caret Line="1384" Column="23" TopLine="1368"/>
+        <Filename Value="..\..\Source\SizeControl.pas"/>
+        <Caret Line="463" Column="41" TopLine="450"/>
       </Position24>
       <Position25>
-        <Filename Value="main.lfm"/>
-        <Caret Line="1396" Column="23" TopLine="1380"/>
+        <Filename Value="..\..\Source\SizeControl.pas"/>
+        <Caret Line="473" Column="52" TopLine="460"/>
       </Position25>
       <Position26>
-        <Filename Value="main.lfm"/>
-        <Caret Line="1427" Column="25" TopLine="1411"/>
+        <Filename Value="..\..\Source\SizeControl.pas"/>
+        <Caret Line="1206" Column="10" TopLine="1192"/>
       </Position26>
       <Position27>
-        <Filename Value="main.lfm"/>
-        <Caret Line="1437" Column="25" TopLine="1421"/>
+        <Filename Value="..\..\Source\SizeControl.pas"/>
+        <Caret Line="1226" Column="13" TopLine="1213"/>
       </Position27>
       <Position28>
-        <Filename Value="main.lfm"/>
-        <Caret Line="1446" Column="25" TopLine="1430"/>
+        <Filename Value="..\..\Source\SizeControl.pas"/>
+        <Caret Line="1227" Column="12" TopLine="1214"/>
       </Position28>
       <Position29>
-        <Filename Value="main.lfm"/>
-        <Caret Line="1455" Column="25" TopLine="1439"/>
+        <Filename Value="..\..\Source\SizeControl.pas"/>
+        <Caret Line="1240" Column="12" TopLine="1226"/>
       </Position29>
       <Position30>
-        <Filename Value="main.lfm"/>
-        <Caret Line="1464" Column="25" TopLine="1448"/>
+        <Filename Value="..\..\Source\SizeControl.pas"/>
+        <Caret Line="1242" Column="12" TopLine="1228"/>
       </Position30>
     </JumpHistory>
     <RunParams>
