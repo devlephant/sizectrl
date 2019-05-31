@@ -2,7 +2,8 @@
 Updated TSizeCtrl (v8), which originally performed by Angus Johnson, so... it's inspired by original, but, now it's not the same as legacy/old version :)
 
 ## Description
-TSizeCtrl is a non-visual VCL component, which allows you to resize, select and move TControl decadents
+TSizeCtrl is a non-visual V+LCL component, which allows you to resize, select and move TControl decadents
+Unlike original realisation, current version supports both Delphi and Lazarus
 
 ##### Features:
 <ul> <li>Fully customizable buttons: you can change count (from 4 to 8), colour, size, transparency, shape, and if you want to - you can set the button image</li>
@@ -39,7 +40,12 @@ TSizeCtrl is a non-visual VCL component, which allows you to resize, select and 
 <li> Bug with recursion in DefWindowProc -- FormWindowProc </li>
 <ul><li> Known modern bugs:</li><ul>
 <li> 1. Moving with keys doesn't count on the limits ({e.g moveonly, custom tags, align limits)} </li>
+<li> 2. Cursor sometimes won't change, when the moving is started (with TShape, for example) </li>
 </ul> </ul>
+<ul><li> Known modern Lazarus bugs:</li><ul>
+<li> 1. Selection Frame  is always upper than SizeButtons
+<li> 2. Selection Frame behaves very unpredictable in transparent mode, which is platform-dependent behaviour
+</ul></ul>
 
 ##### Nearly plans:
 <ul><li> New Features:</li><ul>
@@ -49,5 +55,7 @@ TSizeCtrl is a non-visual VCL component, which allows you to resize, select and 
 <ul><li> Refactorings:</li><ul>
 <li>1. Flipping control, when its sizes is too small
   (Changing position + resizing)</li>
-<li>2. Regenerate Frame topmost settings(Add FrameOnTop property, e.g make the TMovePanel parent the same as TSizeBtn parent, if needed)
+<li>2. Regenerate Frame topmost settings(Add FrameOnTop property, e.g make the TMovePanel parent the same as TSizeBtn parent, if needed) [Delphi]
+<li>3. Add disabled objects selecting support [Lazarus]
+		Sol: hook all WndProces recursive</li>
   </ul></ul>

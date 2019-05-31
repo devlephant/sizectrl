@@ -1,0 +1,3 @@
+main.pas Note: Замінений модуль "Windows" на "LCLIntf, LCLType, LMessages" в секції uses.
+main.pas(1,11) Note: Після назви модуля додано модифікатор синтаксису MODE Delphi.
+ : Перетворення готове.

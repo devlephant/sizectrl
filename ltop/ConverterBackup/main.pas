@@ -1,9 +1,5 @@
 unit main;
 
-{$IFDEF FPC}
-  {$MODE Delphi}
-{$ENDIF}
-
 interface
 {$IFDEF VER80}
   {$DEFINE VER3D}
@@ -17,25 +13,15 @@ interface
 {$IFNDEF VER80} {$IFNDEF VER90} {$DEFINE VER3U} {$ENDIF} {$ENDIF}
 {$IFDEF VER3U} {$IFNDEF VER100} {$DEFINE VER3UP} {$ENDIF} {$ENDIF}
 uses
-{$IFnDEF FPC}
-  Windows,
-  Messages,
-{$ELSE}
-  LCLIntf, LCLType,
-{$ENDIF}
-SysUtils, Classes, Graphics, Controls, Forms,
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, SizeControl, ExtCtrls, ComCtrls, StdCtrls, Menus, CommCtrl,
-  imageselect,
-  {$IFnDEF FPC}
   Vcl.Buttons,
-  {$ELSE}
-  Buttons,
-{$ENDIF}
-  {$IFDEF VER3UP} {$IFnDEF FPC}UITypes, {$ENDIF} Types, {$ENDIF}
- {$IFDEF FPC}Spin{$ELSE} Vcl.Samples.Spin{$ENDIF};
+  imageselect,
+  {$IFDEF VER3UP} UITypes, Types, {$ENDIF}
+  Vcl.Samples.Spin;
 
 type
-  TMainForm = class(TForm)
+  TForm1 = class(TForm)
     MainMenu1: TMainMenu;
     File1: TMenuItem;
     EnableSizeControl1: TMenuItem;
@@ -214,30 +200,21 @@ type
   private
     SizeCtrl: TSizeCtrl;
     procedure SizeCtrlDuring(Sender: TObject; dx, dy: integer; State: TSCState);
-    {$IFDEF FPC}
-    procedure SizeCtrlEnd(Sender: TObject; {%H-}State: TSCState);
-    {$ELSE}
     procedure SizeCtrlEnd(Sender: TObject; State: TSCState);
-    {$ENDIF}
     procedure SizeCtrlTargetChange(Sender: TObject);
     procedure SizeCtrlMouseDown(Sender: TObject;
       Target: TControl; TargetPt: TPoint; var handled: boolean);
     procedure SizeCtrlSetCursor(Sender: TObject;
       Target: TControl; TargetPt: TPoint; var handled: boolean);
-    {$IFDEF FPC}
-     procedure SizeCtrlKeyDown(Sender: TObject; var Key: Word;
-      {%H-}Shift: TShiftState);
-    {$ELSE}
     procedure SizeCtrlKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    {$ENDIF}
   protected
   public
     { Public declarations }
   end;
 
 var
-  MainForm: TMainForm;
+  Form1: TForm1;
   pv: boolean = true;
   GRIDSIZE: integer = 8; //try changing this too.
   //PanelSizeCaption
@@ -245,11 +222,8 @@ const
   pCollapsed: string = 'Show Properties';
   pExpanded: string = 'Hide';
 implementation
-{$IFnDEF FPC}
-  {$R *.dfm}
-{$ELSE}
-  {$R *.lfm}
-{$ENDIF}
+
+{$R *.dfm}
 
 //RegComponents: A simple recursive procedure which registers with SizeCtrl1
 //all the visible controls contained by aParent except 'tagged' controls ...
@@ -284,13 +258,13 @@ end;
 
 function selectColor(aColor: TColor): TColor;
 begin
-   MainForm.ColorDialog1.Color := aColor;
-   if MainForm.ColorDialog1.Execute then
-    Result := MainForm.ColorDialog1.Color
+   Form1.ColorDialog1.Color := aColor;
+   if Form1.ColorDialog1.Execute then
+    Result := Form1.ColorDialog1.Color
    else Result := aColor;
 end;
 
-procedure TMainForm.FormCreate(Sender: TObject);
+procedure TForm1.FormCreate(Sender: TObject);
 begin
   //All of this would normally be done in the IDE's Object Inspector
   //if SizeCtrl was installed into the IDE.
@@ -318,13 +292,13 @@ begin
 end;
 //------------------------------------------------------------------------------
 
-procedure TMainForm.FormClick(Sender: TObject);
+procedure TForm1.FormClick(Sender: TObject);
 begin
   SizeCtrl.UnRegisterAll;
   RegComponents(TWinControl(Sender), SizeCtrl);
 end;
 
-procedure TMainForm.FormDestroy(Sender: TObject);
+procedure TForm1.FormDestroy(Sender: TObject);
 begin
   //it's important to disable SizeCtrl before destroying the form
   //because any SizeCtrl registered controls needs to be 'unhooked' ...
@@ -332,19 +306,19 @@ begin
 end;
 //------------------------------------------------------------------------------
 
-procedure TMainForm.Exit1Click(Sender: TObject);
+procedure TForm1.Exit1Click(Sender: TObject);
 begin
   close;
 end;
 //------------------------------------------------------------------------------
 
-procedure TMainForm.EnableSizeControl1Click(Sender: TObject);
+procedure TForm1.EnableSizeControl1Click(Sender: TObject);
 begin
   cbSizeMove.Checked := not cbSizeMove.Checked;
 end;
 //------------------------------------------------------------------------------
 
-procedure TMainForm.cbSizeMoveClick(Sender: TObject);
+procedure TForm1.cbSizeMoveClick(Sender: TObject);
 begin
   SizeCtrl.Enabled := cbSizeMove.Checked;
   EnableSizeControl1.Checked := cbSizeMove.Checked;
@@ -355,81 +329,81 @@ begin
   ActiveControl := nil;
   invalidate; //fixup grid painting on the form
 end;
-procedure TMainForm.CheckBox2Click(Sender: TObject);
+procedure TForm1.CheckBox2Click(Sender: TObject);
 begin
   SizeCtrl.ShowGrid := TCheckBox(Sender).Checked;
 end;
 
-procedure TMainForm.CheckBox3Click(Sender: TObject);
+procedure TForm1.CheckBox3Click(Sender: TObject);
 begin
    SizeCtrl.MoveOnly := TCheckBox(Sender).Checked;
 end;
 
-procedure TMainForm.CheckBox4Click(Sender: TObject);
+procedure TForm1.CheckBox4Click(Sender: TObject);
 begin
   SizeCtrl.MultiTargetResize := TCheckBox(Sender).Checked;
 end;
 
-procedure TMainForm.CheckBox6Click(Sender: TObject);
+procedure TForm1.CheckBox6Click(Sender: TObject);
 begin
   SizeCtrl.ShowFrame := TCheckBox(Sender).Checked;
 end;
 
-procedure TMainForm.CheckBox7Click(Sender: TObject);
+procedure TForm1.CheckBox7Click(Sender: TObject);
 begin
   SizeCtrl.ApplySizes := TCheckBox(Sender).Checked;
 end;
 
-procedure TMainForm.CheckBox8Click(Sender: TObject);
+procedure TForm1.CheckBox8Click(Sender: TObject);
 begin
   SizeCtrl.EditDisabled := CheckBox8.Checked;
 end;
 
-procedure TMainForm.ComboBox1Change(Sender: TObject);
+procedure TForm1.ComboBox1Change(Sender: TObject);
 begin
   SizeCtrl.BtnCount := TSizeCtrlBtnCount( TCombobox(Sender).ItemIndex );
 end;
 
-procedure TMainForm.ComboBox2Change(Sender: TObject);
+procedure TForm1.ComboBox2Change(Sender: TObject);
 begin
   SizeCtrl.BtnShape := TSizeBtnShapeType( TCombobox(Sender).ItemIndex );
 end;
 
-procedure TMainForm.ComboBox4Change(Sender: TObject);
+procedure TForm1.ComboBox4Change(Sender: TObject);
 begin
   SizeCtrl.ResizeFrameType := TReSizeFrameType( TCombobox(Sender).ItemIndex );
 end;
 
-procedure TMainForm.ComboBox5Change(Sender: TObject);
+procedure TForm1.ComboBox5Change(Sender: TObject);
 begin
   SizeCtrl.movePanelCanvas.Pen.Style :=  TPenStyle( TCombobox(Sender).ItemIndex);
 end;
 
-procedure TMainForm.ComboBox6Change(Sender: TObject);
+procedure TForm1.ComboBox6Change(Sender: TObject);
 begin
   sizeCtrl.movePanelCanvas.Pen.Mode := TPenMode( TCombobox(Sender).ItemIndex );
 end;
 
-procedure TMainForm.ComboBox7Change(Sender: TObject);
+procedure TForm1.ComboBox7Change(Sender: TObject);
 begin
   SizeCtrl.movePanelCanvas.Brush.Style := TBrushStyle( TCombobox(Sender).ItemIndex );
 end;
 
-procedure TMainForm.ComboBox8Change(Sender: TObject);
+procedure TForm1.ComboBox8Change(Sender: TObject);
 begin
   SizeCtrl.ResizeIgnoreMethod := TReSizeHideType( TCombobox(Sender).ItemIndex );
 end;
 
 //------------------------------------------------------------------------------
 
-procedure TMainForm.FormResize(Sender: TObject);
+procedure TForm1.FormResize(Sender: TObject);
 begin
   //if SizeCtrl has targets selected, and they are moved or resized
   //independently of SizeCtrl, then SizeCtrl must be 'updated' ...
   SizeCtrl.Update;
 end;
 
-procedure TMainForm.Label26MouseEnter(Sender: TObject);
+procedure TForm1.Label26MouseEnter(Sender: TObject);
 var c: TControlCanvas;
 begin
     c := TControlCanvas.Create;
@@ -447,7 +421,7 @@ begin
     FreeAndNil(c);
 end;
 
-procedure TMainForm.Label26MouseLeave(Sender: TObject);
+procedure TForm1.Label26MouseLeave(Sender: TObject);
 var c: TControlCanvas;
 begin
     c := TControlCanvas.Create;
@@ -465,7 +439,7 @@ begin
     FreeAndNil(c);
 end;
 
-procedure TMainForm.Label29Click(Sender: TObject);
+procedure TForm1.Label29Click(Sender: TObject);
 begin
 
 end;
@@ -480,80 +454,80 @@ end;
 
 //(nb: This doesn't work in Delphi 3 so OnClick events would have to be
 //blocked manually to prevent Alt+Key shortcuts responding).
-procedure TMainForm.BitBtn10Click(Sender: TObject);
+procedure TForm1.BitBtn10Click(Sender: TObject);
 begin
   SizeCtrl.movePanelCanvas.Brush.Color := selectColor( SizeCtrl.movePanelCanvas.Brush.Color  );
   ComboBox7.ItemIndex := integer( SizeCtrl.movePanelCanvas.Brush.Style );
 end;
 
-procedure TMainForm.BitBtn11Click(Sender: TObject);
+procedure TForm1.BitBtn11Click(Sender: TObject);
 begin
    Form2.Execute( SizeCtrl.HoverBtnImage );
 end;
 
-procedure TMainForm.BitBtn12Click(Sender: TObject);
+procedure TForm1.BitBtn12Click(Sender: TObject);
 begin
   SizeCtrl.HoverBtnFrameColor := selectColor( SizeCtrl.HoverBtnFrameColor );
 end;
 
-procedure TMainForm.BitBtn13Click(Sender: TObject);
+procedure TForm1.BitBtn13Click(Sender: TObject);
 begin
   SizeCtrl.HoverBtnColor := selectColor( SizeCtrl.HoverBtnColor );
 end;
 
-procedure TMainForm.BitBtn1Click(Sender: TObject);
+procedure TForm1.BitBtn1Click(Sender: TObject);
 begin
   SizeCtrl.BtnColor := selectColor( SizeCtrl.BtnColor );
 end;
 
-procedure TMainForm.BitBtn2Click(Sender: TObject);
+procedure TForm1.BitBtn2Click(Sender: TObject);
 begin
   SizeCtrl.BtnFrameColor := selectColor( SizeCtrl.BtnFrameColor );
 end;
 
-procedure TMainForm.BitBtn3Click(Sender: TObject);
+procedure TForm1.BitBtn3Click(Sender: TObject);
 begin
   SizeCtrl.DisabledBtnColor := selectColor(SizeCtrl.DisabledBtnColor);
 end;
 
-procedure TMainForm.BitBtn4Click(Sender: TObject);
+procedure TForm1.BitBtn4Click(Sender: TObject);
 begin
   SizeCtrl.DisabledBtnFrameColor := selectColor( SizeCtrl.DisabledBtnFrameColor   );
 end;
 
-procedure TMainForm.BitBtn5Click(Sender: TObject);
+procedure TForm1.BitBtn5Click(Sender: TObject);
 begin
   Form2.Execute( SizeCtrl.BtnImage );
 end;
 
-procedure TMainForm.BitBtn6Click(Sender: TObject);
+procedure TForm1.BitBtn6Click(Sender: TObject);
 begin
   Form2.Execute( SizeCtrl.DisabledBtnImage );
 end;
 
-procedure TMainForm.BitBtn7Click(Sender: TObject);
+procedure TForm1.BitBtn7Click(Sender: TObject);
 begin
   SizeCtrl.GridColor := selectColor( SizeCtrl.GridColor );
 end;
 
-procedure TMainForm.BitBtn8Click(Sender: TObject);
+procedure TForm1.BitBtn8Click(Sender: TObject);
 begin
   SizeCtrl.GridColorContrast := selectColor( SizeCtrl.GridColorContrast );
 end;
 
-procedure TMainForm.BitBtn9Click(Sender: TObject);
+procedure TForm1.BitBtn9Click(Sender: TObject);
 begin
   SizeCtrl.movePanelCanvas.Pen.Color := selectColor( SizeCtrl.movePanelCanvas.Pen.Color  );
 end;
 
-procedure TMainForm.Button1Click(Sender: TObject);
+procedure TForm1.Button1Click(Sender: TObject);
 begin
   ShowMessage('Button1 pressed.');
 end;
 //------------------------------------------------------------------------------
 
 //Paints a grid on the form (if GRIDSIZE > 1) ...
-procedure TMainForm.FormPaint(Sender: TObject);
+procedure TForm1.FormPaint(Sender: TObject);
 var
   i,j: integer;
 begin
@@ -570,7 +544,7 @@ end;
 //------------------------------------------------------------------------------
 
 //1. Whenever a target changes ...
-procedure TMainForm.SizeCtrlTargetChange(Sender: TObject);
+procedure TForm1.SizeCtrlTargetChange(Sender: TObject);
 begin
   if SizeCtrl.TargetCount = 0 then
     StatusBar1.SimpleText := ''
@@ -578,37 +552,37 @@ begin
     format('  %s -  left:%d  top:%d, width:%d  height:%d',
       [Name,left,top,width,height]);
 end;
-procedure TMainForm.SpinEdit1Change(Sender: TObject);
+procedure TForm1.SpinEdit1Change(Sender: TObject);
 begin
     SizeCtrl.BtnSize := TSpinEdit(Sender).Value;
 end;
 
-procedure TMainForm.SpinEdit2Change(Sender: TObject);
+procedure TForm1.SpinEdit2Change(Sender: TObject);
 begin
   SizeCtrl.BtnAlphaBlend := TSpinEdit(Sender).Value;
 end;
 
-procedure TMainForm.SpinEdit3Change(Sender: TObject);
+procedure TForm1.SpinEdit3Change(Sender: TObject);
 begin
   SizeCtrl.GridSize := TSpinEdit(Sender).Value;
 end;
 
-procedure TMainForm.SpinEdit4Change(Sender: TObject);
+procedure TForm1.SpinEdit4Change(Sender: TObject);
 begin
   SizeCtrl.Constraints.MinHeight := TSpinEdit(Sender).Value;;
 end;
 
-procedure TMainForm.SpinEdit5Change(Sender: TObject);
+procedure TForm1.SpinEdit5Change(Sender: TObject);
 begin
   SizeCtrl.Constraints.MinWidth := TSpinEdit(Sender).Value;
 end;
 
-procedure TMainForm.SpinEdit6Change(Sender: TObject);
+procedure TForm1.SpinEdit6Change(Sender: TObject);
 begin
   SizeCtrl.Constraints.MaxWidth := TSpinEdit(Sender).Value;
 end;
 
-procedure TMainForm.SpinEdit7Change(Sender: TObject);
+procedure TForm1.SpinEdit7Change(Sender: TObject);
 begin
   SizeCtrl.Constraints.MaxHeight := TSpinEdit(Sender).Value;
 end;
@@ -616,7 +590,7 @@ end;
 //------------------------------------------------------------------------------
 
 //2. During target resizing or moving ...
-procedure TMainForm.SizeCtrlDuring(Sender: TObject; dx,dy: integer; State: TSCState);
+procedure TForm1.SizeCtrlDuring(Sender: TObject; dx,dy: integer; State: TSCState);
 begin
   with SizeCtrl.Targets[0] do
     if State = scsMoving then
@@ -629,7 +603,7 @@ end;
 //------------------------------------------------------------------------------
 
 //3. Once target resizing or moving has finished ...
-procedure TMainForm.SizeCtrlEnd(Sender: TObject; State: TSCState);
+procedure TForm1.SizeCtrlEnd(Sender: TObject; State: TSCState);
 begin
   with SizeCtrl do
     if TargetCount = 0 then StatusBar1.SimpleText := ''
@@ -644,7 +618,7 @@ end;
 //The TPageControl.IndexOfTabAt() method is not available in older Delphi
 //compilers. Therefore, I've included the following function
 //so this demo works all the way back to Delphi 3 ...
-{$IFNDEF VER3UP}
+
 function My_IndexOfTabAt(PageControl: TPageControl; X, Y: Integer): Integer;
 var
   HitTest: TTCHitTestInfo;
@@ -660,11 +634,10 @@ begin
 {$WARNINGS ON}
     end;
 end;
-{$ENDIF}
 
 //------------------------------------------------------------------------------
 
-procedure TMainForm.SizeCtrlMouseDown(Sender: TObject;
+procedure TForm1.SizeCtrlMouseDown(Sender: TObject;
   Target: TControl; TargetPt: TPoint; var handled: boolean);
 var
   i: integer;
@@ -679,11 +652,7 @@ begin
       //is fine in Delphi 7 but isn't available with older compilers ...
       //    with TargetPt do i := PageControl1.IndexOfTabAt(X, Y);
       //Therefore, this is my workaround which works back to Delphi 3 ...
-      {$IFDEF VER3UP}
-      with TargetPt do i := TPageControl(Target).IndexOfTabAt(X, Y);
-      {$ELSE}
       with TargetPt do i := My_IndexOfTabAt(TPageControl(Target), X, Y);
-      {$ENDIF}
 
       if (i >= 0) and ( ActivePage.PageIndex <> i) then
       begin
@@ -700,7 +669,7 @@ begin
 end;
 //------------------------------------------------------------------------------
 
-procedure TMainForm.SizeCtrlSetCursor(Sender: TObject;
+procedure TForm1.SizeCtrlSetCursor(Sender: TObject;
   Target: TControl; TargetPt: TPoint; var handled: boolean);
 var
   i: integer;
@@ -710,21 +679,13 @@ begin
   if (Target is TPageControl) then
     with TPageControl(Target) do
     begin
-      {$IFDEF VER3UP}
-      with TargetPt do i := TPageControl(Target).IndexOfTabAt(X, Y);
-      {$ELSE}
       with TargetPt do i := My_IndexOfTabAt(TPageControl(Target), X, Y);
-      {$ENDIF}
       if (i >= 0) and (ActivePage.PageIndex <> i) then
       begin
         //OK, we'll manage things from here ...
         handled := true;
         //assign the cursor directly ...
-        {$IFDEF FPC}
-        SetCursor(crDefault);
-        {$ELSE}
         windows.SetCursor(screen.Cursors[crDefault]);
-        {$ENDIF}
       end;
     end;
 end;
@@ -733,7 +694,7 @@ end;
 var
   popupMousePos: TPoint; //A workaround for older versions of Delphi (see below)
 
-procedure TMainForm.Panel3Click(Sender: TObject);
+procedure TForm1.Panel3Click(Sender: TObject);
 var c: TControlCanvas;
 begin
     c := TControlCanvas.Create;
@@ -753,7 +714,7 @@ begin
     SizeCtrl.Update;
 end;
 
-procedure TMainForm.Panel3Resize(Sender: TObject);
+procedure TForm1.Panel3Resize(Sender: TObject);
 var c: TControlCanvas;
 begin
     c := TControlCanvas.Create;
@@ -769,13 +730,13 @@ begin
     FreeAndNil(c);
 end;
 
-procedure TMainForm.sizePopsPopup(Sender: TObject);
+procedure TForm1.sizePopsPopup(Sender: TObject);
 begin
   GetCursorPos(popupMousePos);
 end;
 //------------------------------------------------------------------------------
 
-procedure TMainForm.MenuItem1Click(Sender: TObject);
+procedure TForm1.MenuItem1Click(Sender: TObject);
 var
   ctrl: TControl;
 begin
@@ -790,7 +751,7 @@ begin
 end;
 //------------------------------------------------------------------------------
 
-procedure TMainForm.SizeCtrlKeyDown(Sender: TObject; var Key: Word;
+procedure TForm1.SizeCtrlKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if key > VK_HELP then beep;

@@ -2,7 +2,10 @@ __history/
 __history\
 __recovery\
 __recovery/
-SizeControl8_src.zip
+lib\
+lib/
+backup\
+backup/
 *.dcu
 *.stat
 *.dproj_local
@@ -12,4 +15,6 @@ DemoSizeCtrl\
 Win32/
 Win32\
 DemoSizeCtrl.res
+DemoSizeCtrl_Icon.res
+*.lrs
 *.local

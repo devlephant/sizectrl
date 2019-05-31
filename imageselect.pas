@@ -3,9 +3,16 @@ unit imageselect;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+{$IFDEF FPC}
+Classes, Graphics,
+Controls, Forms, Dialogs, StdCtrls, Buttons,
+ExtCtrls,
+ExtDlgs, LCLTYPE
+{$ELSE}
+System.SysUtils, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
-  Vcl.ExtDlgs, vcl.imaging.pngimage, vcl.imaging.jpeg, vcl.imaging.gifimg;
+  Vcl.ExtDlgs, vcl.imaging.pngimage, vcl.imaging.jpeg, vcl.imaging.gifimg
+{$ENDIF};
 
 type
   TForm2 = class(TForm)
@@ -31,8 +38,11 @@ var
   Form2: TForm2;
 
 implementation
-
-{$R *.dfm}
+{$IFnDEF FPC}
+        {$R *.dfm}
+{$ELSE}
+       {$R *.lfm}
+{$ENDIF}
 
 function TForm2.Execute(const Picture: TPicture): Boolean;
 begin
