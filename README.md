@@ -21,25 +21,27 @@ Unlike original realization, current version supports both Delphi and Lazarus
 <li> MoveOnly property to deny/allow resizing of an objects
 <li> Objects tag support, to deny object from selecting
 <li> Customizable buttons: colours ({content-fill, border}) and images for Enabled, Hovered and Disabled states 
-<li> ApplySizes property - to apply sizes to the object immediately </li>
+<li> ApplySizes property - to apply sizes to the object immediately
 <li> EditDisabled property to allow (Enabled := False)->Disabled components editing
 <li> Different resize-during button styles: none (buttons are hidden),  buttons (all buttons are visible), line, single button
-<li> Different resize-during button hide options: none (buttons are visible, but static), hide (buttons are hidden), move (buttons will be moved in case of moving, but hidden in case of sizing)</ul></ul>
+<li> Different resize-during button hide options: none (buttons are visible, but static), hide (buttons are hidden), move (buttons will be moved in case of moving, but hidden in case of sizing) </li>
+	</ul></ul>
 <ul><li> Additional options:</li><ul>
-<li> Stretch properties supplied with every Image(TPicture) properties, to specify which images you would like to store in the original size </li>
+<li> Stretch properties supplied with every Image(TPicture) properties, to specify which images you would like to store in the original size
 <li> Customizable modification keys (selection, moving/sizing, align-ignoring keys)
-<li> OnHover events for TSizeBtns (sizing grips/handles)</ul></ul>
+<li> OnHover events for TSizeBtns (sizing grips/handles) </li>
+	</ul></ul>
 
 ##### Fixed bugs:
 <ul><li> Fixed common bugs:</li><ul>
 <li> Bug with Sizing Grid (ShowGrid) on non-TForm controls
 <li> Selection bug with Form focus (when you trying to change the form, and TSizeCtrl still handles events)
 <li> Selection bug with Forms (when you size form, its Caption Bar with action buttons is still available, which is kinda irritating)
-<li> Moving bugs with DoubleBuffering Enabled</li>
-<li> Bug with btn size, when object Left+Top = Btn Diameter(Size)</li>
+<li> Moving bugs with DoubleBuffering Enabled
+<li> Bug with btn size, when object Left+Top = Btn Diameter(Size)
 <li> Bug with recursion in DefWindowProc -- FormWindowProc </li></ul></ul>
 <ul><li> Known modern bugs:</li><ul>
-<li> 1. Moving with keys doesn't count on the limits ({e.g moveonly, custom tags, align limits)} </li>
+<li> 1. Moving with keys doesn't count on the limits ({e.g moveonly, custom tags, align limits)} 
 <li> 2. Cursor sometimes won't change, when the moving is started (with TShape, for example) </li>
 </ul> </ul>
 <ul><li> Known modern Lazarus bugs:</li><ul>
@@ -53,9 +55,10 @@ Unlike original realization, current version supports both Delphi and Lazarus
 <ul><li> New Features:</li><ul>
 <li> 1. Align with lines (function, ef)
 <li> 2. Detect control polygon to draw shape to fit the form
+<li> 3. Custom tag(s) support </li>
   </ul></ul>
 <ul><li> Refactorings:</li><ul>
 <li>1. Flipping control, when its sizes is too small
-  (Changing position + resizing)</li>
-<li>2. Regenerate Frame topmost settings(Add FrameOnTop property, e.g make the TMovePanel parent the same as TSizeBtn parent, if needed) [Delphi]
+  (Changing position + resizing)
+<li>2. Regenerate Frame topmost settings(Add FrameOnTop property, e.g make the TMovePanel parent the same as TSizeBtn parent, if needed) [Delphi]</li>
   </ul></ul>
