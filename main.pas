@@ -579,7 +579,9 @@ end;
 
 procedure TMainForm.SpinEdit2Change(Sender: TObject);
 begin
+  {$IFDEF VER3UP}
   SizeCtrl.BtnAlphaBlend := TSpinEdit(Sender).Value;
+  {$ENDIF}
 end;
 
 procedure TMainForm.SpinEdit3Change(Sender: TObject);

@@ -18,3 +18,5 @@ DemoSizeCtrl.res
 DemoSizeCtrl_Icon.res
 *.lrs
 *.local
+mainlaz.lfm
+mainlaz.pas
