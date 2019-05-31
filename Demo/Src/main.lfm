@@ -1,10 +1,10 @@
 object MainForm: TMainForm
   Left = 0
-  Height = 536
+  Height = 309
   Top = 0
   Width = 496
   Caption = 'Demo SizeCtrl'
-  ClientHeight = 516
+  ClientHeight = 309
   ClientWidth = 496
   Color = clBtnFace
   DoubleBuffered = True
@@ -18,12 +18,11 @@ object MainForm: TMainForm
   OnResize = FormResize
   ParentDoubleBuffered = False
   Position = poDesktopCenter
-  LCLVersion = '2.1.0.0'
   Visible = True
   object StatusBar1: TStatusBar
     Left = 0
     Height = 23
-    Top = 513
+    Top = 286
     Width = 496
     Panels = <>
   end
@@ -1144,12 +1143,12 @@ object MainForm: TMainForm
   end
   object Panel1: TPanel
     Left = 0
-    Height = 313
+    Height = 86
     Top = 200
     Width = 496
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 313
+    ClientHeight = 86
     ClientWidth = 496
     DoubleBuffered = True
     ParentBackground = False
@@ -1245,6 +1244,7 @@ object MainForm: TMainForm
         ''
       )
       TabOrder = 0
+      TabStop = False
     end
     object Panel2: TPanel
       Left = 195
@@ -1287,6 +1287,7 @@ object MainForm: TMainForm
       Height = 166
       Top = 75
       Width = 185
+      TabStop = False
       ActivePage = TabSheet2
       TabIndex = 1
       TabOrder = 2
@@ -1299,6 +1300,7 @@ object MainForm: TMainForm
           Height = 21
           Top = 7
           Width = 166
+          TabStop = False
           TabOrder = 0
           Text = 'Edit1'
         end
@@ -1351,6 +1353,7 @@ object MainForm: TMainForm
           Width = 75
           Caption = 'CheckBox1'
           TabOrder = 0
+          TabStop = False
         end
         object CheckBox5: TCheckBox
           Left = 0
@@ -1359,6 +1362,7 @@ object MainForm: TMainForm
           Width = 75
           Caption = 'CheckBox2'
           TabOrder = 1
+          TabStop = False
         end
       end
     end
@@ -1372,12 +1376,13 @@ object MainForm: TMainForm
       Enabled = False
       ItemHeight = 13
       TabOrder = 4
+      TabStop = False
       Text = 'Not impelled into Lazarus'
     end
     object Panel4: TPanel
       Left = 0
       Height = 60
-      Top = 253
+      Top = 26
       Width = 496
       Align = alBottom
       ClientHeight = 60
@@ -1412,6 +1417,7 @@ object MainForm: TMainForm
             Caption = 'Column two'
             Width = 81
           end>
+        TabStop = False
         TabOrder = 0
         ViewStyle = vsReport
       end
@@ -1422,6 +1428,7 @@ object MainForm: TMainForm
         Width = 60
         Caption = 'Try'
         TabOrder = 1
+        TabStop = False
       end
       object Button2: TButton
         Left = 282
@@ -1430,6 +1437,7 @@ object MainForm: TMainForm
         Width = 60
         Caption = 'Selecting'
         TabOrder = 2
+        TabStop = False
       end
       object Button3: TButton
         Left = 348
@@ -1438,6 +1446,7 @@ object MainForm: TMainForm
         Width = 60
         Caption = 'Multiple'
         TabOrder = 3
+        TabStop = False
       end
       object Button4: TButton
         Left = 414
@@ -1446,6 +1455,7 @@ object MainForm: TMainForm
         Width = 60
         Caption = 'Controls'
         TabOrder = 4
+        TabStop = False
       end
     end
     object Label37: TLabel

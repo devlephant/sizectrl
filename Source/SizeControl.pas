@@ -1966,6 +1966,10 @@ begin
         exit;
       {$ENDIF}
         if Msg.WParam = fMoveTopKey then
+        begin
+          {$IFDEF FPC}
+          Msg.Result := 1;
+          {$ENDIF}
           if KeyIsPressed(Self.FSelKey) then
           begin
             SizeTargets(0, -GridSize);
@@ -1978,7 +1982,12 @@ begin
             if assigned(fEndEvent) then
               fEndEvent(self, scsMoving);
           end;
+        end;
         if Msg.WParam = fMoveBottomKey then
+        begin
+          {$IFDEF FPC}
+          Msg.Result := 1;
+          {$ENDIF}
           if KeyIsPressed(Self.FSelKey) then
           begin
             SizeTargets(0, +GridSize);
@@ -1991,7 +2000,12 @@ begin
             if assigned(fEndEvent) then
               fEndEvent(self, scsMoving);
           end;
+        end;
         if Msg.WParam = fMoveLeftKey then
+        begin
+          {$IFDEF FPC}
+          Msg.Result := 1;
+          {$ENDIF}
           if KeyIsPressed(Self.FSelKey) then
           begin
             SizeTargets(-GridSize, 0);
@@ -2004,7 +2018,12 @@ begin
             if assigned(fEndEvent) then
               fEndEvent(self, scsMoving);
           end;
+        end;
         if Msg.WParam = fMoveRightKey then
+        begin
+          {$IFDEF FPC}
+          Msg.Result := 1;
+          {$ENDIF}
           if KeyIsPressed(Self.FSelKey) then
           begin
             SizeTargets(+GridSize, 0);
@@ -2017,8 +2036,12 @@ begin
             if assigned(fEndEvent) then
               fEndEvent(self, scsMoving);
           end;
+        end;
         if Msg.WParam = fSelToggleKey then
         begin
+          {$IFDEF FPC}
+          Msg.Result := 1;
+          {$ENDIF}
           if fRegList.Count = 0 then
             exit
           else if targetCount = 0 then
@@ -2039,6 +2062,10 @@ begin
           end;
         end;
         if Msg.WParam = fSelActionCancelKey then
+        begin
+          {$IFDEF FPC}
+          Msg.Result := 1;
+          {$ENDIF}
           //ESCAPE is used for both -
           //  1. cancelling a mouse move/resize operation, and
           //  2. selecting the parent of the currenctly selected target
@@ -2056,6 +2083,7 @@ begin
             if i >= 0 then
               AddTarget(TRegisteredObj(fRegList[i]).fControl);
           end;
+        end;
     end;
 
     WM_KEYUP: Msg.Result := 0;
@@ -2422,8 +2450,10 @@ begin
   for i := 0 to fTargetList.Count -1 do
     with TTargetObj(fTargetList[i]) do
     begin
-      with fTarget do SetBounds(Left + dx, Top + dy, Width, Height);
+      with fTarget do
+        SetBounds(Left + dx, Top + dy, Width, Height);
       Update;
+      end;
     end;
 end;
 
