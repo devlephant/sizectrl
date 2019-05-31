@@ -1846,13 +1846,6 @@ var
     begin
       getCursorPos(screenPt);
       regCtrl := RegisteredCtrlFromPt(screenPt, nil);
-      {$IFNDEF FPC}
-      if isVirtual then
-      begin
-         if inList(integer(regCtrl)) then
-         Exit;
-      end;
-      {$ENDIF}
       if assigned(regCtrl) then
       begin
         handled := False;
@@ -2460,7 +2453,6 @@ begin
       with fTarget do
         SetBounds(Left + dx, Top + dy, Width, Height);
       Update;
-      end;
     end;
 end;
 
