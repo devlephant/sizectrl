@@ -1,4 +1,4 @@
-object ImSelect: ImSelect
+object ImSelect: TImSelect
   Left = 0
   Height = 327
   Top = 0
@@ -17,7 +17,7 @@ object ImSelect: ImSelect
     Left = 0
     Height = 272
     Top = 0
-    Width = 356
+    Width = 368
     Align = alClient
     Center = True
   end
@@ -25,14 +25,14 @@ object ImSelect: ImSelect
     Left = 0
     Height = 55
     Top = 272
-    Width = 356
+    Width = 368
     Align = alBottom
     BevelOuter = bvNone
     ClientHeight = 55
-    ClientWidth = 356
+    ClientWidth = 368
     TabOrder = 0
     object BitBtn3: TBitBtn
-      Left = 281
+      Left = 293
       Height = 25
       Top = 23
       Width = 75
@@ -60,7 +60,7 @@ object ImSelect: ImSelect
       TabOrder = 2
     end
     object BitBtn4: TBitBtn
-      Left = 200
+      Left = 212
       Height = 25
       Top = 23
       Width = 75
@@ -70,10 +70,10 @@ object ImSelect: ImSelect
       TabOrder = 3
     end
     object CheckBox1: TCheckBox
-      Left = 135
-      Height = 17
-      Top = 2
-      Width = 81
+      Left = 139
+      Height = 19
+      Top = 1
+      Width = 84
       Anchors = []
       Caption = 'Resize Image'
       OnClick = CheckBox1Click

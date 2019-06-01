@@ -17,8 +17,30 @@
       </XPManifest>
       <Icon Value="0"/>
     </General>
+    <MacroValues Count="9">
+      <Macro1 Name="LCLWidgetType" Value="win32"/>
+      <Macro2 Name="LCLWidgetType" Value="gtk2"/>
+      <Macro3 Name="LCLWidgetType" Value="fpgui"/>
+      <Macro4 Name="LCLWidgetType" Value="gtk2"/>
+      <Macro5 Name="LCLWidgetType" Value="win32"/>
+      <Macro6 Name="LCLWidgetType" Value="gtk2"/>
+      <Macro7 Name="LCLWidgetType" Value="win32"/>
+      <Macro8 Name="LCLWidgetType" Value="wince"/>
+      <Macro9 Name="LCLWidgetType" Value="fpgui"/>
+    </MacroValues>
     <BuildModes>
       <Item Name="Default" Default="True"/>
+      <SharedMatrixOptions Count="9">
+        <Item1 ID="243690514248" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
+        <Item2 ID="412107564439" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+        <Item3 ID="654830078192" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="fpgui"/>
+        <Item4 ID="209540306060" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+        <Item5 ID="055128698345" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
+        <Item6 ID="507067560839" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+        <Item7 ID="352418055530" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
+        <Item8 ID="778943881748" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="wince"/>
+        <Item9 ID="409675207408" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="fpgui"/>
+      </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
@@ -49,7 +71,7 @@
       <Unit>
         <Filename Value="imageselect.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="Form2"/>
+        <ComponentName Value="ImSelect"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
@@ -65,18 +87,15 @@
       <IncludeFiles Value="$(ProjOutDir)"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
+    <CodeGeneration>
+      <TargetOS Value="win64"/>
+    </CodeGeneration>
     <Linking>
       <Debugging>
+        <GenerateDebugInfo Value="False"/>
         <DebugInfoType Value="dsDwarf2Set"/>
-        <UseHeaptrc Value="True"/>
-        <TrashVariables Value="True"/>
         <UseValgrind Value="True"/>
       </Debugging>
-      <Options>
-        <Win32>
-          <GraphicApplication Value="True"/>
-        </Win32>
-      </Options>
     </Linking>
   </CompilerOptions>
   <Debugging>

@@ -1,4 +1,7 @@
 unit imageselect;
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
 
 interface
 
@@ -39,9 +42,9 @@ var
 
 implementation
 {$IFnDEF FPC}
-        {$R *.dfm}
+  {$R *.dfm}
 {$ELSE}
-       {$R *.lfm}
+  {$R *.lfm}
 {$ENDIF}
 
 function TImSelect.Execute(const Picture: TPicture): Boolean;

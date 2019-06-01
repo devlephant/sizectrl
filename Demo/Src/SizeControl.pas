@@ -19,8 +19,8 @@ Copyright:      © 2019 Leu Zenin
  --------------------------------------------------------------------------- *)
 
 interface
-
 {$R SIZECONTROL}
+
 {$IFNDEF FPC}
 {$WARN HIDDEN_VIRTUAL OFF}
 {$IFDEF VER80}
@@ -2263,7 +2263,7 @@ begin
   if Control is TMovePanel or
   (Assigned(fGridForm) and (integer(Control) = integer(fGridForm))) then //b.f with 1000 objects selected
     Exit;
-
+  if Control.Tag = fTags.DenyChange then Exit;
   if RegisteredIndex(Control) >= 0 then
     exit;
 
@@ -2296,6 +2296,8 @@ var
 begin
   //first, clear any targets
   ClearTargets;
+  if fRegList.Count = 0 then
+                            Exit;
   //now, clear all registered controls ...
   for i := 0 to fRegList.Count - 1 do
   begin
@@ -2312,6 +2314,8 @@ var
   i: integer;
 begin
   Result := -1;
+  if fRegList.Count = 0 then
+                            Exit;
   for i := 0 to fRegList.Count - 1 do
     if TRegisteredObj(fRegList[i]).fControl = Control then
     begin

@@ -24,7 +24,10 @@ uses
   LCLIntf, LCLType,
 {$ENDIF}
 SysUtils, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, ComCtrls, StdCtrls, Menus, CommCtrl,
+  Dialogs, ExtCtrls, ComCtrls, StdCtrls, Menus,
+  {$IFNDEF Linux}
+  CommCtrl,
+  {$ENDIF}
   imageselect,
   {$IFnDEF FPC}
   Vcl.Buttons,
