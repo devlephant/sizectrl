@@ -1,4 +1,4 @@
-object Form2: TForm2
+object ImSelect: TImSelect
   Left = 0
   Top = 0
   Caption = 'Image Select'
@@ -32,7 +32,6 @@ object Form2: TForm2
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 356
     DesignSize = (
       368
       55)

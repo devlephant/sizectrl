@@ -15,7 +15,7 @@ System.SysUtils, System.Classes, Vcl.Graphics,
 {$ENDIF};
 
 type
-  TForm2 = class(TForm)
+  TImSelect = class(TForm)
     Image1: TImage;
     Panel1: TPanel;
     BitBtn3: TBitBtn;
@@ -35,7 +35,7 @@ type
   end;
 
 var
-  Form2: TForm2;
+  ImSelect: TImSelect;
 
 implementation
 {$IFnDEF FPC}
@@ -44,7 +44,7 @@ implementation
        {$R *.lfm}
 {$ENDIF}
 
-function TForm2.Execute(const Picture: TPicture): Boolean;
+function TImSelect.Execute(const Picture: TPicture): Boolean;
 begin
   Image1.Picture.Assign( Picture );
   Result := Self.ShowModal =  mrOk;
@@ -52,18 +52,18 @@ begin
     Picture.Assign( Image1.Picture );
 end;
 
-procedure TForm2.BitBtn1Click(Sender: TObject);
+procedure TImSelect.BitBtn1Click(Sender: TObject);
 begin
     if opd1.Execute then
       Image1.Picture.LoadFromFile( opd1.FileName );
 end;
 
-procedure TForm2.BitBtn2Click(Sender: TObject);
+procedure TImSelect.BitBtn2Click(Sender: TObject);
 begin
   Image1.Picture.Graphic.Free;
 end;
 
-procedure TForm2.CheckBox1Click(Sender: TObject);
+procedure TImSelect.CheckBox1Click(Sender: TObject);
 begin
   Image1.Stretch := TCheckBox(Sender).Checked;
 end;

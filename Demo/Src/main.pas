@@ -498,7 +498,7 @@ end;
 
 procedure TMainForm.BitBtn11Click(Sender: TObject);
 begin
-   Form2.Execute( SizeCtrl.HoverBtnImage );
+   ImSelect.Execute( SizeCtrl.HoverBtnImage );
 end;
 
 procedure TMainForm.BitBtn12Click(Sender: TObject);
@@ -533,12 +533,12 @@ end;
 
 procedure TMainForm.BitBtn5Click(Sender: TObject);
 begin
-  Form2.Execute( SizeCtrl.BtnImage );
+  ImSelect.Execute( SizeCtrl.BtnImage );
 end;
 
 procedure TMainForm.BitBtn6Click(Sender: TObject);
 begin
-  Form2.Execute( SizeCtrl.DisabledBtnImage );
+  ImSelect.Execute( SizeCtrl.DisabledBtnImage );
 end;
 
 procedure TMainForm.BitBtn7Click(Sender: TObject);
