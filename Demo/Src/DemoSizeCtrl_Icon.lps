@@ -11,7 +11,7 @@
         <EditorIndex Value="3"/>
         <TopLine Value="5"/>
         <CursorPos X="6" Y="14"/>
-        <UsageCount Value="100"/>
+        <UsageCount Value="102"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -25,9 +25,10 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="22"/>
-        <CursorPos X="58" Y="30"/>
-        <UsageCount Value="99"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="30"/>
+        <CursorPos X="29" Y="41"/>
+        <UsageCount Value="101"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -40,7 +41,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="56"/>
         <CursorPos X="21" Y="62"/>
-        <UsageCount Value="98"/>
+        <UsageCount Value="100"/>
       </Unit>
       <Unit>
         <Filename Value="mainlaz.pas"/>
@@ -91,11 +92,10 @@
       </Unit>
       <Unit>
         <Filename Value="SizeControl.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="208"/>
-        <CursorPos X="24" Y="215"/>
-        <UsageCount Value="49"/>
+        <TopLine Value="211"/>
+        <CursorPos X="17" Y="215"/>
+        <UsageCount Value="50"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -112,7 +112,7 @@
         <EditorIndex Value="2"/>
         <TopLine Value="642"/>
         <CursorPos X="15" Y="648"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -214,9 +214,9 @@
       <Unit>
         <Filename Value="main.lfm"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="38"/>
-        <CursorPos X="27" Y="48"/>
-        <UsageCount Value="5"/>
+        <TopLine Value="611"/>
+        <CursorPos X="14" Y="619"/>
+        <UsageCount Value="10"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit>
       <Unit>
@@ -304,127 +304,31 @@
         <UsageCount Value="18"/>
       </Unit>
     </Units>
-    <JumpHistory Count="30" HistoryIndex="29">
+    <JumpHistory Count="6" HistoryIndex="5">
       <Position1>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="1992" Column="58" TopLine="1983"/>
+        <Caret Line="1403" Column="17" TopLine="1390"/>
       </Position1>
       <Position2>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="210" Column="26" TopLine="203"/>
+        <Caret Line="1407" Column="15" TopLine="1394"/>
       </Position2>
       <Position3>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="1359" Column="30" TopLine="1350"/>
+        <Caret Line="1417" Column="15" TopLine="1403"/>
       </Position3>
       <Position4>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="1418" Column="11" TopLine="1404"/>
+        <Caret Line="1428" Column="15" TopLine="1412"/>
       </Position4>
       <Position5>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="1419" Column="11" TopLine="1405"/>
+        <Caret Line="1482" Column="15" TopLine="1469"/>
       </Position5>
       <Position6>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1420" Column="11" TopLine="1406"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="30" Column="58" TopLine="22"/>
       </Position6>
-      <Position7>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1483" Column="11" TopLine="1470"/>
-      </Position7>
-      <Position8>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1598" Column="24" TopLine="1590"/>
-      </Position8>
-      <Position9>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="210" Column="26" TopLine="203"/>
-      </Position9>
-      <Position10>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1603" Column="30" TopLine="1594"/>
-      </Position10>
-      <Position11>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1333" Column="30" TopLine="1320"/>
-      </Position11>
-      <Position12>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1401" Column="23" TopLine="1391"/>
-      </Position12>
-      <Position13>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1415" Column="12" TopLine="1401"/>
-      </Position13>
-      <Position14>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1416" Column="12" TopLine="1402"/>
-      </Position14>
-      <Position15>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1417" Column="12" TopLine="1403"/>
-      </Position15>
-      <Position16>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1480" Column="12" TopLine="1467"/>
-      </Position16>
-      <Position17>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1404" Column="15" TopLine="1390"/>
-      </Position17>
-      <Position18>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1509" Column="22" TopLine="1496"/>
-      </Position18>
-      <Position19>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1405" Column="16" TopLine="1391"/>
-      </Position19>
-      <Position20>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1391" Column="11" TopLine="1391"/>
-      </Position20>
-      <Position21>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1407" Column="21" TopLine="1397"/>
-      </Position21>
-      <Position22>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1516" Column="23" TopLine="1504"/>
-      </Position22>
-      <Position23>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="215" Column="79" TopLine="207"/>
-      </Position23>
-      <Position24>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1555" Column="19" TopLine="1550"/>
-      </Position24>
-      <Position25>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="2587" Column="43" TopLine="2573"/>
-      </Position25>
-      <Position26>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="215" Column="24" TopLine="208"/>
-      </Position26>
-      <Position27>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1421" Column="5" TopLine="1407"/>
-      </Position27>
-      <Position28>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1483" Column="14" TopLine="1470"/>
-      </Position28>
-      <Position29>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="1518" Column="31" TopLine="1505"/>
-      </Position29>
-      <Position30>
-        <Filename Value="SizeControl.pas"/>
-        <Caret Line="2587" Column="43" TopLine="2573"/>
-      </Position30>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
