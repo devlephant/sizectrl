@@ -22,3 +22,5 @@ DemoSizeCtrl_Icon.exe
 mainlaz.lfm
 mainlaz.pas
 *.db
+Demo/Src/SizeControl.pas
+Demo/Src/SizeControl.res
