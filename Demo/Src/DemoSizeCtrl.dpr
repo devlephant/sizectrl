@@ -10,6 +10,6 @@ uses
 begin
   Application.Initialize;
   Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TForm2, Form2);
+  Application.CreateForm(TImSelect, ImSelect);
   Application.Run;
 end.

@@ -44,7 +44,8 @@ uses
   Menus,   //To hook the TSizeCtrl.PopupMenu
   ComCtrls, //To check the TTabSheet, TPageControl
  {$IFDEF VER3U} TypInfo, {$ENDIF} //To hook the OnClick event
- {$IFDEF VER3UP} Math, {$IFNDEF FPC}System.UITypes,{$ENDIF} {$ENDIF}//TO expand the GetColor funct
+ {$IFDEF VER3UP} Math, {$IFNDEF FPC}System.UITypes,{$ENDIF} {$ENDIF}
+ //To calculate TSizeBtn shape region//TO expand the GetColor function for our needs
   Forms;
   (* [TSizeBtn reqs]
     To make transparent and topmost at the same time...
@@ -1690,8 +1691,6 @@ begin
   {$ELSE}
   if fForm is TForm then
     TForm(fForm).OnPaint := Self.formPaint
-  else
-    CreateGrid;
   {$ENDIF}
 {$IFDEF VER3D}
   screen.Cursors[crSize] := loadcursor(hInstance, 'NSEW');
@@ -2652,6 +2651,9 @@ begin
     {$IFDEF FPC}
     THackedControl(fCapturedCtrl).SetCursor(crSize);
     {$ENDIF}
+    {$IFDEF FPC}
+      DrawRect;
+    {$ENDIF}
   end;
 
 
@@ -2986,7 +2988,9 @@ procedure TSizeCtrl.UpdateGrid;
 begin
   if Assigned(TWinControl(Owner)) then
   begin
+     {$IFDEF FPC}
      if TWinControl(Owner).Visible then
+     {$ENDIF}
         TWinControl(Owner).Repaint;
      {$IFNDEF FPC}
      if not (fForm is TCustomForm) then
@@ -2996,6 +3000,8 @@ begin
        else
         CreateGrid;
      end;
+     {$ELSE}
+     fForm.Repaint;
      {$ENDIF}
   end;
 

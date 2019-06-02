@@ -17,7 +17,7 @@
       </XPManifest>
       <Icon Value="0"/>
     </General>
-    <MacroValues Count="10">
+    <MacroValues Count="11">
       <Macro1 Name="LCLWidgetType" Value="win32"/>
       <Macro2 Name="LCLWidgetType" Value="gtk2"/>
       <Macro3 Name="LCLWidgetType" Value="fpgui"/>
@@ -28,10 +28,11 @@
       <Macro8 Name="LCLWidgetType" Value="wince"/>
       <Macro9 Name="LCLWidgetType" Value="fpgui"/>
       <Macro10 Name="LCLWidgetType" Value="win32"/>
+      <Macro11 Name="LCLWidgetType" Value="gtk2"/>
     </MacroValues>
     <BuildModes>
       <Item Name="Default" Default="True"/>
-      <SharedMatrixOptions Count="10">
+      <SharedMatrixOptions Count="11">
         <Item1 ID="243690514248" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
         <Item2 ID="412107564439" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
         <Item3 ID="654830078192" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="fpgui"/>
@@ -42,6 +43,7 @@
         <Item8 ID="778943881748" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="wince"/>
         <Item9 ID="409675207408" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="fpgui"/>
         <Item10 ID="607088211176" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
+        <Item11 ID="062131125079" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
@@ -90,7 +92,7 @@
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>
-      <TargetOS Value="win64"/>
+      <TargetOS Value="linux"/>
     </CodeGeneration>
     <Linking>
       <Debugging>
@@ -98,11 +100,6 @@
         <DebugInfoType Value="dsDwarf2Set"/>
         <UseValgrind Value="True"/>
       </Debugging>
-      <Options>
-        <Win32>
-          <GraphicApplication Value="True"/>
-        </Win32>
-      </Options>
     </Linking>
   </CompilerOptions>
   <Debugging>
