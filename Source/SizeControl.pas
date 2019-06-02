@@ -19,8 +19,8 @@ Copyright:      © 2019 Leu Zenin
  --------------------------------------------------------------------------- *)
 
 interface
-
 {$R SIZECONTROL}
+
 {$IFNDEF FPC}
 {$WARN HIDDEN_VIRTUAL OFF}
 {$IFDEF VER80}
@@ -129,7 +129,7 @@ type
     fColor, fPen: TColor;
     fImage: TPicture;
   protected
-    procedure DrawTriangle(l, t:integer);
+    procedure DrawTriangle({$IFDEF FPC} b: Graphics.TBitmap;{$ENDIF}l, t:integer);
     procedure PaintAs(l,t:integer);
     procedure doPaint(Sender:TObject);
     procedure mEnter(Sender:TObject);
@@ -154,11 +154,8 @@ type
     constructor Create(TargetObj: TTargetObj; BtnPos: TBtnPos);
  {$IFNDEF VER3U} reintroduce; {$ENDIF}
   end;
-  {$IFDEF FPC}
-  TMovePanel = class(TForm)
-  {$ELSE}
+  {$IFNDEF FPC}
   TMovePanel = class(TCustomForm)
-  {$ENDIF}
   private
     fSizeCtrl: TSizeCtrl;
     procedure setfcanvas(fCanvas: TCanvas);
@@ -168,10 +165,8 @@ type
   public
     constructor Create(AOwner: TComponent;AsizeCtrl:TSizeCtrl);
     {$IFNDEF VER3U} reintroduce; {$ENDIF}
-    property RectCanvas: TCanvas write setfCanvas;
   end;
-
-
+  {$ENDIF}
   //TRegisteredObj is used internally by TSizeCtrl. Each TRegisteredObj
   //contains info about a possible target control.
   TRegisteredObj = class
@@ -195,10 +190,17 @@ type
   //TSizeBtn objects. Any number of TTargetObj's can be contained by TSizeCtrl.
   TTargetObj = class
   private
+
     fSizeCtrl: TSizeCtrl; //the owner of TTargetObj
     fTarget: TControl;
+    {$IFDEF FPC}
+    p: TPen;
+    br: TBRuSH;
+    frw:TCustomControl;
+    {$ELSE}
     fPanels: TList;
     fPanelsNames: TStrings;
+    {$ENDIF}
     fBtns: array [TBtnPos] of TSizeBtn;
     fFocusRect: TRect;
     fLastRect: TRect;
@@ -365,9 +367,9 @@ type
     procedure SetHoverBtnColor(aColor: TColor);
     procedure SetDisabledBtnColor(aColor: TColor);
     procedure SetBtnShape(v: TSizeBtnShapeType);
-    procedure SetBtnFrameColor(v: TColor);
-    procedure SetHoverBtnFrameColor(v: TColor);
-    procedure SetDisabledBtnFrameColor(v: TColor);
+    procedure SetBtnFrameColor(aColor: TColor);
+    procedure SetHoverBtnFrameColor(aColor: TColor);
+    procedure SetDisabledBtnFrameColor(aColor: TColor);
     {$IFDEF FPC}
     procedure DoMouseDown(Sender: TObject; {%H-}Button: TMouseButton; Shift: TShiftState);
     procedure DoMouseUp(Sender: TObject; {%H-}Button: TMouseButton; {%H-}Shift: TShiftState);
@@ -1046,50 +1048,50 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TSizeBtn.DrawTriangle(l,t:integer);
+procedure TSizeBtn.DrawTriangle({$IFDEF FPC}b:Graphics.TBitmap;{$ENDIF}l,t:integer);
 begin
   case fPos of
-    bpLeft: Canvas.Polygon(
+    bpLeft: {$IFDEF FPC}b.{$ENDIF}Canvas.Polygon(
       [Point(l, t+Floor(Height/2)),
       Point(l+Width-1, t),
       Point(l+Width-1, t+Height)
       ]);
-    bpRight: Canvas.Polygon(
+    bpRight: {$IFDEF FPC}b.{$ENDIF}Canvas.Polygon(
       [Point(l+Width, t+Floor(Height/2)),
       Point(l, t),
       Point(l, t+Height-1)
       ]);
     bpTop:
-      Canvas.Polygon(
+      {$IFDEF FPC}b.{$ENDIF}Canvas.Polygon(
       [Point(l, t+Height-1),
       Point(l+Floor(Width/2), t),
       Point(l+Width, t+Height-1)
       ]);
-    bpTopLeft: Canvas.Polygon(
+    bpTopLeft:{$IFDEF FPC}b.{$ENDIF} Canvas.Polygon(
       [Point(l, t),
        Point(l+Width-1, t+Floor(Height/2)),
        Point(l+Floor(Width/2),t+Height-1)
       ]);
     bpTopRight:
-      Canvas.Polygon(
+      {$IFDEF FPC}b.{$ENDIF}Canvas.Polygon(
       [Point(l, t+Floor(Height/2)),
        Point(l+Floor(Width/2),t+Height-1),
        Point(l+Width, t-1)
       ]);
     bpBottom:
-    Canvas.Polygon(
+    {$IFDEF FPC}b.{$ENDIF}Canvas.Polygon(
       [Point(l, t),
       Point(l+Floor(Width/2), t+Height-1),
       Point(l+Width, t)
       ]);
     bpBottomLeft:
-    Canvas.Polygon(
+    {$IFDEF FPC}b.{$ENDIF}Canvas.Polygon(
       [Point(l+Width-1, t+Floor(Height/2)),
        Point(l-1, t+Height),
        Point(l+Floor(Width/2),t)
       ]);
     bpBottomRight:
-    Canvas.Polygon(
+    {$IFDEF FPC}b.{$ENDIF}Canvas.Polygon(
       [Point(l, t+Floor(Height/2)),
        Point(l+Width, t+Height),
        Point(l+Floor(Width/2),t)
@@ -1100,6 +1102,9 @@ end;
 //------------------------------------------------------------------------------
 
 procedure TSizeBtn.PaintAs(l,t:integer);
+{$IFDEF FPC}
+var b:Graphics.TBitmap;
+  {$ENDIF}
 begin
   if Assigned(fImage.Graphic) and not(fImage.Graphic.Empty) then
   begin
@@ -1112,27 +1117,48 @@ begin
       Canvas.Draw(l,t, fImage.Graphic);
   end
   else
+  {$IFDEF FPC}
+  begin
+    b := Graphics.TBitmap.Create;
+    b.Width := Self.Width;
+    b.Height:= Self.Height;
+    b.Transparent:=True;
+    b.TransparentColor := clBlack;
+    b.Canvas.Brush.Assign(Self.Canvas.Brush);
+    b.Canvas.Pen.Assign(Self.Canvas.Pen);
+  {$ENDIF}
   case fTargetObj.fSizeCtrl.BtnShape of
      tszbSquare:
+     {$IFDEF FPC}b.{$ENDIF}
       Canvas.Rectangle(l,t, l+Width, t+Height);
      tszbTriangle:
-      DrawTriangle(l,t);
+      DrawTriangle({$IFDEF FPC}b,{$ENDIF}l,t);
      tszbCircle:
+     {$IFDEF FPC}b.{$ENDIF}
       Canvas.Ellipse(l,t, l+Width, t+Height);
      tszbMockTube:
      begin
+     {$IFDEF FPC}b.{$ENDIF}
       Canvas.Ellipse(l,t,l+Width,t+Height);
-      DrawTriangle(l,t);
+      DrawTriangle({$IFDEF FPC}b,{$ENDIF}l,t);
      end;
      tszbRoundRect:
+     {$IFDEF FPC}b.{$ENDIF}
       Canvas.RoundRect(l,t,l+Width,t+Height, (Width+Height) div 4,(Width+Height) div 4);
      tszbRhombus:
+     {$IFDEF FPC}b.{$ENDIF}
       Canvas.Polygon(
       [Point(l,t+Ceil(Height/2)-1),
       Point(l+Ceil(Width/2)-1, t),
       Point(l+Width-1,t+Ceil(Height/2)-1),
       Point(l+Ceil(Width/2)-1, t+Height-1)]);
   end;
+  {$IFDEF FPC}
+  SetShape(b);
+  Canvas.Draw(0,0,b);
+  b.Free;
+  end;
+  {$ENDIF}
 end;
 
 //------------------------------------------------------------------------------
@@ -1157,9 +1183,6 @@ begin
   {$IFDEF VER3UP}
   AlphaBlend := fTargetObj.fSizeCtrl.BtnAlphaBlend <> 255;
   AlphaBlendValue := fTargetObj.fSizeCtrl.BtnAlphaBlend;
-  {$IFDEF FPC}
-  ControlStyle := ControlStyle - [csOpaque] + [csParentBackground];
-  {$ENDIF}
   {$ELSE}
    if Canvas.Brush.Style = bsClear then
       Color := fSizeCtrl.fParentForm.Color;
@@ -1199,8 +1222,14 @@ begin
   inherited Create;
   fSizeCtrl := aSizeCtrl;
   fTarget := aTarget;
+  {$IFDEF FPC}
+  p := TPen.Create;
+  br:= TBrush.Create;
+  frw := TCustomControl(fsizeCtrl.fForm);
+  {$ELSE}
   fPanels := TList.Create;
   fPanelsNames := TStringList.Create;
+  {$ENDIF}
   for i := bpLeft to High(TBtnPos) do
     fBtns[i] := TSizeBtn.Create(self, i);
 end;
@@ -1210,8 +1239,11 @@ end;
 destructor TTargetObj.Destroy;
 var
   i: TBtnPos;
+  {$IFnDEF FPC}
   k: integer;
+  {$ENDIF}
 begin
+  {$IFnDEF FPC}
   fPanelsNames.Clear;
   for k := 0 to fPanels.Count - 1 do
     TObject(fPanels[k]).Free();
@@ -1219,7 +1251,7 @@ begin
 
   fPanels.Free;
   fPanelsNames.Free;
-
+  {$ENDIF}
   for i := bpLeft to high(TBtnPos) do
   begin
     if fBtns[i] <> nil then
@@ -1377,6 +1409,11 @@ end;
 procedure TTargetObj.StartFocus();
 begin
   fFocusRect := fTarget.BoundsRect;
+  {$IFDEF FPC};
+  DrawRect(fTarget);
+  DrawRect(fTarget);
+  DrawRect(fTarget);
+  {$ENDIF}
   fStartRec := fFocusRect;
 end;
 
@@ -1437,6 +1474,9 @@ begin
       Inc(fFocusRect.Bottom, dy);
     end;
   end;
+  {$IFDEF FPC}
+  DrawRect(fTarget);
+  {$ENDIF}
   Result := (L <> fFocusRect.Left) or (R <> fFocusRect.Right) or
     (T <> fFocusRect.Top) or (B <> fFocusRect.Bottom);
 end;
@@ -1472,26 +1512,28 @@ end;
 
 procedure TTargetObj.DrawRect(obj: TControl);
 var
+  {$IFnDEF FPC}
   pr: TWinControl;
   panel: TMovePanel;
   s: string;
   k: integer;
+  {$ENDIF}
   r: TRect;
 begin
   if fTarget.Tag = fSizeCtrl.TagOptions.DenyChange then
     exit;
 
+  {$IFNDEF FPC}
   fLastRect := fFocusRect;
-
   pr := obj.Parent;
   s := IntToStr(integer(obj));
+
   k := Self.fPanelsNames.IndexOf(s);
   if k > -1 then
     panel := TMovePanel(fPanels[k])
   else
   begin
     panel := TMovePanel.Create(pr, fSizeCtrl);
-    {$IFDEF FPC}panel.DoubleBuffered:=True;{$ENDIF}
     fPanelsNames.Add(IntToStr(integer(obj)));
     fPanels.Add(panel);
   end;
@@ -1501,6 +1543,7 @@ begin
 
   panel.Left := fFocusRect.Left;
   panel.Top := fFocusRect.Top;
+  {$ENDIF}
   r := TRect.Create( fFocusRect.TopLeft );
   r.BottomRight := fFocusRect.BottomRight;
   if fSizeCtrl.ApplySizes then
@@ -1534,18 +1577,28 @@ begin
       self.UpdateExtra(r,2);
   end;
   {$IFDEF FPC}
-  fSizeCtrl.Parent.Update;
   if fSizeCtrl.ApplySizes then
   obj.Repaint;
-  panel.Repaint;
-  {$ENDIF}
+  //panel.Repaint;
+  {$ELSE}
   if (panel.Visible = False) and (fSizeCtrl.ShowFrame) then
   begin
-        {$IFNDEF FPC}
-                 panel.BringToFront;
-        {$ENDIF}
-        panel.Show;
+       panel.BringToFront;
+       panel.Show;
   end;
+  {$ENDIF}
+  {$IFDEF FPC}
+  if fLastRect <> fFocusRect then
+  fSizeCtrl.FForm.Invalidate;
+  br.Assign(TCustomControl(fsizeCtrl.fForm).Canvas.Brush);
+  p.Assign(TCustomControl(fsizeCtrl.fForm).Canvas.Pen);
+  TCustomControl(fsizeCtrl.fForm).Canvas.Brush.Assign(fSizeCtrl.MovePanelCanvas.Brush);
+  TCustomControl(fsizeCtrl.fForm).Canvas.Pen.Assign(fSizeCtrl.MovePanelCanvas.Pen);
+  TCustomControl(fsizeCtrl.fForm).Canvas.Rectangle(fFocusRect);
+  TCustomControl(fsizeCtrl.fForm).Canvas.Brush.Assign(br);
+  TCustomControl(fsizeCtrl.fForm).Canvas.Pen.Assign(p);
+  fLastRect := fFocusRect;
+  {$ENDIF}
 end;
 
 //------------------------------------------------------------------------------
@@ -1826,8 +1879,13 @@ end;
 //WindowProc for the 'hooked' form and all 'hooked' controls
 procedure TSizeCtrl.DoWindowProc(DefaultProc: TWndMethod; var Msg: TMessage);
 var
-  i, k: integer;
+  i
+  {$IFDEF FPC}
+  :integer;
+  {$ELSE}
+  ,k: integer;
   list: TList;
+  {$ENDIF}
   ShiftState: TShiftState;
   controlPt, screenPt: TPoint;
   regCtrl: TControl;
@@ -1847,6 +1905,9 @@ var
       regCtrl := RegisteredCtrlFromPt(screenPt, nil);
       if assigned(regCtrl) then
       begin
+        {$IFDEF FPC}
+        if isTarget(regCtrl) then Exit;
+        {$ENDIF}
         handled := False;
         controlPt := regCtrl.ScreenToClient(screenPt);
         fOnMouseDown(self, regCtrl, controlPt, handled);
@@ -2102,11 +2163,13 @@ begin
         for i := 0 to TargetCount - 1 do
           begin
             TTargetObj(fTargetList[i]).EndFocus;
+            {$IFnDEF FPC}
             TTargetObj(fTargetList[i]).fPanelsNames.Clear;
             list := TTargetObj(fTargetList[i]).fPanels;
             for k := 0 to list.Count - 1 do
               TObject(list[k]).Free();
             list.Clear;
+            {$ENDIF}
           end;
           Msg.Result := 0;
       end else
@@ -2260,10 +2323,11 @@ function TSizeCtrl.RegisterControl(Control: TControl): integer;
 var
   RegisteredObj: TRegisteredObj;
 begin
-  if Control is TMovePanel or
+  if
+  {$IFNDEF FPC}Control is TMovePanel or{$ENDIF}
   (Assigned(fGridForm) and (integer(Control) = integer(fGridForm))) then //b.f with 1000 objects selected
     Exit;
-
+  if Control.Tag = fTags.DenyChange then Exit;
   if RegisteredIndex(Control) >= 0 then
     exit;
 
@@ -2296,6 +2360,8 @@ var
 begin
   //first, clear any targets
   ClearTargets;
+  if fRegList.Count = 0 then
+                            Exit;
   //now, clear all registered controls ...
   for i := 0 to fRegList.Count - 1 do
   begin
@@ -2312,6 +2378,8 @@ var
   i: integer;
 begin
   Result := -1;
+  if fRegList.Count = 0 then
+                            Exit;
   for i := 0 to fRegList.Count - 1 do
     if TRegisteredObj(fRegList[i]).fControl = Control then
     begin
@@ -2505,21 +2573,11 @@ end;
 procedure TSizeCtrl.DrawRect;
 var
   i: integer;
-  dc: hDC;
 begin
   if TargetCount = 0 then
     exit;
-  dc := GetDC(0);
-  try
-    for i := 0 to TargetCount - 1 do
-    {$IFDEF FPC}
+  for i := 0 to TargetCount - 1 do
       TTargetObj(fTargetList[i]).DrawRect(TTargetObj(fTargetList[i]).fTarget);
-    {$ELSE}
-      TTargetObj(fTargetList[i]).DrawRect(TTargetObj(fTargetList[i]).fTarget);
-    {$ENDIF}
-  finally
-    ReleaseDC(0, dc);
-  end;
 end;
 
 //------------------------------------------------------------------------------
@@ -2535,7 +2593,7 @@ begin
   fEscCancelled := False;
   GetCursorPos(fStartPt);
 
-
+  fParentForm.ActiveControl := nil;
 
   if (Sender is TSizeBtn) then
   begin
@@ -2557,7 +2615,6 @@ begin
     //First find the top-most control that's clicked ...
     //nb: It's so much simpler to do this here than try and work it out from
     //the WindowProc owner (because of disabled controls & non-TWinControls.)
-
     fCapturedCtrl := RegisteredCtrlFromPt(fStartPt);
 
     targetIdx := TargetIndex(fCapturedCtrl);
@@ -2571,6 +2628,9 @@ begin
     begin
 
       AddTarget(fCapturedCtrl);
+      {$IFDEF FPC}
+      DrawRect;
+      {$ENDIF}
       exit;
       //if the control's already a target but the Shift key's pressed then delete it ...
     end
@@ -2581,10 +2641,17 @@ begin
       exit;
     end;
     fParentForm.ActiveControl := nil;
+    {$IFDEF FPC}
+      DrawRect;
+    {$ENDIF}
     if not IsValidMove then
       exit;
     targetObj := TTargetObj(fTargetList[targetIdx]);
+
     fState := scsMoving;
+    {$IFDEF FPC}
+    THackedControl(fCapturedCtrl).SetCursor(crSize);
+    {$ENDIF}
   end;
 
 
@@ -2639,6 +2706,9 @@ begin
 
   DrawRect;
   THackedControl(fCapturedCtrl).MouseCapture := True;
+  {$IFDEF FPC}
+      DrawRect;
+  {$ENDIF}
 end;
 
 //------------------------------------------------------------------------------
@@ -2707,8 +2777,13 @@ end;
 procedure TSizeCtrl.DoMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState);
 var
-  i, k: integer;
+  i
+  {$IFDEF FPC}
+  :integer;
+  {$ELSE}
+  ,k: integer;
   list: TList;
+  {$ENDIF}
 begin
   if fState = scsReady then
     exit;
@@ -2725,11 +2800,13 @@ begin
     for i := 0 to TargetCount - 1 do
     begin
       TTargetObj(fTargetList[i]).EndFocus;
+      {$IFnDEF FPC}
       TTargetObj(fTargetList[i]).fPanelsNames.Clear;
       list := TTargetObj(fTargetList[i]).fPanels;
       for k := 0 to list.Count - 1 do
         TObject(list[k]).Free();
       list.Clear;
+      {$ENDIF}
     end;
 
   fEscCancelled := False;
@@ -2840,6 +2917,9 @@ procedure TSizeCtrl.SetEnabledBtnColor(aColor: TColor);
 begin
   if fEnabledBtnColor = aColor then
     exit;
+  {$IFDEF FPC}
+  if aColor = clBlack then inc(AColor,1);
+  {$ENDIF}
   fEnabledBtnColor := aColor;
   UpdateBtnCursors;
 end;
@@ -2850,17 +2930,23 @@ procedure TSizeCtrl.SetHoverBtnColor(aColor: TColor);
 begin
   if fHoverBtnColor = aColor then
     exit;
+  {$IFDEF FPC}
+  if aColor = clBlack then inc(AColor,1);
+  {$ENDIF}
   fHoverBtnColor := aColor;
   UpdateBtnCursors;
 end;
 
 //------------------------------------------------------------------------------
 
-procedure TSizeCtrl.SetHoverBtnFrameColor(v: TColor);
+procedure TSizeCtrl.SetHoverBtnFrameColor(aColor: TColor);
 begin
-  if fHoverBtnFrameColor = v then
+  if fHoverBtnFrameColor = aColor then
     exit;
-  fHoverBtnFrameColor := v;
+  {$IFDEF FPC}
+  if aColor = clBlack then inc(AColor,1);
+  {$ENDIF}
+  fHoverBtnFrameColor := aColor;
   UpdateBtnCursors;
 end;
 
@@ -2870,6 +2956,9 @@ procedure TSizeCtrl.SetDisabledBtnColor(aColor: TColor);
 begin
   if fDisabledBtnColor = aColor then
     exit;
+  {$IFDEF FPC}
+  if aColor = clBlack then inc(AColor,1);
+  {$ENDIF}
   fDisabledBtnColor := aColor;
   UpdateBtnCursors;
 end;
@@ -3050,21 +3139,27 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TSizeCtrl.SetBtnFrameColor(v: TColor);
+procedure TSizeCtrl.SetBtnFrameColor(aColor: TColor);
 begin
-  if fBtnFrameColor = v then
+  if fBtnFrameColor = aColor then
   exit;
-   fBtnFrameColor := v;
+  {$IFDEF FPC}
+  if aColor = clBlack then inc(AColor,1);
+  {$ENDIF}
+   fBtnFrameColor := aColor;
   UpdateBtnCursors;
 end;
 
 //------------------------------------------------------------------------------
 
-procedure TSizeCtrl.SetDisabledBtnFrameColor(v: TColor);
+procedure TSizeCtrl.SetDisabledBtnFrameColor(aColor: TColor);
 begin
-  if fDisabledBtnFrameColor = v then
+  if fDisabledBtnFrameColor = aColor then
   exit;
-   fDisabledBtnFrameColor := v;
+  {$IFDEF FPC}
+  if aColor = clBlack then inc(AColor,1);
+  {$ENDIF}
+   fDisabledBtnFrameColor := aColor;
   UpdateBtnCursors;
 end;
 
@@ -3135,6 +3230,10 @@ begin
     exit;
   if not ShowGrid or not Enabled then
     exit;
+  {$IFDEF FPC}
+  if fState = scsMoving then
+  DrawRect;
+  {$ENDIF}
   if GridSize < 5 then
     exit;
 
@@ -3287,24 +3386,31 @@ begin
   fRegList.Free;
   fRegList := newList;
 end;
-
+{$IFNDEF FPC}
 { TMovePanel }
 
 constructor TMovePanel.Create(AOwner: TComponent;AsizeCtrl:TSizeCtrl);
 begin
+  fSizeCtrl := ASizeCtrl;
   inherited CreateNew(nil);
   Loaded;
+
   BorderStyle := bsNone;
   AutoSize := False;
   Position := poDesigned;
-  {$IFNDEF FPC}
+
   FormStyle := fsStayOnTop;
-  {$ENDIF}
   Visible := False;
   Parent := TWinControl(AOwner);
-  fSizeCtrl := AsizeCtrl;
   OnPaint := DoPaint;
   OnResize := SetBoundsRect;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TMovePanel.SetBoundsRect;
+begin
+  invalidate;
 end;
 
 //------------------------------------------------------------------------------
@@ -3317,21 +3423,10 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-
-procedure TMovePanel.SetBoundsRect;
-begin
-  invalidate;
-end;
-
-//------------------------------------------------------------------------------
-
 procedure TMovePanel.DoPaint(Sender: TObject);
 begin
   setfcanvas(fSizeCtrl.movePanelCanvas);
   {$IFDEF VER3UP}
-  {$IFDEF FPC}
-  ControlStyle := ControlStyle - [csOpaque] + [csParentBackground];
-  {$ELSE}
     if Canvas.Brush.Style = bsClear then
   begin
     TransparentColor := True;
@@ -3341,7 +3436,6 @@ begin
   begin
     TransparentColor := False;
   end;
-  {$ENDIF}
   AlphaBlend := fSizeCtrl.MovePanelAlphaBlend < 255;
   AlphaBlendValue := fSizeCtrl.MovePanelAlphaBlend;
   {$ELSE}
@@ -3355,14 +3449,11 @@ begin
       Canvas.StretchDraw(Rect(0,0,Width,Height), fSizeCtrl.MovePanelImage.Graphic)
      Else
      Begin
-      {$IFDEF FPC}
-        Self.SetShape(fSizeCtrl.MovePanelImage.Bitmap);
-      {$ENDIF}
       Canvas.Draw(0,0,fSizeCtrl.MovePanelImage.Graphic);
      end;
   End
   Else
       Canvas.Rectangle(0, 0, Width, Height);
 end;
-
+{$ENDIF}
 end.
