@@ -1,10 +1,10 @@
 object MainForm: TMainForm
   Left = 0
-  Height = 309
+  Height = 522
   Top = 0
   Width = 496
   Caption = 'Demo SizeCtrl'
-  ClientHeight = 309
+  ClientHeight = 522
   ClientWidth = 496
   Color = clBtnFace
   DoubleBuffered = True
@@ -22,7 +22,7 @@ object MainForm: TMainForm
   object StatusBar1: TStatusBar
     Left = 0
     Height = 23
-    Top = 286
+    Top = 499
     Width = 496
     Panels = <>
   end
@@ -129,7 +129,7 @@ object MainForm: TMainForm
     object Panel9: TPanel
       Left = 0
       Height = 24
-      Top = 528
+      Top = 547
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -163,7 +163,7 @@ object MainForm: TMainForm
     object Panel10: TPanel
       Left = 0
       Height = 24
-      Top = 504
+      Top = 523
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -197,7 +197,7 @@ object MainForm: TMainForm
     object Panel11: TPanel
       Left = 0
       Height = 24
-      Top = 423
+      Top = 442
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -230,7 +230,7 @@ object MainForm: TMainForm
     object Panel12: TPanel
       Left = 0
       Height = 24
-      Top = 399
+      Top = 418
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -263,7 +263,7 @@ object MainForm: TMainForm
     object Panel13: TPanel
       Left = 0
       Height = 24
-      Top = 375
+      Top = 394
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -542,7 +542,7 @@ object MainForm: TMainForm
     object CheckBox3: TCheckBox
       Left = 0
       Height = 19
-      Top = 447
+      Top = 466
       Width = 479
       Align = alTop
       Caption = 'Move Only'
@@ -552,7 +552,7 @@ object MainForm: TMainForm
     object CheckBox4: TCheckBox
       Left = 0
       Height = 19
-      Top = 466
+      Top = 485
       Width = 479
       Align = alTop
       Caption = 'Multi-Target Resize'
@@ -619,7 +619,7 @@ object MainForm: TMainForm
     object Panel8: TPanel
       Left = 0
       Height = 24
-      Top = 619
+      Top = 638
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -662,7 +662,7 @@ object MainForm: TMainForm
     object Panel14: TPanel
       Left = 0
       Height = 24
-      Top = 667
+      Top = 686
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -708,7 +708,7 @@ object MainForm: TMainForm
     object Panel22: TPanel
       Left = 0
       Height = 24
-      Top = 691
+      Top = 710
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -762,7 +762,7 @@ object MainForm: TMainForm
     object Panel23: TPanel
       Left = 0
       Height = 24
-      Top = 715
+      Top = 734
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -795,7 +795,7 @@ object MainForm: TMainForm
     object Panel24: TPanel
       Left = 0
       Height = 24
-      Top = 739
+      Top = 758
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -841,7 +841,7 @@ object MainForm: TMainForm
     object Panel25: TPanel
       Left = 0
       Height = 24
-      Top = 763
+      Top = 782
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -874,7 +874,7 @@ object MainForm: TMainForm
     object Panel26: TPanel
       Left = 0
       Height = 24
-      Top = 643
+      Top = 662
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -915,7 +915,7 @@ object MainForm: TMainForm
     object CheckBox6: TCheckBox
       Left = 0
       Height = 19
-      Top = 600
+      Top = 619
       Width = 479
       Align = alTop
       Caption = 'Show Selection/Sizing Frame'
@@ -927,7 +927,7 @@ object MainForm: TMainForm
     object CheckBox7: TCheckBox
       Left = 0
       Height = 19
-      Top = 485
+      Top = 504
       Width = 479
       Align = alTop
       Caption = 'Apply Sizes Immediately'
@@ -937,7 +937,7 @@ object MainForm: TMainForm
     object Panel27: TPanel
       Left = 0
       Height = 24
-      Top = 552
+      Top = 571
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -971,7 +971,7 @@ object MainForm: TMainForm
     object Panel28: TPanel
       Left = 0
       Height = 24
-      Top = 576
+      Top = 595
       Width = 479
       Align = alTop
       BevelOuter = bvNone
@@ -1112,6 +1112,18 @@ object MainForm: TMainForm
       TabOrder = 33
       Visible = False
     end
+    object CheckBox8: TCheckBox
+      Left = 0
+      Height = 19
+      Top = 375
+      Width = 479
+      Align = alTop
+      Caption = 'Align Controls to Grid'
+      Checked = True
+      OnClick = CheckBox8Click
+      State = cbChecked
+      TabOrder = 34
+    end
   end
   object Panel3: TPanel
     Tag = 1
@@ -1148,12 +1160,12 @@ object MainForm: TMainForm
   end
   object Panel1: TPanel
     Left = 0
-    Height = 86
+    Height = 299
     Top = 200
     Width = 496
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 86
+    ClientHeight = 299
     ClientWidth = 496
     DoubleBuffered = True
     ParentBackground = False
@@ -1387,7 +1399,7 @@ object MainForm: TMainForm
     object Panel4: TPanel
       Left = 0
       Height = 60
-      Top = 26
+      Top = 239
       Width = 496
       Align = alBottom
       ClientHeight = 60

@@ -198,6 +198,7 @@ type
     p: TPen;
     br: TBRuSH;
     frw:TCustomControl;
+    fDrawRect: boolean;
     {$ELSE}
     fPanels: TList;
     fPanelsNames: TStrings;
@@ -288,7 +289,7 @@ type
     fDisabledBtnColor: TColor;
     fValidBtns: TBtnPosSet;
     fMultiResize: boolean;
-    fEnabled: boolean;
+    fEnabled, fAlignToGrid: boolean;
     fCapturedCtrl: TControl;
     fCapturedBtnPos: TBtnPos;
     fGridSize: integer;
@@ -504,6 +505,7 @@ type
     property ShowGrid: boolean read FShowGrid write SetShowGrid;
     //GridSize: aligns mouse moved/resized controls to nearest grid dimensions
     property GridSize: integer read fGridSize write setGridSize;
+    property AlignToGrid: boolean read fAlignToGrid write fAlignToGrid;
     property GridColor: TColor read fGridBlack write setGridBlack;
     property GridColorContrast: TColor read fGridWhite write setGridWhite;
     //MultiTargetResize: Resizing of multiple targets is allowed by default
@@ -779,7 +781,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure AlignToGrid(Ctrl: TControl; ProposedBoundsRect: TRect);
+procedure AlignCtrlToGrid(Ctrl: TControl; ProposedBoundsRect: TRect);
 begin
   with ProposedBoundsRect do
     Ctrl.SetBounds(left, top, right, bottom);
@@ -1415,9 +1417,8 @@ procedure TTargetObj.StartFocus();
 begin
   fFocusRect := fTarget.BoundsRect;
   {$IFDEF FPC};
-  DrawRect(fTarget);
-  DrawRect(fTarget);
-  DrawRect(fTarget);
+  fDrawRect := True;
+  fSizeCtrl.fForm.Update;
   {$ENDIF}
   fStartRec := fFocusRect;
 end;
@@ -1479,9 +1480,6 @@ begin
       Inc(fFocusRect.Bottom, dy);
     end;
   end;
-  {$IFDEF FPC}
-  DrawRect(fTarget);
-  {$ENDIF}
   Result := (L <> fFocusRect.Left) or (R <> fFocusRect.Right) or
     (T <> fFocusRect.Top) or (B <> fFocusRect.Bottom);
 end;
@@ -1506,9 +1504,12 @@ begin
     fFocusRect.Right := fFocusRect.Left + w;
     fFocusRect.Bottom := fFocusRect.Top + h;
   end;
-  with fFocusRect do
-    AlignToGrid(fTarget, Rect(Left, top, fSizeCtrl.FixSize(right - left,0),
-      fSizeCtrl.FixSize(bottom - top,1)));
+    AlignCtrlToGrid(fTarget, Rect(fFocusRect.Left, fFocusRect.Top,
+    fSizeCtrl.FixSize(fFocusRect.Right - fFocusRect.Left,0),
+      fSizeCtrl.FixSize(fFocusRect.Bottom - fFocusRect.Top,1)));
+  {$IFDEF FPC}
+  fDrawRect := false;
+  {$ENDIF}
   Update;
   fTarget.Invalidate;
 end;
@@ -1525,7 +1526,7 @@ var
   {$ENDIF}
   r: TRect;
 begin
-  if fTarget.Tag = fSizeCtrl.TagOptions.DenyChange then
+  if (fTarget.Tag = fSizeCtrl.TagOptions.DenyChange) {$IFDEF FPC} or not fDrawRect {$ENDIF}then
     exit;
 
   {$IFNDEF FPC}
@@ -1629,6 +1630,7 @@ begin
   fTargetList := TList.Create;
   fReIgnBtn := tszhNone;
   fRegList := TList.Create;
+  fAlignToGrid := true;
   fCanv := TCanvas.Create;
   fCanv.Brush.Color := clBtnFace;
   fCanv.Pen.Color := clBlack;
@@ -2635,9 +2637,6 @@ begin
     begin
 
       AddTarget(fCapturedCtrl);
-      {$IFDEF FPC}
-      DrawRect;
-      {$ENDIF}
       exit;
       //if the control's already a target but the Shift key's pressed then delete it ...
     end
@@ -2648,9 +2647,6 @@ begin
       exit;
     end;
     fParentForm.ActiveControl := nil;
-    {$IFDEF FPC}
-      DrawRect;
-    {$ENDIF}
     if not IsValidMove then
       exit;
     targetObj := TTargetObj(fTargetList[targetIdx]);
@@ -2658,9 +2654,6 @@ begin
     fState := scsMoving;
     {$IFDEF FPC}
     THackedControl(fCapturedCtrl).SetCursor(crSize);
-    {$ENDIF}
-    {$IFDEF FPC}
-      DrawRect;
     {$ENDIF}
   end;
 
@@ -2716,9 +2709,6 @@ begin
 
   DrawRect;
   THackedControl(fCapturedCtrl).MouseCapture := True;
-  {$IFDEF FPC}
-      DrawRect;
-  {$ENDIF}
 end;
 
 //------------------------------------------------------------------------------
@@ -2754,7 +2744,7 @@ begin
       bpTop, bpBottom: dx := 0;
     end;
 
-    if (not KeyIsPressed(Self.FDGKey)) then
+    if (not KeyIsPressed(Self.FDGKey)) and self.fAlignToGrid then
     begin
       Q := Dx mod GridSize;
       R := Dy mod GridSize;
@@ -2768,7 +2758,7 @@ begin
   else
   begin
 
-    if (not KeyIsPressed(Self.FDGKey)) then
+    if (not KeyIsPressed(Self.FDGKey)) and self.fAlignToGrid then
     begin
       Q := Dx mod GridSize;
       R := Dy mod GridSize;
@@ -3238,16 +3228,15 @@ var
   obj: TWinControl;
   {$ENDIF}
 begin
-  if not Assigned(Self) then
-    exit;
-  if not Assigned(fForm) then
-    exit;
-  if not ShowGrid or not Enabled then
+  if not Assigned(Self) or
+     not Assigned(fForm)or
+     not Enabled then
     exit;
   {$IFDEF FPC}
-  if fState = scsMoving then
   DrawRect;
   {$ENDIF}
+  if not ShowGrid then
+    exit;
   if GridSize < 5 then
     exit;
 

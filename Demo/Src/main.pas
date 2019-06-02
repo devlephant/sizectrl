@@ -170,6 +170,7 @@ type
     Label36: TLabel;
     Label37: TLabel;
     Button5: TButton;
+    CheckBox8: TCheckBox;
     procedure Button5Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
@@ -219,6 +220,7 @@ type
     procedure BitBtn11Click(Sender: TObject);
     procedure BitBtn13Click(Sender: TObject);
     procedure BitBtn12Click(Sender: TObject);
+    procedure CheckBox8Click(Sender: TObject);
   private
     SizeCtrl: TSizeCtrl;
     procedure SizeCtrlDuring(Sender: TObject; dx, dy: integer; State: TSCState);
@@ -396,6 +398,11 @@ end;
 procedure TMainForm.CheckBox7Click(Sender: TObject);
 begin
   SizeCtrl.ApplySizes := TCheckBox(Sender).Checked;
+end;
+
+procedure TMainForm.CheckBox8Click(Sender: TObject);
+begin
+  SizeCtrl.AlignToGrid := TCheckBox(Sender).Checked;
 end;
 
 procedure TMainForm.ComboBox1Change(Sender: TObject);
