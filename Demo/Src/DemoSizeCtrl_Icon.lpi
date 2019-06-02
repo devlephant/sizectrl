@@ -17,7 +17,7 @@
       </XPManifest>
       <Icon Value="0"/>
     </General>
-    <MacroValues Count="11">
+    <MacroValues Count="16">
       <Macro1 Name="LCLWidgetType" Value="win32"/>
       <Macro2 Name="LCLWidgetType" Value="gtk2"/>
       <Macro3 Name="LCLWidgetType" Value="fpgui"/>
@@ -29,10 +29,15 @@
       <Macro9 Name="LCLWidgetType" Value="fpgui"/>
       <Macro10 Name="LCLWidgetType" Value="win32"/>
       <Macro11 Name="LCLWidgetType" Value="gtk2"/>
+      <Macro12 Name="LCLWidgetType" Value="win32"/>
+      <Macro13 Name="LCLWidgetType" Value="gtk2"/>
+      <Macro14 Name="LCLWidgetType" Value="gtk3"/>
+      <Macro15 Name="LCLWidgetType" Value="gtk2"/>
+      <Macro16 Name="LCLWidgetType" Value="win32"/>
     </MacroValues>
     <BuildModes>
       <Item Name="Default" Default="True"/>
-      <SharedMatrixOptions Count="11">
+      <SharedMatrixOptions Count="16">
         <Item1 ID="243690514248" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
         <Item2 ID="412107564439" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
         <Item3 ID="654830078192" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="fpgui"/>
@@ -44,6 +49,11 @@
         <Item9 ID="409675207408" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="fpgui"/>
         <Item10 ID="607088211176" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
         <Item11 ID="062131125079" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+        <Item12 ID="826342022170" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
+        <Item13 ID="780824893056" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+        <Item14 ID="004794789249" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk3"/>
+        <Item15 ID="501807146042" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+        <Item16 ID="461734992088" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
@@ -92,7 +102,8 @@
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>
-      <TargetOS Value="linux"/>
+      <TargetCPU Value="i386"/>
+      <TargetOS Value="win32"/>
     </CodeGeneration>
     <Linking>
       <Debugging>
@@ -100,7 +111,17 @@
         <DebugInfoType Value="dsDwarf2Set"/>
         <UseValgrind Value="True"/>
       </Debugging>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
     </Linking>
+    <Other>
+      <Verbosity>
+        <ShowDebugInfo Value="True"/>
+      </Verbosity>
+    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">

@@ -556,7 +556,8 @@ type
   procedure SendCancelMode(Sender: TControl);
   end;
   {$ENDIF}
-  THackedWinControl = class(TWinControl){$IFNDEF FPC};{$ELSE}
+  THackedWinControl = {$IFNDEF FPC}class(TWinControl);{$ELSE}
+  class(TCustomForm)
   public
   procedure SendCancelMode(Sender: TControl);
   end;
@@ -1252,6 +1253,9 @@ begin
 
   fPanels.Free;
   fPanelsNames.Free;
+  {$ELSE}
+  p.Free;
+  br.Free;
   {$ENDIF}
   for i := bpLeft to high(TBtnPos) do
   begin
@@ -1326,9 +1330,6 @@ begin
    end;
     if not fBtns[i].Visible then
     fBtns[i].Visible := True;
-    {$IFDEF FPC}
-    fBtns[i].Repaint;
-    {$ENDIF}
   end;
 end;
 
@@ -1369,7 +1370,7 @@ begin
     2:
      if fSizeCtrl.fCapturedBtnPos <> bpNone
       then ilrd := [fSizeCtrl.fCapturedBtnPos]
-     else if fSizeCtrl.ResizeIgnoreMethod = tszhMove then ilrd := ilr;
+     else if fSizeCtrl.ResizeIgnoreMethod = tszhMove then ilrd := ilr else exit;
   end;
 
   for i in ilr do
@@ -1400,9 +1401,12 @@ begin
       else fBtns[i].Top := lTop;
     end;
     {$IFDEF FPC}
-    fBtns[i].Repaint;
+    fBtns[i].Update;//reduce button flicker
     {$ENDIF}
   end;
+  {$IFDEF FPC}
+  fSizeCtrl.FForm.Update;//reduce panel flicker
+  {$ENDIF}
 end;
 
 //------------------------------------------------------------------------------
@@ -1547,7 +1551,7 @@ begin
   {$ENDIF}
   r := TRect.Create( fFocusRect.TopLeft );
   r.BottomRight := fFocusRect.BottomRight;
-  if fSizeCtrl.ApplySizes then
+  if {$IFDEF FPC}(fFocusRect <> fLastRect) and {$ENDIF} fSizeCtrl.ApplySizes then
   begin
     obj.Width := fSizeCtrl.FixSize(fFocusRect.Right - fFocusRect.Left,0);
     obj.Height := fSizeCtrl.FixSize(fFocusRect.Bottom - fFocusRect.Top,0);
@@ -1569,6 +1573,9 @@ begin
     r.TopLeft := obj.ClientToParent(r.TopLeft);
     r.BottomRight := obj.ClientToParent(r.BottomRight)
   end;
+  {$IFDEF FPC}
+  if fLastRect <> fFocusRect then
+  {$ENDIF}
   case fSizeCtrl.ResizeFrameType of
     tszfButtons:
       self.UpdateExtra(r,0);
@@ -1579,8 +1586,7 @@ begin
   end;
   {$IFDEF FPC}
   if fSizeCtrl.ApplySizes then
-  obj.Repaint;
-  //panel.Repaint;
+  obj.Update;//reduce object flicker
   {$ELSE}
   if (panel.Visible = False) and (fSizeCtrl.ShowFrame) then
   begin
@@ -1589,8 +1595,10 @@ begin
   end;
   {$ENDIF}
   {$IFDEF FPC}
+  if not fSizeCtrl.ShowFrame then
+  Exit;
   if fLastRect <> fFocusRect then
-  fSizeCtrl.FForm.Invalidate;
+  fSizeCtrl.FForm.Invalidate;//Finally, repaint the panel
   br.Assign(TCustomControl(fsizeCtrl.fForm).Canvas.Brush);
   p.Assign(TCustomControl(fsizeCtrl.fForm).Canvas.Pen);
   TCustomControl(fsizeCtrl.fForm).Canvas.Brush.Assign(fSizeCtrl.MovePanelCanvas.Brush);
@@ -1905,7 +1913,7 @@ var
       if assigned(regCtrl) then
       begin
         {$IFDEF FPC}
-        if isTarget(regCtrl) then Exit;
+        if self.isTarget(regCtrl) then Exit;
         {$ENDIF}
         handled := False;
         controlPt := regCtrl.ScreenToClient(screenPt);
