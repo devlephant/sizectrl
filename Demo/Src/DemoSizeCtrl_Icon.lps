@@ -15,7 +15,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="27" Y="20"/>
-        <UsageCount Value="114"/>
+        <UsageCount Value="116"/>
       </Unit>
       <Unit>
         <Filename Value=""/>
@@ -30,7 +30,7 @@
         <ResourceBaseClass Value="Form"/>
         <TopLine Value="30"/>
         <CursorPos X="30" Y="34"/>
-        <UsageCount Value="113"/>
+        <UsageCount Value="115"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -43,7 +43,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="56"/>
         <CursorPos X="21" Y="62"/>
-        <UsageCount Value="112"/>
+        <UsageCount Value="114"/>
       </Unit>
       <Unit>
         <Filename Value="mainlaz.pas"/>
@@ -59,8 +59,8 @@
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\controls.pp"/>
         <UnitName Value="Controls"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="1626"/>
-        <CursorPos X="14" Y="1632"/>
+        <TopLine Value="1754"/>
+        <CursorPos X="14" Y="1762"/>
         <UsageCount Value="10"/>
       </Unit>
       <Unit>
@@ -96,9 +96,9 @@
         <Filename Value="SizeControl.pas"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="2806"/>
-        <CursorPos X="35" Y="2813"/>
-        <UsageCount Value="56"/>
+        <TopLine Value="2567"/>
+        <CursorPos X="23" Y="2567"/>
+        <UsageCount Value="57"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -333,7 +333,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="2482"/>
         <CursorPos X="6" Y="2491"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\include\messagedialogs.inc"/>
@@ -349,100 +349,136 @@
         <CursorPos X="18" Y="13"/>
         <UsageCount Value="10"/>
       </Unit>
+      <Unit>
+        <Filename Value="C:\fpcupdeluxe\lazarus\lcl\interfaces\gtk\gtkdefines.inc"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="9"/>
+        <CursorPos X="40" Y="71"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit>
     </Units>
-    <JumpHistory Count="23" HistoryIndex="22">
+    <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2296" Column="43" TopLine="2287"/>
+        <Caret Line="2029" Column="42" TopLine="2015"/>
       </Position1>
       <Position2>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2298" Column="21" TopLine="2290"/>
+        <Caret Line="2674" Column="44" TopLine="2661"/>
       </Position2>
       <Position3>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2295" Column="68" TopLine="2290"/>
+        <Caret Line="2811" Column="42" TopLine="2798"/>
       </Position3>
       <Position4>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2294" Column="35" TopLine="2290"/>
+        <Caret Line="2294" Column="35" TopLine="2294"/>
       </Position4>
       <Position5>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="8" Column="69"/>
+        <Caret Line="7" Column="73"/>
       </Position5>
       <Position6>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="6" Column="62"/>
+        <Caret Line="2020" Column="52" TopLine="2005"/>
       </Position6>
       <Position7>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2019" Column="53" TopLine="2012"/>
+        <Caret Line="2031" Column="58" TopLine="2020"/>
       </Position7>
       <Position8>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2676" Column="53" TopLine="2663"/>
+        <Caret Line="2679" Column="51" TopLine="2664"/>
       </Position8>
       <Position9>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2294" Column="35" TopLine="2279"/>
+        <Caret Line="2816" Column="48" TopLine="2806"/>
       </Position9>
       <Position10>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="5" Column="70"/>
+        <Caret Line="1163" Column="11" TopLine="1156"/>
       </Position10>
       <Position11>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2027" Column="40" TopLine="2012"/>
+        <Caret Line="1162" Column="18" TopLine="1156"/>
       </Position11>
       <Position12>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2029" Column="30" TopLine="2016"/>
+        <Caret Line="1163" Column="9" TopLine="1156"/>
       </Position12>
       <Position13>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2674" Column="53" TopLine="2662"/>
+        <Caret Line="46" Column="21" TopLine="32"/>
       </Position13>
       <Position14>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="6" Column="70"/>
+        <Caret Line="840" Column="22" TopLine="827"/>
       </Position14>
       <Position15>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2019" Column="33" TopLine="2004"/>
+        <Caret Line="841" Column="22" TopLine="828"/>
       </Position15>
       <Position16>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2029" Column="42" TopLine="2015"/>
+        <Caret Line="1754" Column="22" TopLine="1741"/>
       </Position16>
       <Position17>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2674" Column="44" TopLine="2661"/>
+        <Caret Line="2288" Column="3" TopLine="2274"/>
       </Position17>
       <Position18>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2811" Column="42" TopLine="2798"/>
+        <Caret Line="1165" Column="6" TopLine="1160"/>
       </Position18>
       <Position19>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2294" Column="35" TopLine="2294"/>
+        <Caret Line="1756" Column="22" TopLine="1743"/>
       </Position19>
       <Position20>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="7" Column="73"/>
+        <Caret Line="2288" Column="32" TopLine="2276"/>
       </Position20>
       <Position21>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2020" Column="52" TopLine="2005"/>
+        <Caret Line="2290" Column="17" TopLine="2277"/>
       </Position21>
       <Position22>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2031" Column="58" TopLine="2020"/>
+        <Caret Line="1117" Column="79" TopLine="1110"/>
       </Position22>
       <Position23>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2679" Column="51" TopLine="2664"/>
+        <Caret Line="1165" Column="77" TopLine="1152"/>
       </Position23>
+      <Position24>
+        <Filename Value="SizeControl.pas"/>
+        <Caret Line="2290" Column="79" TopLine="2282"/>
+      </Position24>
+      <Position25>
+        <Filename Value="SizeControl.pas"/>
+        <Caret Line="2287" Column="32" TopLine="2282"/>
+      </Position25>
+      <Position26>
+        <Filename Value="SizeControl.pas"/>
+        <Caret Line="2567" Column="3" TopLine="2556"/>
+      </Position26>
+      <Position27>
+        <Filename Value="SizeControl.pas"/>
+        <Caret Line="2576" Column="37" TopLine="2566"/>
+      </Position27>
+      <Position28>
+        <Filename Value="SizeControl.pas"/>
+        <Caret Line="2568" Column="31" TopLine="2566"/>
+      </Position28>
+      <Position29>
+        <Filename Value="SizeControl.pas"/>
+        <Caret Line="2567" Column="9" TopLine="2565"/>
+      </Position29>
+      <Position30>
+        <Filename Value="SizeControl.pas"/>
+        <Caret Line="2575" Column="19" TopLine="2564"/>
+      </Position30>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>

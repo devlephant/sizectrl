@@ -1114,6 +1114,7 @@ begin
   begin
        {$IFDEF FPC}
         Self.SetShape(fImage.Bitmap);
+       {$MESSAGE HINT 'This feature is not supported by GTK,GTK?->Comment line'}
        {$ENDIF}
     if fTargetObj.fSizeCtrl.StretchBtnImage then
       Canvas.StretchDraw(Rect(l,t, width, height), fImage.Graphic)
@@ -1158,7 +1159,12 @@ begin
       Point(l+Ceil(Width/2)-1, t+Height-1)]);
   end;
   {$IFDEF FPC}
-  //Self.SetShape(b);
+   {$IFNDEF Gtk2}
+    {$IFNDEF Gtk1}
+     Self.SetShape(b);
+     {$MESSAGE HINT 'This feature is not supported by GTK,GTK?->Comment line'}
+    {$ENDIF}
+   {$ENDIF}
   Canvas.Draw(0,0,b);
   b.Free;
   end;
@@ -2279,11 +2285,8 @@ begin
   TargetObj := TTargetObj.Create(self, Control);
   fTargetList.Add(TargetObj);
   RegisterControl(Control);
-  {$IFDEF FPC}
   fParentForm.ActiveControl := nil;
-  {$ELSE}
-  fParentForm.ActiveControl := nil;
-  {$ENDIF}
+  {$MESSAGE HINT 'In GTK Active Control must not to be null,GTK?->Comment this'}
   UpdateBtnCursors;
   TargetObj.Update;
   {$IFNDEF FPC}
@@ -2530,14 +2533,38 @@ end;
 
 procedure TSizeCtrl.MoveTargets(dx, dy: integer);
 var
-  i: integer;       //ihere
+  i, Q, R, RDx, RDy: integer;       //ihere
 begin
   if not IsValidMove then exit;
-  for i := 0 to fTargetList.Count -1 do
+  if MoveOnly then
+    exit;
+  if (dx = 0) and (dy = 0) then
+    exit;
+  Q := 0;
+  R := 0;
+  if ((dx = 1) or (dy = 1)) and (GridSize <> 1) then
+     begin
+       Inc(dx,1);
+       Inc(dy,1);
+     end;
+  if ((dx = -1) or (dy = -1)) and (GridSize <> 1) then
+     begin
+       Dec(dx,1);
+       Dec(dy,1);
+     end;
+  for i := 0 to fTargetList.Count - 1 do
     with TTargetObj(fTargetList[i]) do
     begin
-      with fTarget do
-        SetBounds(Left + dx, Top + dy, Width, Height);
+    RDx :=  fTarget.Left + dx;
+    RDy :=  fTarget.Top  + dy;
+    if self.fAlignToGrid then
+     begin
+       if dx <> 0 then
+       Q := RDx mod GridSize;
+       if dy <> 0 then
+       R := RDy mod GridSize;
+     end;
+        fTarget.SetBounds(RDx-Q,RDy-R, fTarget.Width, fTarget.Height);
       Update;
     end;
 end;
@@ -2546,7 +2573,7 @@ end;
 
 procedure TSizeCtrl.SizeTargets(dx, dy: integer);
 var
-  i: integer;
+  i, Q, R, RDx, RDy: integer;
 begin
   if MoveOnly then
     exit;
@@ -2554,13 +2581,33 @@ begin
     exit;
   if (dy <> 0) and not (IsValidSizeBtn(bpBottom) or IsValidSizeBtn(bpTop)) then
     exit;
-
+  if (dx = 0) and (dy = 0) then
+    exit;
+  Q := 0;
+  R := 0;
+  if ((dx = 1) or (dy = 1)) and (GridSize <> 1) then
+     begin
+       Inc(dx,1);
+       Inc(dy,1);
+     end;
+  if ((dx = -1) or (dy = -1)) and (GridSize <> 1) then
+     begin
+       Dec(dx,1);
+       Dec(dy,1);
+     end;
   for i := 0 to fTargetList.Count - 1 do
     with TTargetObj(fTargetList[i]) do
     begin
-      with fTarget do
-        SetBounds(Left, Top,
-          FixSize(Width + dx,0), FixSize(Height + dy,1));
+    RDx :=  FixSize(fTarget.Width + dx,0);
+    RDy :=  FixSize(fTarget.Height + dy,1);
+    if self.fAlignToGrid then
+     begin
+       if dx <> 0 then
+       Q := RDx mod GridSize;
+       if dy <> 0 then
+       R := RDy mod GridSize;
+     end;
+        fTarget.SetBounds(fTarget.Left, fTarget.Top, RDx-Q,RDy-R);
       Update;
     end;
 end;

@@ -19,18 +19,24 @@
       </XPManifest>
       <Icon Value="0"/>
     </General>
-    <MacroValues Count="3">
+    <MacroValues Count="6">
       <Macro1 Name="LCLWidgetType" Value="gtk2"/>
       <Macro3 Name="LCLWidgetType" Value="gtk3"/>
       <Macro4 Name="LCLWidgetType" Value="win32"/>
+      <Macro5 Name="LCLWidgetType" Value="gtk"/>
+      <Macro6 Name="LCLWidgetType" Value="gtk2"/>
+      <Macro7 Name="LCLWidgetType" Value="win32"/>
     </MacroValues>
     <BuildModes>
       <Item Name="Default" Default="True"/>
-      <SharedMatrixOptions Count="4">
+      <SharedMatrixOptions Count="7">
         <Item1 ID="233570912205" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
         <Item2 ID="088933904513" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
         <Item3 ID="970096801389" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk3"/>
         <Item4 ID="549294149281" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
+        <Item5 ID="345486835110" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk"/>
+        <Item6 ID="307447695551" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+        <Item7 ID="264270717478" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
