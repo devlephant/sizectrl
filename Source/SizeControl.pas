@@ -10,12 +10,12 @@ unit SizeControl;
 Component Name:  TSizeCtrl
 Module:          SizeControl
 Description:     Enables both moving and resizing of controls at runtime.
-Version:         8.1
-Date:            01-JUN-2019
+Version:         8.2
+Date:            03-JUN-2019
 Author:          Leu Zenin, kashaket@protonmail.com
+                 Angus Johnson,   angusj@myrealbox.com
 Copyright:      © 2019 Leu Zenin
-                {near 90% code is refactored}
-                © 1997-2007 Angus Johnson
+                {near 94.45% code is refactored}
  --------------------------------------------------------------------------- *)
 
 interface
@@ -1158,7 +1158,7 @@ begin
       Point(l+Ceil(Width/2)-1, t+Height-1)]);
   end;
   {$IFDEF FPC}
-  SetShape(b);
+  //Self.SetShape(b);
   Canvas.Draw(0,0,b);
   b.Free;
   end;
@@ -1286,7 +1286,9 @@ end;
 procedure TTargetObj.Update;
 var
   i: TBtnPos;
+  {$IFNDEF FPC}
   st: boolean;
+  {$ENDIF}
   parentForm: TCustomForm;
   tl: TPoint;
   bsDiv2: integer;
@@ -1305,10 +1307,14 @@ begin
   if fBtns[i].ParentWindow <> parentForm.Handle then
   begin
     fBtns[i].ParentWindow := parentForm.Handle; //ie keep btns separate !!!
+    {$IFNDEF FPC}
     fBtns[i].SetZOrder(true); //force btns to the top ...
+    {$ENDIF}
     //just to be sure, that our button will be displayed correctly
     fBtns[i].Position := poDesigned;
+    {$IFNDEF FPC}
     st := true;
+    {$ENDIF}
   end;
     fBtns[i].Left := tl.X - bsDiv2;
     case i of
@@ -1324,12 +1330,14 @@ begin
       bpBottomLeft, bpBottom, bpBottomRight:
         fBtns[i].Top := fBtns[i].Top + fTarget.Height - 1;
     end;
+    {$IFNDEF FPC}
     //force btns to the top ...
     if st then begin
       SetWindowPos(fBtns[i].Handle, HWND_TOP, fBtns[i].Left,
       fBtns[i].Top, fBtns[i].Left + fBtns[i].Width, fBtns[i].Left + fBtns[i].Top,
       SWP_NOACTIVATE or SWP_NOACTIVATE or SWP_NOMOVE or SWP_NOSIZE);
-   end;
+    end;
+    {$ENDIF}
     if not fBtns[i].Visible then
     fBtns[i].Visible := True;
   end;
@@ -1688,7 +1696,6 @@ begin
   fValidBtns := [bpLeft, bpTopLeft, bpTop, bpTopRight, bpRight,
     bpBottomRight, bpBottom, bpBottomLeft];
   {$IFDEF FPC}
-  Visible := False;
   fDefWindowProc := WindowProc;
   WindowProc := WinProc;
   {$ELSE}
@@ -1698,6 +1705,12 @@ begin
   {$IFDEF FPC}
   if fForm is TCustomControl then
      TCustomControl(fForm).OnPaint:=self.formPaint;
+    Left := -1;
+  Top := -1;
+  Height := 0;
+  Width := 0;
+  Visible := True;
+  Enabled := True;
   {$ELSE}
   if fForm is TForm then
     TForm(fForm).OnPaint := Self.formPaint
@@ -1990,21 +2003,10 @@ begin
           fOnSetCursor(self, RegisteredCtrlFromPt(screenPt), controlPt, handled);
         end;
 
-        if  not handled and (TargetIndex(regCtrl) >= 0) then
+        if not IsValidMove and handled and (TargetIndex(regCtrl) >= 0) then
         begin
-          if not IsValidMove then
-          begin
             if Assigned(DefaultProc) then
             DefaultProc(Msg);
-          end
-          else
-          {$IFDEF FPC}
-          Msg.Result := 1;
-          THackedControl(regCtrl).SetCursor(crSize);
-          Self.SetCursor(crSize);
-          {$ELSE}
-            Windows.SetCursor(screen.Cursors[crSize]);
-          {$ENDIF}
         end
         else if not handled and assigned(regCtrl) then
         begin
@@ -2013,7 +2015,7 @@ begin
             THackedControl(regCtrl).SetCursor(crHandPoint);
             Self.SetCursor(crHandPoint);
           {$ELSE}
-            Windows.SetCursor(screen.Cursors[crHandPoint])
+            Windows.SetCursor(screen.Cursors[crHandPoint]);
           {$ENDIF}
         end
         else
@@ -2164,9 +2166,11 @@ begin
       //P.s thanks to "furious programming" from Lazarus forum,
       //Because now i'm know, that in FP i do not have to
       //do this...
+
       if ( GetForegroundWindow <> fParentForm.Handle)
           and (fState <> scsReady) then
       begin
+        ShowMessage('s');
         fState := scsReady;
         if TargetCount > 0 then
         for i := 0 to TargetCount - 1 do
@@ -2181,9 +2185,8 @@ begin
             {$ENDIF}
           end;
           Msg.Result := 0;
-      end else
-      DefaultProc(Msg);
-    end
+        end;
+    end;
     else if Assigned(DefaultProc) then
       DefaultProc(Msg);
   end;
@@ -2276,7 +2279,11 @@ begin
   TargetObj := TTargetObj.Create(self, Control);
   fTargetList.Add(TargetObj);
   RegisterControl(Control);
+  {$IFDEF FPC}
   fParentForm.ActiveControl := nil;
+  {$ELSE}
+  fParentForm.ActiveControl := nil;
+  {$ENDIF}
   UpdateBtnCursors;
   TargetObj.Update;
   {$IFNDEF FPC}
@@ -2334,6 +2341,7 @@ var
 begin
   if
   {$IFNDEF FPC}Control is TMovePanel or{$ENDIF}
+  (integer(Control) = integer(Self)) or
   (Assigned(fGridForm) and (integer(Control) = integer(fGridForm))) then //b.f with 1000 objects selected
     Exit;
   if Control.Tag = fTags.DenyChange then Exit;
@@ -2654,6 +2662,8 @@ begin
     fState := scsMoving;
     {$IFDEF FPC}
     THackedControl(fCapturedCtrl).SetCursor(crSize);
+    {$ELSE}
+     Windows.SetCursor(Screen.Cursors[crSizeAll]);
     {$ENDIF}
   end;
 
@@ -2726,7 +2736,7 @@ begin
 
   if (fState = scsReady) or not assigned(fCapturedCtrl) then
     exit;
-  DrawRect;
+ // DrawRect;
   {$IFDEF FPC}
   GetCursorPos({%H-}newPt);
   {$ELSE}
@@ -2787,7 +2797,6 @@ var
 begin
   if fState = scsReady then
     exit;
-  DrawRect;
   {$IFNDEF FPC}
   ClipCursor(nil);
   {$ENDIF}

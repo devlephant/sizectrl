@@ -14,48 +14,23 @@
       <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True"/>
+        <TextName Value="SizeControl"/>
+        <TextDesc Value="SizeControl Demo"/>
       </XPManifest>
       <Icon Value="0"/>
     </General>
-    <MacroValues Count="17">
-      <Macro1 Name="LCLWidgetType" Value="win32"/>
-      <Macro2 Name="LCLWidgetType" Value="gtk2"/>
-      <Macro3 Name="LCLWidgetType" Value="fpgui"/>
-      <Macro4 Name="LCLWidgetType" Value="gtk2"/>
-      <Macro5 Name="LCLWidgetType" Value="win32"/>
-      <Macro6 Name="LCLWidgetType" Value="gtk2"/>
-      <Macro7 Name="LCLWidgetType" Value="win32"/>
-      <Macro8 Name="LCLWidgetType" Value="wince"/>
-      <Macro9 Name="LCLWidgetType" Value="fpgui"/>
-      <Macro10 Name="LCLWidgetType" Value="win32"/>
-      <Macro11 Name="LCLWidgetType" Value="gtk2"/>
-      <Macro12 Name="LCLWidgetType" Value="win32"/>
-      <Macro13 Name="LCLWidgetType" Value="gtk2"/>
-      <Macro14 Name="LCLWidgetType" Value="gtk3"/>
-      <Macro15 Name="LCLWidgetType" Value="gtk2"/>
-      <Macro16 Name="LCLWidgetType" Value="win32"/>
-      <Macro17 Name="LCLWidgetType" Value="gtk2"/>
+    <MacroValues Count="3">
+      <Macro1 Name="LCLWidgetType" Value="gtk2"/>
+      <Macro3 Name="LCLWidgetType" Value="gtk3"/>
+      <Macro4 Name="LCLWidgetType" Value="win32"/>
     </MacroValues>
     <BuildModes>
       <Item Name="Default" Default="True"/>
-      <SharedMatrixOptions Count="17">
-        <Item1 ID="243690514248" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
-        <Item2 ID="412107564439" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
-        <Item3 ID="654830078192" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="fpgui"/>
-        <Item4 ID="209540306060" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
-        <Item5 ID="055128698345" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
-        <Item6 ID="507067560839" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
-        <Item7 ID="352418055530" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
-        <Item8 ID="778943881748" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="wince"/>
-        <Item9 ID="409675207408" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="fpgui"/>
-        <Item10 ID="607088211176" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
-        <Item11 ID="062131125079" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
-        <Item12 ID="826342022170" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
-        <Item13 ID="780824893056" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
-        <Item14 ID="004794789249" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk3"/>
-        <Item15 ID="501807146042" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
-        <Item16 ID="461734992088" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
-        <Item17 ID="374904345487" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+      <SharedMatrixOptions Count="4">
+        <Item1 ID="233570912205" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+        <Item2 ID="088933904513" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+        <Item3 ID="970096801389" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk3"/>
+        <Item4 ID="549294149281" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
@@ -104,14 +79,24 @@
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>
-      <TargetOS Value="linux"/>
+      <Checks>
+        <IOChecks Value="True"/>
+        <OverflowChecks Value="True"/>
+        <StackChecks Value="True"/>
+      </Checks>
+      <TargetCPU Value="i386"/>
+      <TargetOS Value="win32"/>
     </CodeGeneration>
     <Linking>
       <Debugging>
-        <GenerateDebugInfo Value="False"/>
-        <DebugInfoType Value="dsDwarf2Set"/>
+        <TrashVariables Value="True"/>
         <UseValgrind Value="True"/>
       </Debugging>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
     </Linking>
     <Other>
       <Verbosity>

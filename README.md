@@ -38,15 +38,16 @@ Unlike original realization, current version supports both Delphi and Lazarus, s
 <li> Moving bugs with DoubleBuffering Enabled
 <li> Bug with btn size, when object Left+Top = Btn Diameter(Size)
 <li> Bug with recursion in DefWindowProc -- FormWindowProc
-<li> Bug with unassigned control, which caused by size-during component selection</li></ul></ul>
+<li> Bug with unassigned control, which caused by size-during component selection
+<li> Bug with cursor: sometimes it's won't change, when the moving is started (with TShape, for example)</li></ul></ul>
 <ul><li> Known modern bugs:</li><ul>
 <li> 1. Moving with keys doesn't count on the limits ({e.g moveonly, custom tags, align limits)} 
-<li> 2. Cursor sometimes won't change, when the moving is started (with TShape, for example) </li>
 </ul> </ul>
 <ul><li> Known modern Lazarus bugs:</li><ul>
 <li> 1. Add disabled objects selecting support [Lazarus]
 		<br>Possible solution: hook all WndProces recursive?</li>
-<li> 2. WIth gtk it doesn't handles the WM_KEY messages... </li>
+<li> 2. WIth gtk it doesn't handles the WM_KEY messages... 
+		[Reason: fActiveControl:=nil cannot be done on GTK]</li>
 </ul></ul>
 
 ##### Nearly plans:
