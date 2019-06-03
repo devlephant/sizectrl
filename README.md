@@ -42,6 +42,7 @@ Unlike original realization, current version supports both Delphi and Lazarus, s
 <li> Bug with cursor: sometimes it's won't change, when the moving is started (with TShape, for example)</li></ul></ul>
 <ul><li> Known modern bugs:</li><ul>
 <li> 1. Moving with keys doesn't count on the limits ({e.g moveonly, custom tags, align limits)} 
+<li> 2. Moving with keys while editing object by mouse causes sizing bugs</li>
 </ul> </ul>
 <ul><li> Known modern Lazarus bugs:</li><ul>
 <li> 1. Add disabled objects selecting support [Lazarus]
