@@ -13,6 +13,7 @@ Unlike original realization, current version supports both Delphi and Lazarus, s
 <li> TCustomForms support: when form is resized with TSizeCtrl, it cannot be closed or maximized/minimized </li>
 <li>Grid support, with properties: gridSize, showGrid, gridColor, gridColorContrast </li></ul>
 <ul><li> Resizing options:</li><ul>
+<li> AlignToGrid property - align controls to the grid
 <li> ApplySizes property - activate to change object's size immediately
 <li> MultiTargetResize property - to deny/allow resizing of few targets at once
 <li> Constraints property to specify minimal and maximal sizes of the resizable object
