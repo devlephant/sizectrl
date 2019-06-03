@@ -44,6 +44,7 @@ type
 
   TMainForm = class(TForm)
     ComboBox3: TComboBox;
+    Label38: TLabel;
     MainMenu1: TMainMenu;
     File1: TMenuItem;
     EnableSizeControl1: TMenuItem;
@@ -216,7 +217,6 @@ type
     procedure SpinEdit6Change(Sender: TObject);
     procedure SpinEdit7Change(Sender: TObject);
     procedure Panel3Resize(Sender: TObject);
-    procedure Label29Click(Sender: TObject);
     procedure BitBtn11Click(Sender: TObject);
     procedure BitBtn13Click(Sender: TObject);
     procedure BitBtn12Click(Sender: TObject);
@@ -483,11 +483,6 @@ begin
       Label26.Left := (Panel3.Width div 2) + (c.TextWidth(pCollapsed) div 2) + 3;
     end;
     FreeAndNil(c);
-end;
-
-procedure TMainForm.Label29Click(Sender: TObject);
-begin
-
 end;
 
 //------------------------------------------------------------------------------

@@ -230,46 +230,48 @@ type
     fMResize, fNMResize,  //Multi-Resize
      fChange, fnChange,    //Any change
      fMChange, fnMChange,   //Any change in selected group
-      { x; y; w; h; }
+     fNoSel, //Deny selection!
+     { x; y; w; h; }
     fLeft, fTop, fWidth, fHeight,
       { x, h; x, w; }
     fLeftHeight, fLeftWidth,
       { y, h; y, w; }
     fTopHeight, fTopWidth,
       { x, y, w, h; x, y, w; x, y, h; }
-    fTLWH, fTLW, fTLH: integer;
+    fTLWH, fTLW, fTLH: int64;
   public
     //ChangeTopLeft: integer read fnTopLeft write fnTopLeft;
-    property AllowMove: integer read fMove write fMove;
-    property DenyMove: integer read fNMove write fNMove;
-    property AllowMultiMove: integer read fMMove write fMMove;
-    property DenyMultiMove: integer read fNMMove write fNMMove;
+    property DenySelect: int64 read fNoSel write fNoSel;
+    property AllowMove: int64 read fMove write fMove;
+    property DenyMove:  int64  read fNMove write fNMove;
+    property AllowMultiMove:  int64  read fMMove write fMMove;
+    property DenyMultiMove:  int64  read fNMMove write fNMMove;
 
-    property AllowChange: integer read fChange write fChange;
-    property DenyChange: integer read fNChange write fNChange;
-    property AllowMultiChange: integer read fmChange write fmChange;
-    property DenyMultiChange: integer read fnMChange write fnMChange;
+    property AllowChange:  int64  read fChange write fChange;
+    property DenyChange:  int64  read fNChange write fNChange;
+    property AllowMultiChange:  int64  read fmChange write fmChange;
+    property DenyMultiChange:  int64  read fnMChange write fnMChange;
 
-    property ChangeTop: integer read fTop write fTop;
-    property ChangeLeft: integer read fLeft write fLeft;
-    property ChangeWidth: integer read fWidth write fWidth;
-    property ChangeHeight: integer read fHeight write fHeight;
+    property ChangeTop:  int64  read fTop write fTop;
+    property ChangeLeft:  int64  read fLeft write fLeft;
+    property ChangeWidth:  int64  read fWidth write fWidth;
+    property ChangeHeight:  int64  read fHeight write fHeight;
 
-    property ChangeTopHeight: integer read fTopHeight write fTopHeight;
-    property ChangeTopWidth: integer read fTopWidth write fTopWidth;
-    property ChangeLeftHeight: integer read fLeftHeight write fLeftHeight;
-    property ChangeLeftWidth: integer read fLeftWidth write fLeftWidth;
+    property ChangeTopHeight:  int64  read fTopHeight write fTopHeight;
+    property ChangeTopWidth:  int64  read fTopWidth write fTopWidth;
+    property ChangeLeftHeight:  int64  read fLeftHeight write fLeftHeight;
+    property ChangeLeftWidth:  int64  read fLeftWidth write fLeftWidth;
 
-    property ChangeTopLeftWidth: integer read fTLW write fTLW;
-    property ChangeTopLeftHeight: integer read fTLH write fTLH;
-    property ChangeTopLeftWidthHeight: integer read fTLWH write fTLWH;
+    property ChangeTopLeftWidth:  int64  read fTLW write fTLW;
+    property ChangeTopLeftHeight:  int64  read fTLH write fTLH;
+    property ChangeTopLeftWidthHeight:  int64  read fTLWH write fTLWH;
 
-    // ChangeHeightWidth: integer read fnHeightWidth write fnHeightWidth;
-    property AllowResize:  integer read fResize write fResize;
-    property DenyResize: integer read fNResize write fNResize;
+    // ChangeHeightWidth:  int64  read fnHeightWidth write fnHeightWidth;
+    property AllowResize:   int64  read fResize write fResize;
+    property DenyResize:  int64  read fNResize write fNResize;
 
-    property AllowMultiResize: integer read fMResize write fMResize;
-    property DenyMultiResize: integer read fNMResize write fNMresize;
+    property AllowMultiResize:  int64  read fMResize write fMResize;
+    property DenyMultiResize:  int64  read fNMResize write fNMresize;
   end;
   {$IFDEF FPC}
   TSizeCtrl = class(TForm)
@@ -415,6 +417,9 @@ type
       Include:boolean;
       AddType:TRecursionVector
     ): boolean;
+    function XYweckPositive(x,y:integer;c:byte;t:int64): boolean;
+    function XyWeckTag(c: TBtnPos;t:int64):boolean;
+    function XYweck(x,y:integer;c:byte;t:int64): boolean;
   public
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
@@ -762,7 +767,221 @@ begin
 end;
  //P.s Delphi compiler is kind of a shit
 }
-//-----------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+function TSizeCtrl.XyWeck(x,y:integer;c:byte;t:int64): boolean;
+begin
+  Result :=
+    (
+     (fTargetList.Count > 1) and
+     (
+      (fTags.DenyMultiChange = t) or
+      ((c=1)and(fTags.DenyMultiResize = t)) or
+      ((c=0)and(fTags.DenyMultiMove = t))
+     )
+    )
+    or
+    (fTags.DenyChange = t)
+    or
+    (fTags.DenySelect = t)//Should never happen,but...
+    or
+    (
+    (c = 0)
+       and
+        (fTags.DenyMove = t)
+        or
+         ((x<>0)
+              and
+               (
+                 (fTags.ChangeTop=t)
+                 or
+                 (fTags.ChangeTopHeight=t)
+                 or
+                 (fTags.ChangeTopWidth=t)
+                 or
+                 (fTags.ChangeWidth=t)
+                 or
+                 (fTags.ChangeHeight=t)
+               )
+         )
+        or
+         ((y<>0)
+              and
+               (
+                 (FTags.ChangeWidth=t)
+                 or
+                 (fTags.ChangeHeight=t)
+                 or
+                 (fTags.ChangeLeftHeight=t)
+                 or
+                 (fTags.ChangeLeft=t)
+                 or
+                 (fTags.ChangeLeftWidth=t)
+               )
+         )
+    )
+    or
+    (
+    (c = 1)
+       and
+        (fTags.DenyResize = t)
+        or
+         ((x<>0)
+              and
+               (
+                 (fTags.ChangeTop=t)
+                 or
+                 (fTags.ChangeTopHeight=t)
+                 or
+                 (fTags.ChangeLeft=t)
+                 or
+                 (fTags.ChangeLeftHeight=t)
+                 or
+                 (fTags.ChangeHeight=t)
+               )
+         )
+        or
+         ((y<>0)
+              and
+               (
+                 (FTags.ChangeWidth=t)
+                 or
+                 (fTags.ChangeTopWidth=1)
+                 or
+                 (fTags.ChangeTopHeight=t)
+                 or
+                 (fTags.ChangeLeft=t)
+                 or
+                 (fTags.ChangeLeftWidth=t)
+               )
+         )
+    )
+    ;
+end;
+
+//------------------------------------------------------------------------------
+
+function TSizeCtrl.XyWeckPositive(x,y:integer;c:byte;t:int64): boolean;
+begin
+  Result :=
+    (
+     (fTargetList.Count > 1) and
+     (
+      (fTags.AllowMultiChange = t) or
+      ((c=1)and(fTags.AllowMultiResize = t)) or
+      ((c=0)and(fTags.AllowMultiMove = t))
+     )
+    )
+    or
+    (fTags.AllowChange = t)
+    or
+    (
+    (c = 0)
+       and
+        (fTags.AllowMove = t)
+        or
+         ((x<>0)
+              and
+               not (
+                 (fTags.ChangeTop=t)
+                 or
+                 (fTags.ChangeTopHeight=t)
+                 or
+                 (fTags.ChangeTopWidth=t)
+                 or
+                 (fTags.ChangeWidth=t)
+                 or
+                 (fTags.ChangeHeight=t)
+               )
+         )
+        or
+         ((y<>0)
+              and
+               not (
+                 (FTags.ChangeWidth=t)
+                 or
+                 (fTags.ChangeHeight=t)
+                 or
+                 (fTags.ChangeLeftHeight=t)
+                 or
+                 (fTags.ChangeLeft=t)
+                 or
+                 (fTags.ChangeLeftWidth=t)
+               )
+         )
+    )
+    or
+    (
+    (c = 1)
+       and
+        (fTags.AllowResize = t)
+        or
+         ((x<>0)
+              and
+               not (
+                 (fTags.ChangeTop=t)
+                 or
+                 (fTags.ChangeTopHeight=t)
+                 or
+                 (fTags.ChangeLeft=t)
+                 or
+                 (fTags.ChangeLeftHeight=t)
+                 or
+                 (fTags.ChangeHeight=t)
+               )
+         )
+        or
+         ((y<>0)
+              and
+               not (
+                 (FTags.ChangeWidth=t)
+                 or
+                 (fTags.ChangeTopWidth=1)
+                 or
+                 (fTags.ChangeTopHeight=t)
+                 or
+                 (fTags.ChangeLeft=t)
+                 or
+                 (fTags.ChangeLeftWidth=t)
+               )
+          )
+    )
+    ;
+end;
+
+//-----------------------------------------------------------------------------
+function TSizeCtrl.XyWeckTag(c: TBtnPos;t:int64):boolean;
+begin
+
+  case c of
+    bpLeft:
+      Result :=
+      XyWeckPositive(1,0,0,t) and XyWeckPositive(1,0,1,t);
+    bpTop:
+      Result :=
+      XyWeckPositive(0,1,0,t) and XyWeckPositive(0,1,1,t);
+    bpRight:
+      Result :=
+      XyWeckPositive(1,0,1,t);
+    bpBottom:
+      Result :=
+      XyWeckPositive(0,1,1,t);
+    bpTopLeft:
+      Result :=
+      XyWeckPositive(1,0,0,t) and XyWeckPositive(1,0,1,t) AND XyWeckPositive(0,1,0,t) and XyWeckPositive(0,1,1,t);
+    bpTopRight:
+      Result :=
+      XyWeckPositive(1,0,1,t) AND XyWeckPositive(0,1,0,t) and XyWeckPositive(0,1,1,t);
+    bpBottomRight:
+      Result :=
+      XyWeckPositive(1,0,1,t) AND XyWeckPositive(0,1,1,t);
+    bpBottomLeft:
+      Result :=
+      XyWeckPositive(1,0,0,t) and XyWeckPositive(1,0,1,t) AND XyWeckPositive(0,1,1,t);
+  end;
+end;
+
+//------------------------------------------------------------------------------
 
 function checkTag(tag: integer; _pi: TBtnPos; ts: TSizeCtrlTags;tCount:integer):boolean;
 begin
@@ -808,7 +1027,6 @@ Result :=
        (_pi <> bpTop) and (_pi <> bpLeft)
        and
        (_pi <> bpBottom) and (_pi <> bpRight));
-
 end;
 
 //------------------------------------------------------------------------------
@@ -986,7 +1204,11 @@ end;
 procedure TSizeBtn.UpdateBtnCursorAndColor;
 begin
   if not (fPos in fTargetObj.fSizeCtrl.fValidBtns) or
-    fTargetObj.fSizeCtrl.fMoveOnly or
+    (
+     fTargetObj.fSizeCtrl.fMoveOnly and Not
+      fTargetObj.fSizeCtrl.XyWeckTag(fPos,fTargetObj.fTarget.Tag)
+    )
+    or
     checkTag(fTargetObj.fTarget.Tag, fPos, fTargetObj.fSizeCtrl.TagOptions,
     fTargetObj.fSizeCtrl.TargetCount)
      then
@@ -1681,10 +1903,37 @@ begin
   fCanv.Pen.Color := clBlack;
   fBtnCount := TSizeCtrlBtnCount.szctrl8btns;
   fLastBtn := bpBottomLeft;
-  fTags.DenyMove := 2011;
-  fTags.DenyChange := fTags.DenyChange + 1;
-  fTags.DenyResize := fTags.DenyChange + 2;
-  fTags.DenyMultiResize := fTags.DenyChange + 3;
+
+  fTags.DenySelect := 2012;
+  fTags.AllowMove        := fTags.DenySelect + 1;
+  fTags.AllowResize      := fTags.DenySelect + 2;
+  fTags.AllowMultiResize := fTags.DenySelect + 3;
+  fTags.AllowMultiMove   := fTags.DenySelect + 4;
+  fTags.AllowMultiChange := fTags.DenySelect + 5;
+  fTags.AllowMultiResize := fTags.DenySelect + 6;
+  fTags.DenyMove         := fTags.DenySelect + 7;
+  fTags.DenyResize       := fTags.DenySelect + 8;
+  fTags.DenyChange       := fTags.DenySelect + 9;
+  fTags.DenyMultiResize  := fTags.DenySelect + 10;
+  fTags.DenyMultiMove    := fTags.DenySelect + 11;
+  fTags.DenyMultiChange  := fTags.DenySelect + 12;
+  fTags.DenyMultiResize  := fTags.DenySelect + 13;
+
+
+  fTags.ChangeTop        := 1999;
+
+  fTags.ChangeLeft       := fTags.ChangeTop + 1;
+  fTags.ChangeWidth      := fTags.ChangeTop + 2;
+  fTags.ChangeHeight     := fTags.ChangeTop + 3;
+  fTags.ChangeTopHeight  := fTags.ChangeTop + 4;
+  fTags.ChangeTopWidth   := fTags.ChangeTop + 5;
+  fTags.ChangeLeftHeight := fTags.ChangeTop + 6;
+  fTags.ChangeLeftWidth  := fTags.ChangeTop + 7;
+
+  fTags.ChangeTopLeftWidth      := fTags.ChangeTop + 8;
+  fTags.ChangeTopLeftHeight     := fTags.ChangeTop + 9;
+  FTags.ChangeTopLeftWidthHeight:= fTags.ChangeTop + 10;
+
   fGridSize := 8;
   fBtnAlpha := 255;
   fMovePanelAlpha := 255;
@@ -2306,7 +2555,8 @@ begin
   Result := -1;
   if (csDestroying in ComponentState) or (fState <> scsReady) then
     exit;
-
+  if (fTargetList.Count > 0) and (Control.Tag = fTags.DenyMultiChange) then
+    exit;
   Result := TargetIndex(Control);
   if not assigned(Control) or not Control.Visible or (integer(Control) = integer(fParentForm))
    or
@@ -2514,7 +2764,7 @@ begin
   (integer(Control) = integer(Self)) or
   (Assigned(fGridForm) and (integer(Control) = integer(fGridForm))) then //b.f with 1000 objects selected
     Exit;
-  if Control.Tag = fTags.DenyChange then Exit;
+  if Control.Tag = fTags.DenySelect then Exit;
   if RegisteredIndex(Control) >= 0 then
     exit;
 
@@ -2740,15 +2990,11 @@ end;
 
 procedure TSizeCtrl.MoveTargets(dx, dy: integer);
 var
-  i, Q, R, RDx, RDy: integer;
+  i, RDx, RDy: integer;
 begin
   if not IsValidMove then exit;
-  if MoveOnly then
-    exit;
   if (dx = 0) and (dy = 0) then
     exit;
-  Q := 0;
-  R := 0;
   if ((dx = 1) or (dy = 1)) and (GridSize <> 1) then
      begin
        Inc(dx,1);
@@ -2767,11 +3013,12 @@ begin
     if self.fAlignToGrid then
      begin
        if dx <> 0 then
-       Q := RDx mod GridSize;
+       RDx := RDx - (RDx mod GridSize);
        if dy <> 0 then
-       R := RDy mod GridSize;
+       RDy := RDy - (RDy mod GridSize);
      end;
-        fTarget.SetBounds(RDx-Q,RDy-R, fTarget.Width, fTarget.Height);
+      if Xyweck(RDx,RDy,0,fTarget.Tag) then continue;
+        fTarget.SetBounds(RDx,RDy, fTarget.Width, fTarget.Height);
 
        {$IFDEF FPC}
        fForm.Update;
@@ -2786,18 +3033,14 @@ end;
 
 procedure TSizeCtrl.SizeTargets(dx, dy: integer);
 var
-  i, Q, R, RDx, RDy: integer;
+  i, RDx, RDy: integer;
 begin
-  if MoveOnly then
-    exit;
   if (dx <> 0) and not (IsValidSizeBtn(bpLeft) or IsValidSizeBtn(bpRight)) then
     exit;
   if (dy <> 0) and not (IsValidSizeBtn(bpBottom) or IsValidSizeBtn(bpTop)) then
     exit;
   if (dx = 0) and (dy = 0) then
     exit;
-  Q := 0;
-  R := 0;
   if ((dx = 1) or (dy = 1)) and (GridSize <> 1) then
      begin
        Inc(dx,1);
@@ -2811,16 +3054,27 @@ begin
   for i := 0 to fTargetList.Count - 1 do
     with TTargetObj(fTargetList[i]) do
     begin
-    RDx :=  FixSize(fTarget.Width + dx,0);
-    RDy :=  FixSize(fTarget.Height + dy,1);
+
+    RDx :=  fTarget.Width + dx;
+    RDy :=  fTarget.Height + dy;
     if self.fAlignToGrid then
      begin
        if dx <> 0 then
-       Q := RDx mod GridSize;
+       RDx := RDx - (RDx mod GridSize);
        if dy <> 0 then
-       R := RDy mod GridSize;
+       RDy := RDy - (RDy mod GridSize);
      end;
-        fTarget.SetBounds(fTarget.Left, fTarget.Top, RDx-Q,RDy-R);
+    RDx := FixSize(RDx,0);
+    RDy := FixSize(RDy,1);
+    if MoveOnly then
+    begin
+       if not XyweckPositive(RDx,RDy,1,fTarget.Tag) then continue;
+    end
+    else
+    begin
+      if Xyweck(RDx,RDy,1,fTarget.Tag) then continue;
+    end;
+        fTarget.SetBounds(fTarget.Left, fTarget.Top, RDx,RDy);
       Update;
       {$IFDEF FPC}
         fTarget.Invalidate;
@@ -2891,6 +3145,7 @@ begin
   begin
     if (fState = TSCState.scsSizing) and (fCapturedBtnPos <> bpNone) then //b.f
     Exit;
+
     fCapturedBtnPos := bpNone;
     //First find the top-most control that's clicked ...
     //nb: It's so much simpler to do this here than try and work it out from
@@ -2918,6 +3173,12 @@ begin
       exit;
     end;
     fParentForm.ActiveControl := nil;
+    if
+      (fCapturedCtrl.Tag = fTags.DenyMove)
+      or
+      (fCapturedCtrl.Tag = fTags.DenyChange)
+      then
+      Exit;
     if not IsValidMove then
       exit;
     targetObj := TTargetObj(fTargetList[targetIdx]);

@@ -1185,11 +1185,11 @@ object MainForm: TMainForm
       WordWrap = True
     end
     object Label29: TLabel
-      Tag = 2012
+      Tag = 2021
       Cursor = crHandPoint
-      Left = 387
+      Left = 384
       Height = 26
-      Top = 12
+      Top = 112
       Width = 104
       Alignment = taCenter
       AutoSize = False
@@ -1198,15 +1198,13 @@ object MainForm: TMainForm
       Layout = tlCenter
       ParentColor = False
       Transparent = False
-      Visible = False
-      OnClick = Label29Click
     end
     object Label30: TLabel
-      Tag = 2012
+      Tag = 2019
       Cursor = crHandPoint
-      Left = 387
+      Left = 384
       Height = 26
-      Top = 44
+      Top = 48
       Width = 104
       Alignment = taCenter
       AutoSize = False
@@ -1215,15 +1213,13 @@ object MainForm: TMainForm
       Layout = tlCenter
       ParentColor = False
       Transparent = False
-      Visible = False
-      OnClick = Label29Click
     end
     object Label31: TLabel
-      Tag = 2012
+      Tag = 2020
       Cursor = crHandPoint
-      Left = 387
+      Left = 384
       Height = 26
-      Top = 76
+      Top = 81
       Width = 104
       Alignment = taCenter
       AutoSize = False
@@ -1232,20 +1228,21 @@ object MainForm: TMainForm
       Layout = tlCenter
       ParentColor = False
       Transparent = False
-      Visible = False
-      OnClick = Label29Click
     end
     object Label36: TLabel
+      Tag = 2002
       Cursor = crHandPoint
       Left = 384
       Height = 18
       Top = 152
       Width = 107
+      Alignment = taCenter
       AutoSize = False
       Caption = 'Try different tags        '
       Font.Color = clWindowText
       Font.Height = -10
       Font.Name = 'MS Sans Serif'
+      Layout = tlBottom
       ParentColor = False
       ParentFont = False
     end
@@ -1488,6 +1485,21 @@ object MainForm: TMainForm
       ParentColor = False
       Visible = False
       WordWrap = True
+    end
+    object Label38: TLabel
+      Tag = 2012
+      Cursor = crHandPoint
+      Left = 384
+      Height = 26
+      Top = 12
+      Width = 104
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'My Tag is set, so...'#13#10'You can only look'
+      Color = clYellow
+      Layout = tlCenter
+      ParentColor = False
+      Transparent = False
     end
   end
   object MainMenu1: TMainMenu
