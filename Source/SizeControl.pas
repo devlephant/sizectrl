@@ -100,6 +100,7 @@ type
     bpBottomRight, bpBottomLeft);
   TBtnPosSet = set of TBtnPos;
   TSizeCtrlBtnCount = (szctrl4btns, szctrl8btns);
+  TRecursionVector = (trecChild, trecParent, trecBoth);
   TSCState = (scsReady, scsMoving, scsSizing);
 
   TStartEndEvent = procedure(Sender: TObject; State: TSCState) of object;
@@ -208,7 +209,7 @@ type
     fLastRect: TRect;
     fStartRec: TRect;
     procedure Update;
-    procedure UpdateExtra(const Rectange: TRect;const typer: integer);
+    procedure DragMoveUpdate(const Rectange: TRect;const t: byte);
     procedure StartFocus();
     function MoveFocus(dx, dy: integer): boolean;
     function SizeFocus(dx, dy: integer; BtnPos: TBtnPos): boolean;
@@ -406,6 +407,14 @@ type
     function DoKeyDown(var Message: TWMKey): boolean;
     {$ENDIF}
     procedure formPaint(Sender: TObject);
+    function PerformRecursively
+    (
+      Control: TControl;
+      Func: byte;
+      FullRecursion: boolean;
+      Include:boolean;
+      AddType:TRecursionVector
+    ): boolean;
   public
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
@@ -431,20 +440,43 @@ type
 
     //RegisterControl: Register potential target controls with TSizeCtrl
     function RegisterControl(Control: TControl): integer;
-    procedure UnRegisterControl(Control: TControl);
+    function RegisterControlR
+    (
+      Control: TControl;
+      AddType: TRecursionVector=TRecursionVector.trecChild;
+      FullRecursion: boolean=True
+    ): boolean;
+    function UnRegisterControl(Control: TControl): integer;
+    function UnRegisterControlR
+    (
+      Control: TControl;
+      AddType: TRecursionVector=TRecursionVector.trecChild;
+      FullRecursion: boolean=True
+    ): boolean;
     procedure UnRegisterAll;
     function RegisteredIndex(Control: TControl): integer;
 
     function getRegObj(C: TComponent): TRegisteredObj;
+    function getSelected(): TList;
 
     //AddTarget: Add any number of targets to TSizeCtrl so they can be
     //resized or moved together.
     //(nb: The programmer doesn't normally need to call this method directly
     //since TSizeCtrl will call it whenever a target is clicked.)
     function AddTarget(Control: TControl): integer;
-    function getSelected(): TList;
-
-    procedure DeleteTarget(Control: TControl);
+    function AddTargetR
+    (
+      Control: TControl;
+      AddType: TRecursionVector=TRecursionVector.trecChild;
+      FullRecursion: boolean=True
+    ): boolean;
+    function DeleteTarget(Control: TControl): integer;
+    function DeleteTargetR
+    (
+      Control: TControl;
+      AddType: TRecursionVector=TRecursionVector.trecChild;
+      FullRecursion: boolean=True
+    ): boolean;
     procedure ClearTargets;
     function TargetIndex(Control: TControl): integer;
     function TargetCtrlFromPt(screenPt: TPoint): TControl;
@@ -1112,14 +1144,15 @@ var b:Graphics.TBitmap;
 begin
   if Assigned(fImage.Graphic) and not(fImage.Graphic.Empty) then
   begin
-       {$IFDEF FPC}
-        Self.SetShape(fImage.Bitmap);
-       {$MESSAGE HINT 'This feature is not supported by GTK,GTK?->Comment line'}
-       {$ENDIF}
     if fTargetObj.fSizeCtrl.StretchBtnImage then
       Canvas.StretchDraw(Rect(l,t, width, height), fImage.Graphic)
     else
+    begin
       Canvas.Draw(l,t, fImage.Graphic);
+     {$IFDEF FPC}
+      Self.SetShape(fImage.Bitmap);
+     {$ENDIF}
+    end;
   end
   else
   {$IFDEF FPC}
@@ -1159,13 +1192,8 @@ begin
       Point(l+Ceil(Width/2)-1, t+Height-1)]);
   end;
   {$IFDEF FPC}
-   {$IFNDEF Gtk2}
-    {$IFNDEF Gtk1}
-     Self.SetShape(b);
-     {$MESSAGE HINT 'This feature is not supported by GTK,GTK?->Comment line'}
-    {$ENDIF}
-   {$ENDIF}
   Canvas.Draw(0,0,b);
+  Self.SetShape(b);
   b.Free;
   end;
   {$ENDIF}
@@ -1346,12 +1374,15 @@ begin
     {$ENDIF}
     if not fBtns[i].Visible then
     fBtns[i].Visible := True;
+    {$IFDEF FPC}
+    fBtns[i].Update;//reduce button flicker
+    {$ENDIF}
   end;
 end;
 
 //------------------------------------------------------------------------------
 
-procedure TTargetObj.UpdateExtra(const Rectange: TRect; const typer: integer);
+procedure TTargetObj.DragMoveUpdate(const Rectange: TRect; const t: byte);
 var
   i: TBtnPos;
   lLeft, lTop: integer;
@@ -1369,7 +1400,7 @@ begin
     bpBottomRight, bpBottomLeft];
   check := true;
   bsDiv2 := (fSizeCtrl.BtnSize div 2);
-  case typer of
+  case t of
     0: check := false;
     1:
     case fSizeCtrl.fCapturedBtnPos  of
@@ -1593,11 +1624,11 @@ begin
   {$ENDIF}
   case fSizeCtrl.ResizeFrameType of
     tszfButtons:
-      self.UpdateExtra(r,0);
+      self.DragMoveUpdate(r,0);
     tzfRButtons:
-      self.UpdateExtra(r,1);
+      self.DragMoveUpdate(r,1);
     tszfRButton:
-      self.UpdateExtra(r,2);
+      self.DragMoveUpdate(r,2);
   end;
   {$IFDEF FPC}
   if fSizeCtrl.ApplySizes then
@@ -1715,8 +1746,8 @@ begin
   Top := -1;
   Height := 0;
   Width := 0;
-  Visible := True;
   Enabled := True;
+  Visible := False;
   {$ELSE}
   if fForm is TForm then
     TForm(fForm).OnPaint := Self.formPaint
@@ -1785,7 +1816,7 @@ begin
       fGridForm.FormStyle := fsNormal;
       fGridForm.OnPaint := Self.formPaint;
       fGridForm.SendToBack;
-      fGridForm.Visible := True;
+      fGridForm.Visible := False;
 end;
 
 //------------------------------------------------------------------------------
@@ -2285,8 +2316,10 @@ begin
   TargetObj := TTargetObj.Create(self, Control);
   fTargetList.Add(TargetObj);
   RegisterControl(Control);
+
+{$IFDEF FPC}{$MESSAGE HINT 'In GTK Active Control must not to be null,GTK?->Comment this'}{$ENDIF}
   fParentForm.ActiveControl := nil;
-  {$MESSAGE HINT 'In GTK Active Control must not to be null,GTK?->Comment this'}
+
   UpdateBtnCursors;
   TargetObj.Update;
   {$IFNDEF FPC}
@@ -2300,18 +2333,152 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TSizeCtrl.DeleteTarget(Control: TControl);
+function TSizeCtrl.PerformRecursively
+(
+  Control: TControl;
+  Func: byte;
+  FullRecursion: boolean;
+  Include:boolean;
+  AddType:TRecursionVector
+): boolean;
+var obj: TWinControl;
+    i: integer;
+    procedure fff(ac: TControl; t: byte; var r: boolean);
+    begin
+      case t of
+          0:   If(AddTarget(ac)=-1)        then r:=false;
+          1:   If(DeleteTarget(ac)=-1)     then r:=false;
+          2:   If(RegisterControl(ac)=-1)  then r:=false;
+          3: If(UnRegisterControl(ac)=-1)then r:=false;
+      end;
+    end;
+begin
+
+  if (csDestroying in ComponentState) or (fState <> scsReady) then
+  begin
+    Result := false;
+    exit;
+  end;
+  Result := true;
+  obj := TWinControl(Control);
+  case AddType of
+    trecChild:
+    begin
+      if Include then
+        fff(obj,func,Result);
+      if obj.ControlCount > 0 then
+      begin
+        for i := 0 to obj.ControlCount-1 do
+        begin
+           fff(obj.Controls[i],func,Result);
+           if FullRecursion then
+              if not Self.PerformRecursively(obj.Controls[i],Func,True,False,AddType)
+              then Result := False;
+        end;
+      end;
+    end;
+    trecParent:
+    begin
+      if Include then
+         fff(obj,func,Result);
+      while (obj <> FForm) and Assigned(obj)  do
+      begin
+        obj := obj.Parent;
+        if obj <> FForm then
+        begin
+          fff(obj,func,Result);
+           if FullRecursion then
+              if not Self.PerformRecursively(obj,Func,True,False,AddType)
+              then Result := false;
+        end;
+      end;
+    end;
+    trecBoth:
+    Begin
+      if Include then
+        fff(obj,func,Result);
+      if obj.ControlCount > 0 then
+      begin
+        for i := 0 to obj.ControlCount-1 do
+        begin
+           fff(obj.Controls[i],func,Result);
+            if FullRecursion then
+              if not Self.PerformRecursively(obj.Controls[i],Func,True,False,TRecursionVector.trecChild)
+              then Result := False;
+        end;
+      end;
+      obj := obj.Parent;
+      while (obj <> FForm) and Assigned(obj)  do
+      begin
+        if obj <> FForm then
+        begin
+          fff(obj,func,Result);
+           if FullRecursion then
+              if not Self.PerformRecursively(obj,Func,True,False,TRecursionVector.trecParent)
+              then Result := false;
+        end;
+        obj := obj.Parent;
+      end;
+    End;
+
+  end;
+
+end;
+
+//------------------------------------------------------------------------------
+
+function TSizeCtrl.AddTargetR
+(
+  Control: TControl;
+  AddType: TRecursionVector = trecChild;
+  FullRecursion: Boolean = True
+): boolean;
+begin
+    Result := Self.PerformRecursively
+    (
+      Control,
+      0,
+      FullRecursion,
+      True,
+      AddType
+    );
+end;
+
+//------------------------------------------------------------------------------
+
+function TSizeCtrl.DeleteTarget(Control: TControl): integer;
 var
   i: integer;
 begin
+  Result := -1;
   i := TargetIndex(Control);
   if i < 0 then
     exit;
+  Result := i;
   TTargetObj(fTargetList[i]).Free;
   fTargetList.Delete(i);
   UpdateBtnCursors;
   if assigned(fTargetChangeEvent) then
     fTargetChangeEvent(self);
+end;
+
+//------------------------------------------------------------------------------
+
+function TSizeCtrl.DeleteTargetR
+(
+  Control: TControl;
+  AddType: TRecursionVector = trecChild;
+  FullRecursion: Boolean = True
+): boolean;
+begin
+    Result := Self.PerformRecursively
+    (
+      Control,
+      1,
+      FullRecursion,
+      True,
+      AddType
+    );
 end;
 
 //------------------------------------------------------------------------------
@@ -2358,18 +2525,58 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TSizeCtrl.UnRegisterControl(Control: TControl);
+function TSizeCtrl.RegisterControlR
+(
+  Control: TControl;
+  AddType: TRecursionVector = trecChild;
+  FullRecursion: Boolean = True
+): boolean;
+begin
+    Result := Self.PerformRecursively
+    (
+      Control,
+      2,
+      FullRecursion,
+      True,
+      AddType
+    );
+end;
+
+//------------------------------------------------------------------------------
+
+function TSizeCtrl.UnRegisterControl(Control: TControl): integer;
 var
   i: integer;
 begin
+  Result := -1;
   //first, make sure it's not a current target ...
   DeleteTarget(Control);
   //now unregister it ...
   i := RegisteredIndex(Control);
   if i < 0 then
     exit;
+  Result := i;
   TRegisteredObj(fRegList[i]).Free;
   fRegList.Delete(i);
+end;
+
+//------------------------------------------------------------------------------
+
+function TSizeCtrl.UnRegisterControlR
+(
+  Control: TControl;
+  AddType: TRecursionVector = trecChild;
+  FullRecursion: Boolean = True
+): boolean;
+begin
+    Result := Self.PerformRecursively
+    (
+      Control,
+      3,
+      FullRecursion,
+      True,
+      AddType
+    );
 end;
 
 //------------------------------------------------------------------------------
@@ -2533,7 +2740,7 @@ end;
 
 procedure TSizeCtrl.MoveTargets(dx, dy: integer);
 var
-  i, Q, R, RDx, RDy: integer;       //ihere
+  i, Q, R, RDx, RDy: integer;
 begin
   if not IsValidMove then exit;
   if MoveOnly then
@@ -2565,7 +2772,13 @@ begin
        R := RDy mod GridSize;
      end;
         fTarget.SetBounds(RDx-Q,RDy-R, fTarget.Width, fTarget.Height);
-      Update;
+
+       {$IFDEF FPC}
+       fForm.Update;
+       fTarget.Update;
+       fTarget.Invalidate;
+       {$ENDIF}
+       Update;
     end;
 end;
 
@@ -2609,6 +2822,9 @@ begin
      end;
         fTarget.SetBounds(fTarget.Left, fTarget.Top, RDx-Q,RDy-R);
       Update;
+      {$IFDEF FPC}
+        fTarget.Invalidate;
+      {$ENDIF}
     end;
 end;
 
@@ -3050,7 +3266,10 @@ begin
      if not (fForm is TCustomForm) then
      begin
        if Assigned(fGridForm) then
-          fGridForm.Repaint
+       begin
+          fGridForm.Visible := True;
+          fGridForm.Repaint;
+       end
        else
         CreateGrid;
      end;

@@ -15,13 +15,9 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="27" Y="20"/>
-        <UsageCount Value="116"/>
+        <UsageCount Value="126"/>
       </Unit>
-      <Unit>
-        <Filename Value=""/>
-        <UsageCount Value="1"/>
-        <DefaultSyntaxHighlighter Value="None"/>
-      </Unit>
+      <Unit/>
       <Unit>
         <Filename Value="main.pas"/>
         <IsPartOfProject Value="True"/>
@@ -29,8 +25,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <TopLine Value="30"/>
-        <CursorPos X="30" Y="34"/>
-        <UsageCount Value="115"/>
+        <CursorPos X="20" Y="44"/>
+        <UsageCount Value="125"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -43,7 +39,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="56"/>
         <CursorPos X="21" Y="62"/>
-        <UsageCount Value="114"/>
+        <UsageCount Value="124"/>
       </Unit>
       <Unit>
         <Filename Value="mainlaz.pas"/>
@@ -53,22 +49,23 @@
         <UnitName Value="MainLaz"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="27" Y="13"/>
-        <UsageCount Value="17"/>
+        <UsageCount Value="16"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\controls.pp"/>
         <UnitName Value="Controls"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1754"/>
-        <CursorPos X="14" Y="1762"/>
-        <UsageCount Value="10"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="1573"/>
+        <CursorPos X="15" Y="1581"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\fpcsrc\rtl\inc\objpash.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="290"/>
         <CursorPos X="8" Y="299"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\lmessages.pp"/>
@@ -76,149 +73,77 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="190"/>
         <CursorPos X="17" Y="205"/>
-        <UsageCount Value="3"/>
+        <UsageCount Value="2"/>
       </Unit>
-      <Unit>
-        <Filename Value="C:\fpcupdeluxe\fpcsrc\rtl\win\wininc\messages.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1154"/>
-        <CursorPos X="25" Y="1163"/>
-        <UsageCount Value="1"/>
-      </Unit>
-      <Unit>
-        <Filename Value="C:\fpcupdeluxe\fpcsrc\rtl\objpas\classes\classesh.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1886"/>
-        <CursorPos X="17" Y="1894"/>
-        <UsageCount Value="1"/>
-      </Unit>
+      <Unit/>
+      <Unit/>
       <Unit>
         <Filename Value="SizeControl.pas"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="2567"/>
-        <CursorPos X="23" Y="2567"/>
-        <UsageCount Value="57"/>
+        <TopLine Value="1143"/>
+        <CursorPos X="17" Y="1155"/>
+        <UsageCount Value="58"/>
         <Loaded Value="True"/>
       </Unit>
-      <Unit>
-        <Filename Value="C:\fpcupdeluxe\lazarus\lcl\graphics.pp"/>
-        <UnitName Value="Graphics"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1076"/>
-        <CursorPos X="15" Y="1083"/>
-        <UsageCount Value="1"/>
-      </Unit>
+      <Unit/>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\forms.pp"/>
         <UnitName Value="Forms"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="642"/>
         <CursorPos X="15" Y="648"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="10"/>
       </Unit>
-      <Unit>
-        <Filename Value="C:\fpcupdeluxe\fpcsrc\rtl\win64\classes.pp"/>
-        <UnitName Value="Classes"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="45"/>
-        <CursorPos X="43" Y="48"/>
-        <UsageCount Value="1"/>
-      </Unit>
-      <Unit>
-        <Filename Value="C:\fpcupdeluxe\fpcsrc\rtl\win\wininc\ascdef.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="5"/>
-        <CursorPos X="78" Y="6"/>
-        <UsageCount Value="1"/>
-      </Unit>
-      <Unit>
-        <Filename Value="C:\fpcupdeluxe\lazarus\lcl\include\wincontrol.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="7533"/>
-        <CursorPos Y="7540"/>
-        <UsageCount Value="1"/>
-      </Unit>
-      <Unit>
-        <Filename Value="C:\fpcupdeluxe\lazarus\lcl\lclclasses.pp"/>
-        <UnitName Value="LCLClasses"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="42"/>
-        <CursorPos X="17" Y="50"/>
-        <UsageCount Value="1"/>
-      </Unit>
-      <Unit>
-        <Filename Value="C:\fpcupdeluxe\fpcsrc\rtl\win\messages.pp"/>
-        <UnitName Value="Messages"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="5" Y="14"/>
-        <UsageCount Value="1"/>
-      </Unit>
-      <Unit>
-        <Filename Value="C:\fpcupdeluxe\lazarus\lcl\lcltype.pp"/>
-        <UnitName Value="LCLType"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="2647"/>
-        <CursorPos X="5" Y="2654"/>
-        <UsageCount Value="1"/>
-      </Unit>
+      <Unit/>
+      <Unit/>
+      <Unit/>
+      <Unit/>
+      <Unit/>
+      <Unit/>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\include\customform.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1914"/>
         <CursorPos Y="1921"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
-      <Unit>
-        <Filename Value="C:\fpcupdeluxe\fpcsrc\packages\fcl-image\src\fpcanvas.pp"/>
-        <UnitName Value="FPCanvas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="222"/>
-        <CursorPos X="67" Y="232"/>
-        <UsageCount Value="1"/>
-      </Unit>
-      <Unit>
-        <Filename Value="C:\fpcupdeluxe\fpcsrc\packages\fcl-image\src\fpimage.pp"/>
-        <UnitName Value="FPImage"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="268"/>
-        <CursorPos X="46" Y="274"/>
-        <UsageCount Value="1"/>
-      </Unit>
+      <Unit/>
+      <Unit/>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\include\winapih.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="74"/>
         <CursorPos X="24" Y="78"/>
-        <UsageCount Value="17"/>
+        <UsageCount Value="16"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\include\rasterimage.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="663"/>
         <CursorPos X="32" Y="671"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\include\control.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3431"/>
         <CursorPos Y="3439"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\Source\SizeControl.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="811"/>
         <CursorPos X="43" Y="819"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="main.lfm"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="611"/>
         <CursorPos X="14" Y="619"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit>
       <Unit>
@@ -227,34 +152,34 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="36"/>
         <CursorPos X="4" Y="41"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\interfaces\wince\winceproc.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="45" Y="10"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\interfaces\fpgui\fpguicrosshelpers.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="10"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\interfaces\carbon\pascocoa\appkit\appkit.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="9"/>
         <CursorPos X="16" Y="16"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\interfaces\fpgui\src\corelib\x11\fpg_impl.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="17"/>
         <CursorPos X="26" Y="22"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\fpGUI-develop\src\corelib\gdi\fpg_oledragdrop.pas"/>
@@ -262,14 +187,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="618"/>
         <CursorPos X="42" Y="629"/>
-        <UsageCount Value="6"/>
+        <UsageCount Value="5"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\interfaces\fpgui\src\corelib\fpg_base.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="18"/>
         <CursorPos X="3" Y="27"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\fpcsrc\packages\winunits-base\src\activex.pp"/>
@@ -277,33 +202,33 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="2789"/>
         <CursorPos X="8" Y="2798"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\fpGUI-develop\src\fpmake.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="236"/>
         <CursorPos X="49" Y="253"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\fpcsrc\packages\fpmkunit\src\fpmkunit.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="169"/>
         <CursorPos X="3" Y="178"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\fpGUI-develop\src\corelib\gdi\fpgui_toolkit.pas"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\fpcsrc\rtl\inc\typshrdh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="106"/>
         <CursorPos X="20" Y="115"/>
-        <UsageCount Value="17"/>
+        <UsageCount Value="16"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\interfaces\win32\win32int.pp"/>
@@ -311,7 +236,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="23"/>
         <CursorPos X="3" Y="32"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\interfaces\gtk2\interfaces.pas"/>
@@ -319,165 +244,165 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="22"/>
         <CursorPos X="28" Y="29"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="11"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\interfaces\gtk2\gtk2disableliboverlay.pas"/>
         <UnitName Value="gtk2DisableLibOverlay"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="6"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\interfaces\gtk3\gtk3widgets.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2482"/>
         <CursorPos X="6" Y="2491"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\include\messagedialogs.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="205"/>
         <CursorPos Y="213"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\components\lazutils\LazLoggerIntf.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="97"/>
         <CursorPos X="18" Y="13"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="C:\fpcupdeluxe\lazarus\lcl\interfaces\gtk\gtkdefines.inc"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="3"/>
         <TopLine Value="9"/>
         <CursorPos X="40" Y="71"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2029" Column="42" TopLine="2015"/>
+        <Caret Line="1386" Column="26" TopLine="1374"/>
       </Position1>
       <Position2>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2674" Column="44" TopLine="2661"/>
+        <Caret Line="2786" Column="20" TopLine="2775"/>
       </Position2>
       <Position3>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2811" Column="42" TopLine="2798"/>
+        <Caret Line="2790" Column="27" TopLine="2775"/>
       </Position3>
       <Position4>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2294" Column="35" TopLine="2294"/>
+        <Caret Line="1385" Column="45" TopLine="1381"/>
       </Position4>
       <Position5>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="7" Column="73"/>
+        <Caret Line="2787" Column="29" TopLine="2778"/>
       </Position5>
       <Position6>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2020" Column="52" TopLine="2005"/>
+        <Caret Line="1386" Column="27" TopLine="1377"/>
       </Position6>
       <Position7>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2031" Column="58" TopLine="2020"/>
+        <Caret Line="2781" Column="17" TopLine="2767"/>
       </Position7>
       <Position8>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2679" Column="51" TopLine="2664"/>
+        <Caret Line="2786" Column="20" TopLine="2777"/>
       </Position8>
       <Position9>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2816" Column="48" TopLine="2806"/>
+        <Caret Line="1390" Column="11" TopLine="1382"/>
       </Position9>
       <Position10>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="1163" Column="11" TopLine="1156"/>
+        <Caret Line="2787" Column="8" TopLine="2784"/>
       </Position10>
       <Position11>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="1162" Column="18" TopLine="1156"/>
+        <Caret Line="1386" Column="7" TopLine="1375"/>
       </Position11>
       <Position12>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="1163" Column="9" TopLine="1156"/>
+        <Caret Line="2750" Column="15" TopLine="2737"/>
       </Position12>
       <Position13>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="46" Column="21" TopLine="32"/>
+        <Caret Line="2793" Column="29" TopLine="2785"/>
       </Position13>
       <Position14>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="840" Column="22" TopLine="827"/>
+        <Caret Line="2792" Column="25" TopLine="2780"/>
       </Position14>
       <Position15>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="841" Column="22" TopLine="828"/>
+        <Caret Line="2780" Column="28" TopLine="2774"/>
       </Position15>
       <Position16>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="1754" Column="22" TopLine="1741"/>
+        <Caret Line="1755" Column="21" TopLine="1747"/>
       </Position16>
       <Position17>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2288" Column="3" TopLine="2274"/>
+        <Caret Line="2749" Column="36" TopLine="2742"/>
       </Position17>
       <Position18>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="1165" Column="6" TopLine="1160"/>
+        <Caret Line="3466" Column="24" TopLine="3452"/>
       </Position18>
       <Position19>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="1756" Column="22" TopLine="1743"/>
+        <Caret Line="273" Column="7" TopLine="267"/>
       </Position19>
       <Position20>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2288" Column="32" TopLine="2276"/>
+        <Caret Line="553" Column="54" TopLine="546"/>
       </Position20>
       <Position21>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2290" Column="17" TopLine="2277"/>
+        <Caret Line="2352" Column="26" TopLine="2344"/>
       </Position21>
       <Position22>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="1117" Column="79" TopLine="1110"/>
+        <Caret Line="413" Column="17" TopLine="407"/>
       </Position22>
       <Position23>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="1165" Column="77" TopLine="1152"/>
+        <Caret Line="2343" Column="13" TopLine="2335"/>
       </Position23>
       <Position24>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2290" Column="79" TopLine="2282"/>
+        <Caret Line="2444" Column="8" TopLine="2437"/>
       </Position24>
       <Position25>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2287" Column="32" TopLine="2282"/>
+        <Caret Line="2481" Column="8" TopLine="2474"/>
       </Position25>
       <Position26>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2567" Column="3" TopLine="2556"/>
+        <Caret Line="2542" Column="8" TopLine="2535"/>
       </Position26>
       <Position27>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2576" Column="37" TopLine="2566"/>
+        <Caret Line="2579" Column="8" TopLine="2572"/>
       </Position27>
       <Position28>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2568" Column="31" TopLine="2566"/>
+        <Caret Line="2351" Column="29" TopLine="2342"/>
       </Position28>
       <Position29>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2567" Column="9" TopLine="2565"/>
+        <Caret Line="212" Column="59" TopLine="205"/>
       </Position29>
       <Position30>
         <Filename Value="SizeControl.pas"/>
-        <Caret Line="2575" Column="19" TopLine="2564"/>
+        <Caret Line="1413" Column="29" TopLine="1404"/>
       </Position30>
     </JumpHistory>
     <RunParams>
