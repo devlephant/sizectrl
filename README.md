@@ -41,10 +41,10 @@ Unlike original realization, current version supports both Delphi and Lazarus, s
 <li> Bug with recursion in DefWindowProc -- FormWindowProc
 <li> Bug with unassigned control, which caused by size-during component selection
 <li> Bug with cursor: sometimes it's won't change, when the moving is started (with TShape, for example)</li>
+<li> Moving object with keys, while editing it by mouse, causes sizing bugs
 </ul></ul>
 <ul><li> Known modern bugs:</li><ul>
-<li> 1. Moving with keys while editing object by mouse causes sizing bugs
-<li> 2. Bug with invisible objects: it denies visible, but upper object selection
+<li> 1. Bug with invisible objects: it denies visible, but upper object selection
 	[Solution: Z-index compare? etc]</li>
 </ul> </ul>
 <ul><li> Known modern Lazarus bugs:</li><ul>

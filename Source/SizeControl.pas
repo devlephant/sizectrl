@@ -320,7 +320,7 @@ type
     fShowFrame, fApplySizes: boolean;
     fBtnCount: TSizeCtrlBtnCount;
     FSelKey,
-      fSelActionCancelKey,
+      fSelActionSPKey,
       fSelToggleKey,
       fMoveLeftKey, fMoveTopKey,
       fMoveRightKey, fMoveBottomKey,
@@ -531,8 +531,8 @@ type
 
     //Custom keymaps
     property SelectionKey: integer read FSelKey write FSelKey;
-    property SelectionCancelActionKey:
-      integer read fSelActionCancelKey write fSelActionCancelKey;
+    property SelectionSelectParentKey:
+      integer read fSelActionSPKey write fSelActionSPKey;
     property SelectionTabKey:
       integer read  fSelToggleKey write fSelToggleKey;
     property MoveLeftKey: integer read fMoveLeftKey write fMoveLeftKey;
@@ -1945,7 +1945,7 @@ begin
   fBtnSize := 5;
   FSelKey := VK_SHIFT;
   //Multi-escape key
-  fSelActionCancelKey := VK_ESCAPE;
+  fSelActionSPKey := VK_ESCAPE;
 
   //Tabulation key
   fSelToggleKey := VK_TAB;
@@ -2327,7 +2327,9 @@ begin
       if DoKeyDown(TWMKey(Msg)) then
         exit;
       {$ENDIF}
-        if Msg.WParam = fMoveTopKey then
+      if Self.fCapturedBtnPos = bpNone then
+      begin
+      if Msg.WParam = fMoveTopKey then
         begin
           {$IFDEF FPC}
           Msg.Result := 1;
@@ -2423,20 +2425,14 @@ begin
             AddTarget(TRegisteredObj(fRegList[i]).fControl);
           end;
         end;
-        if Msg.WParam = fSelActionCancelKey then
+        if Msg.WParam = fSelActionSPkey then
         begin
           {$IFDEF FPC}
           Msg.Result := 1;
           {$ENDIF}
-          //ESCAPE is used for both -
-          //  1. cancelling a mouse move/resize operation, and
-          //  2. selecting the parent of the currenctly selected target
-          if fState <> scsReady then
-          begin
-            fEscCancelled := True;
-            DoMouseUp(nil, mbLeft, []);
-          end
-          else
+          //ESCAPE is used for  -
+          //  1. selecting the parent of the currenctly selected target
+          if fState = scsReady then
           begin
             if (targetCount = 0) then
               exit;
@@ -2446,6 +2442,7 @@ begin
               AddTarget(TRegisteredObj(fRegList[i]).fControl);
           end;
         end;
+      end;
     end;
 
     WM_KEYUP: Msg.Result := 0;
