@@ -339,6 +339,7 @@ type
     fPanelImage: TPicture;
     fBtnImage: TPicture;
     fHoverBtnImage: TPicture;
+    fEditParent: boolean;
     fDisabledBtnImage: TPicture;
     fStretchBtnImage, fStretchPanelImage: boolean;
     function GetTargets(index: integer): TControl;
@@ -492,6 +493,7 @@ type
     //Used for getting targets count
     //</summary>
     property TargetCount: integer read GetTargetCount;
+    property EditParent: boolean read fEditParent write fEditParent;
     property Parent:TWinControl read FForm;
     //MinWidth: minimal target (resizing) width
     //MinHeight: minimal target (resizing) height
@@ -1074,7 +1076,9 @@ begin
   fOldWindowProc := fControl.WindowProc;
 
   if fControl is TCustomForm then
-    fControl.WindowProc := NewWindowProcB
+  begin
+    fControl.WindowProc := NewWindowProcB;
+  end
   else
   fControl.WindowProc := NewWindowProc;
   //The following is needed to block OnClick events when TSizeCtrl is enabled.
@@ -1903,6 +1907,7 @@ begin
   fCanv.Pen.Color := clBlack;
   fBtnCount := TSizeCtrlBtnCount.szctrl8btns;
   fLastBtn := bpBottomLeft;
+  fEditParent := False;
 
   fTags.DenySelect := 2012;
   fTags.AllowMove        := fTags.DenySelect + 1;
@@ -2222,7 +2227,7 @@ var
 
         if handled then
           exit;
-      end else if isVirtual then exit;
+      end;
 
     end;
 
@@ -2761,7 +2766,9 @@ var
 begin
   if
   {$IFNDEF FPC}Control is TMovePanel or{$ENDIF}
-  (integer(Control) = integer(Self)) or
+  (integer(Control) = integer(Self))
+  or ((integer(Control) = integer(FForm)) and (not fEditParent)) or
+  (integer(Control) = integer(fParentForm)) or
   (Assigned(fGridForm) and (integer(Control) = integer(fGridForm))) then //b.f with 1000 objects selected
     Exit;
   if Control.Tag = fTags.DenySelect then Exit;
