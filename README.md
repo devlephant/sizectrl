@@ -45,9 +45,6 @@ Unlike original realization, current version supports both Delphi and Lazarus, s
 <li> Bug with invisible objects: it denies visible, but upper object selection</li>
 </ul></ul>
 <ul><li> Known modern bugs:</li><ul>
-<li> 1. SizeControl must deny only object editing, but, it denies all parentform's content editing </li>
-</ul> </ul>
-<ul><li> Known modern Lazarus bugs:</li><ul>
 <li> 1. Add disabled objects selecting support [Lazarus]
 		<br>Possible solution: hook all WndProces recursive?</li>
 </ul></ul>

@@ -1419,6 +1419,7 @@ begin
   end;
   {$IFDEF FPC}
   Canvas.Draw(0,0,b);
+  b.Monochrome:=True;
   Self.SetShape(b);
   b.Free;
   end;
