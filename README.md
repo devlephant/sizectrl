@@ -50,8 +50,6 @@ Unlike original realization, current version supports both Delphi and Lazarus, s
 <ul><li> Known modern Lazarus bugs:</li><ul>
 <li> 1. Add disabled objects selecting support [Lazarus]
 		<br>Possible solution: hook all WndProces recursive?</li>
-<li> 2. WIth gtk it doesn't handles the WM_KEY messages... 
-		[Reason: fActiveControl:=nil cannot be done on GTK]</li>
 </ul></ul>
 
 ##### Nearly plans:
