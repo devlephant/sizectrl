@@ -1305,6 +1305,7 @@ begin
   fHoverDown := False;
   if Assigned( fTargetObj.fSizeCtrl.onButtonUnhover) then
     fTargetObj.fSizeCtrl.onButtonUnhover(Self as TObject);
+  fTargetObj.fSizeCtrl.fCapturedBtnPos := bpNone;
   UpdateBtnCursorAndColor;
 end;
 
@@ -2130,6 +2131,7 @@ end;
 
 procedure TSizeCtrl.FormWindowProc(var Msg: TMessage);
 begin
+
   DoWindowProc(fOldWindowProc, Msg);
 end;
 
@@ -2220,7 +2222,7 @@ var
       if assigned(regCtrl) then
       begin
         {$IFDEF FPC}
-        if self.isTarget(regCtrl) then Exit;
+        if isVirtual and self.isTarget(regCtrl) then Exit;
         {$ENDIF}
         handled := False;
         controlPt := regCtrl.ScreenToClient(screenPt);
@@ -2228,7 +2230,7 @@ var
 
         if handled then
           exit;
-      end;
+      end else if isVirtual then exit;
 
     end;
 
