@@ -1,4 +1,4 @@
-unit SizeControl;
+﻿unit SizeControl;
 {$IFDEF FPC}
         {$MODE Delphi}
         {$warnings off}
@@ -2953,7 +2953,7 @@ begin
     with rO do
     begin
 
-      if not PointIsInControl(screenPt, fControl) then
+      if not PointIsInControl(screenPt, fControl) or not fControl.Visible then //b.f
         continue;
 
       Result := fControl;
