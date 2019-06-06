@@ -31,6 +31,15 @@ Unlike original realization, current version supports both Delphi and Lazarus, s
 <li> OnHover events for TSizeBtns (sizing grips/handles) </li>
 	</ul></ul>
 
+##### Limitations
+<ul> Lazarus: <ul>
+<li> Currently not ssupporting MovePanelImage property
+<li> In some platforms it cannot support Alpha-Transparency
+</ul> </ul>
+<ul> FireMonkey: <ul>
+<li> Not tested yet
+</ul> </ul>
+
 ##### Errors and bugs:
 <ul><li> Fixed common bugs:</li><ul>
 <li> Bug with Sizing Grid (ShowGrid) on non-TForm controls
