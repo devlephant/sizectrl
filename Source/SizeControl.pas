@@ -20,7 +20,7 @@ Copyright:      © 2019 Leu Zenin
 
 interface
 {$R SIZECONTROL}
-
+{$INCLUDE Platforms.inc}
 {$IFNDEF FPC}
 {$WARN HIDDEN_VIRTUAL OFF}
 {$IFDEF VER80}
@@ -126,13 +126,18 @@ type
   private
     fTargetObj: TTargetObj;
     fPos: TBtnPos;
+    {$IFDEF FPC}
+    fPrevShape: TSizeBtnShapeType;
+    fPrevSize: integer;
+    {$ENDIF}
     fHoverDown, fHover: boolean;
     fLeft, fTop: integer;
     fColor, fPen: TColor;
     fImage: TPicture;
   protected
-    procedure DrawTriangle({$IFDEF FPC} b: Graphics.TBitmap;{$ENDIF}l, t:integer);
+    function CalcTriangle(l, t:integer): TArray<TPoint>;
     procedure PaintAs(l,t:integer);
+    procedure DrawAt(l,t:integer;{$IFDEF FPC}b:Graphics.TBitmap{$ENDIF});
     procedure doPaint(Sender:TObject);
     procedure mEnter(Sender:TObject);
     procedure mLeave(Sender:TObject);
@@ -1191,15 +1196,20 @@ begin
   Color := fTargetObj.fSizeCtrl.fParentForm.Color;
   {$ENDIF}
   {$ENDIF}
-  FormStyle := fsStayOnTop;
+  {$IFNDEF GTK}
   BorderIcons := [];
   BorderStyle := bsNone;
+  {$ENDIF}
   fHover := false;
   fHoverDown := false;
   OnPaint := doPaint;
   OnMouseEnter := mEnter;
   OnMouseLeave := mLeave;
   fPos := BtnPos;
+  {$IFDEF FPC}
+  fPrevShape   := TSizeBtnShapeType.tszbCircle;
+  fPrevSize    := -1;
+  {$ENDIF}
   UpdateBtnCursorAndColor;
 end;
 
@@ -1311,54 +1321,109 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TSizeBtn.DrawTriangle({$IFDEF FPC}b:Graphics.TBitmap;{$ENDIF}l,t:integer);
+function TSizeBtn.CalcTriangle(l,t:integer): TArray<TPoint>;
 begin
   case fPos of
-    bpLeft: {$IFDEF FPC}b.{$ENDIF}Canvas.Polygon(
+    bpLeft:
+    Result :=
       [Point(l, t+Floor(Height/2)),
       Point(l+Width-1, t),
       Point(l+Width-1, t+Height)
-      ]);
-    bpRight: {$IFDEF FPC}b.{$ENDIF}Canvas.Polygon(
+      ];
+    bpRight:
+    Result :=
       [Point(l+Width, t+Floor(Height/2)),
       Point(l, t),
       Point(l, t+Height-1)
-      ]);
+      ];
     bpTop:
-      {$IFDEF FPC}b.{$ENDIF}Canvas.Polygon(
+    Result :=
       [Point(l, t+Height-1),
       Point(l+Floor(Width/2), t),
       Point(l+Width, t+Height-1)
-      ]);
-    bpTopLeft:{$IFDEF FPC}b.{$ENDIF} Canvas.Polygon(
+      ];
+    bpTopLeft:
+    Result :=
       [Point(l, t),
        Point(l+Width-1, t+Floor(Height/2)),
        Point(l+Floor(Width/2),t+Height-1)
-      ]);
+      ];
     bpTopRight:
-      {$IFDEF FPC}b.{$ENDIF}Canvas.Polygon(
+    Result :=
       [Point(l, t+Floor(Height/2)),
        Point(l+Floor(Width/2),t+Height-1),
        Point(l+Width, t-1)
-      ]);
+      ];
     bpBottom:
-    {$IFDEF FPC}b.{$ENDIF}Canvas.Polygon(
+    Result :=
       [Point(l, t),
       Point(l+Floor(Width/2), t+Height-1),
       Point(l+Width, t)
-      ]);
+      ];
     bpBottomLeft:
-    {$IFDEF FPC}b.{$ENDIF}Canvas.Polygon(
+    Result :=
       [Point(l+Width-1, t+Floor(Height/2)),
        Point(l-1, t+Height),
        Point(l+Floor(Width/2),t)
-      ]);
+      ];
     bpBottomRight:
-    {$IFDEF FPC}b.{$ENDIF}Canvas.Polygon(
+    Result :=
       [Point(l, t+Floor(Height/2)),
        Point(l+Width, t+Height),
        Point(l+Floor(Width/2),t)
-      ]);
+      ];
+  end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TSizeBtn.DrawAt(l,t:integer{$IFDEF FPC};b:Graphics.TBitmap{$ENDIF});
+begin
+  {$IFDEF FPC}
+  if Assigned(b) then
+    case fTargetObj.fSizeCtrl.BtnShape of
+     tszbSquare:
+      b.Canvas.Rectangle(l,t, l+Width, t+Height);
+     tszbTriangle:
+      b.Canvas.Polygon(CalcTriangle(l,t));
+     tszbCircle:
+      b.Canvas.Ellipse(l,t, l+Width, t+Height);
+     tszbMockTube:
+     begin
+      b.Canvas.Ellipse(l,t,l+Width,t+Height);
+      b.Canvas.Polygon(CalcTriangle(l,t));
+     end;
+     tszbRoundRect:
+      b.Canvas.RoundRect(l,t,l+Width,t+Height, (Width+Height) div 4,(Width+Height) div 4);
+     tszbRhombus:
+      b.Canvas.Polygon(
+      [Point(l,t+Ceil(Height/2)-1),
+      Point(l+Ceil(Width/2)-1, t),
+      Point(l+Width-1,t+Ceil(Height/2)-1),
+      Point(l+Ceil(Width/2)-1, t+Height-1)]);
+  end
+  else
+  {$ENDIF}
+  case fTargetObj.fSizeCtrl.BtnShape of
+     tszbSquare:
+      Canvas.Rectangle(l,t, l+Width, t+Height);
+     tszbTriangle:
+      Canvas.Polygon(CalcTriangle(l,t));
+     tszbCircle:
+      Canvas.Ellipse(l,t, l+Width, t+Height);
+     tszbMockTube:
+     begin
+      Canvas.Ellipse(l,t,l+Width,t+Height);
+      Canvas.Polygon(CalcTriangle(l,t));
+     end;
+     tszbRoundRect:
+      Canvas.RoundRect(l,t,l+Width,t+Height, (Width+Height) div 4,(Width+Height) div 4);
+     tszbRhombus:
+      Canvas.Polygon(
+      [Point(l,t+Ceil(Height/2)-1),
+      Point(l+Ceil(Width/2)-1, t),
+      Point(l+Width-1,t+Ceil(Height/2)-1),
+      Point(l+Ceil(Width/2)-1, t+Height-1)]);
   end;
 end;
 
@@ -1384,46 +1449,27 @@ begin
   else
   {$IFDEF FPC}
   begin
+   if
+     (fPrevShape <> fTargetObj.fSizeCtrl.BtnShape)
+     or
+     (fPrevSize <> Self.Width) then
+   begin
+    fPrevShape := fTargetObj.fSizeCtrl.BtnShape;
+    fPrevSize := Self.Width;
     b := Graphics.TBitmap.Create;
+    b.Monochrome:=True;
     b.Width := Self.Width;
     b.Height:= Self.Height;
-    b.Transparent:=True;
-    b.TransparentColor := clBlack;
-    b.Canvas.Brush.Assign(Self.Canvas.Brush);
-    b.Canvas.Pen.Assign(Self.Canvas.Pen);
-  {$ENDIF}
-  case fTargetObj.fSizeCtrl.BtnShape of
-     tszbSquare:
-     {$IFDEF FPC}b.{$ENDIF}
-      Canvas.Rectangle(l,t, l+Width, t+Height);
-     tszbTriangle:
-      DrawTriangle({$IFDEF FPC}b,{$ENDIF}l,t);
-     tszbCircle:
-     {$IFDEF FPC}b.{$ENDIF}
-      Canvas.Ellipse(l,t, l+Width, t+Height);
-     tszbMockTube:
-     begin
-     {$IFDEF FPC}b.{$ENDIF}
-      Canvas.Ellipse(l,t,l+Width,t+Height);
-      DrawTriangle({$IFDEF FPC}b,{$ENDIF}l,t);
-     end;
-     tszbRoundRect:
-     {$IFDEF FPC}b.{$ENDIF}
-      Canvas.RoundRect(l,t,l+Width,t+Height, (Width+Height) div 4,(Width+Height) div 4);
-     tszbRhombus:
-     {$IFDEF FPC}b.{$ENDIF}
-      Canvas.Polygon(
-      [Point(l,t+Ceil(Height/2)-1),
-      Point(l+Ceil(Width/2)-1, t),
-      Point(l+Width-1,t+Ceil(Height/2)-1),
-      Point(l+Ceil(Width/2)-1, t+Height-1)]);
+    b.Canvas.Brush.Color := clWhite;
+    b.Canvas.Pen.Color := clWhite;
+    Self.DrawAt(0,0,b);
+    Self.SetShape(b);
+    b.Free;
+   end;
+   Self.DrawAt(0,0,nil);
   end;
-  {$IFDEF FPC}
-  Canvas.Draw(0,0,b);
-  b.Monochrome:=True;
-  Self.SetShape(b);
-  b.Free;
-  end;
+  {$ELSE}
+   Self.DrawAt(0,0);
   {$ENDIF}
 end;
 
