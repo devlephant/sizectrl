@@ -45,7 +45,7 @@ Unlike original realization, current version supports both Delphi and Lazarus, s
 <li> Bug with invisible objects: it denies visible, but upper object selection</li>
 </ul></ul>
 <ul><li> Known modern bugs:</li><ul>
-<li> 1. Add disabled objects selecting support [Lazarus]
+<li> 1. Add disabled objects selection support [Lazarus]
 		<br>Possible solution: hook all WndProces recursive?</li>
 </ul></ul>
 
