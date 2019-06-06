@@ -1,3 +1,0 @@
-{$IFDEF LINUX}
-	{$DEFINE GTK}
-{$ENDIF}

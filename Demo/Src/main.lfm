@@ -1176,7 +1176,7 @@ object MainForm: TMainForm
       Left = 195
       Height = 53
       Top = 12
-      Width = 181
+      Width = 187
       Alignment = taCenter
       AutoSize = False
       Caption = 'Visible TControl objects can be sized and/or moved with arrow keys (changeable)'

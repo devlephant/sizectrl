@@ -1,10 +1,5 @@
 ﻿unit SizeControl;
-{$IFDEF FPC}
-        {$MODE Delphi}
-        {$warnings off}
-        {$DEFINE VER3U}
-        {$DEFINE VER3UP}
-{$ENDIF}
+{$IFDEF FPC}       {$MODE Delphi}       {$ENDIF}
 (*
  ---------------------------------------------------------------------------
 Component Name:  TSizeCtrl
@@ -20,22 +15,7 @@ Copyright:      © 2019 Leu Zenin
 
 interface
 {$R SIZECONTROL}
-{$INCLUDE Platforms.inc}
-{$IFNDEF FPC}
-{$WARN HIDDEN_VIRTUAL OFF}
-{$IFDEF VER80}
-  {$DEFINE VER3D}
-{$ENDIF}
-{$IFDEF VER90}
-  {$DEFINE VER3D}
-{$ENDIF}
-{$IFDEF VER100}
-  {$DEFINE VER3D}
-{$ENDIF}
-{$IFNDEF VER80} {$IFNDEF VER90} {$DEFINE VER3U} {$ENDIF} {$ENDIF}
-{$IFDEF VER3U} {$IFNDEF VER100} {$DEFINE VER3UP} {$ENDIF} {$ENDIF}
-{$IFNDEF VER3UP} {$MESSAGE WARN 'AlphaTransparency is not supported under Delphi < 5'} {$ENDIF}
-{$ENDIF}
+{$INCLUDE *.inc}
 uses
   {$IFDEF FPC}LCLIntf, LCLType, LMessages,
   {$ELSE} Windows, Messages,{$ENDIF} SysUtils, Classes,
@@ -137,7 +117,7 @@ type
   protected
     function CalcTriangle(l, t:integer): TArray<TPoint>;
     procedure PaintAs(l,t:integer);
-    procedure DrawAt(l,t:integer;{$IFDEF FPC}b:Graphics.TBitmap{$ENDIF});
+    procedure DrawAt(l,t:integer{$IFDEF FPC};b:Graphics.TBitmap{$ENDIF});
     procedure doPaint(Sender:TObject);
     procedure mEnter(Sender:TObject);
     procedure mLeave(Sender:TObject);
@@ -157,8 +137,11 @@ type
   public
     procedure Reset;
     property Left: integer read GetLeft write SetLeft;
-    property Top: integer read GetTop write SetTop;
+    property Top: integer read GetTop write SetTop
+    ;
+    {$IFDEF FPC} {$PUSH} {$WARN 03057 OFF} {$ENDIF}
     constructor Create(TargetObj: TTargetObj; BtnPos: TBtnPos);
+    {$IFDEF FPC} {$PUSH} {$ENDIF}
  {$IFNDEF VER3U} reintroduce; {$ENDIF}
   end;
   {$IFNDEF FPC}
@@ -348,9 +331,11 @@ type
     fDisabledBtnImage: TPicture;
     fStretchBtnImage, fStretchPanelImage: boolean;
     function GetTargets(index: integer): TControl;
-    function GetTargetCount: integer;
-
+    function GetTargetCount: integer
+    ;
+    {$IFDEF FPC} {$PUSH} {$WARN 03057 OFF} {$ENDIF}
     procedure SetEnabled(Value: boolean);
+    {$IFDEF FPC} {$PUSH} {$ENDIF}
     procedure WinProc(var iMsg: TMessage);
     procedure FormWindowProc(var Msg: TMessage);
     procedure DoWindowProc(DefaultProc: TWndMethod; var Msg: TMessage);
@@ -443,7 +428,7 @@ type
     //Update: it is the responsibility of the component user to call Update
     //if the target(s) are moved or resized independently of this control
     //(eg if the form is resized and targets are aligned with it.)
-    procedure Update;
+    procedure Update; {$IFDEF FPC}override;{$ENDIF}
     procedure UpdateBtns;
 
     procedure toFront(CNTR: TControl);
@@ -2619,13 +2604,12 @@ begin
   fTargetList.Add(TargetObj);
   RegisterControl(Control);
 
-{$IFDEF FPC}{$MESSAGE HINT 'In GTK Active Control must not to be null,GTK?->Comment this'}{$ENDIF}
   fParentForm.ActiveControl := nil;
 
   UpdateBtnCursors;
   TargetObj.Update;
   {$IFNDEF FPC}
-  TargetObj.Update; //b.f: TCustomForm cannot be placed right after show
+  TargetObj.Update; //b.f: TCustomForm cannot be placed right after showing
                     //Delphi VCL bug?
                     //YES<
   {$ENDIF}
