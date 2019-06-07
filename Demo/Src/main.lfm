@@ -1,10 +1,10 @@
 object MainForm: TMainForm
   Left = 0
-  Height = 522
+  Height = 411
   Top = 0
   Width = 496
   Caption = 'Demo SizeCtrl'
-  ClientHeight = 522
+  ClientHeight = 411
   ClientWidth = 496
   Color = clBtnFace
   DoubleBuffered = True
@@ -22,7 +22,7 @@ object MainForm: TMainForm
   object StatusBar1: TStatusBar
     Left = 0
     Height = 23
-    Top = 499
+    Top = 388
     Width = 496
     Panels = <>
   end
@@ -1160,12 +1160,12 @@ object MainForm: TMainForm
   end
   object Panel1: TPanel
     Left = 0
-    Height = 299
+    Height = 188
     Top = 200
     Width = 496
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 299
+    ClientHeight = 188
     ClientWidth = 496
     DoubleBuffered = True
     ParentBackground = False
@@ -1178,6 +1178,7 @@ object MainForm: TMainForm
       Top = 12
       Width = 187
       Alignment = taCenter
+      Anchors = []
       AutoSize = False
       Caption = 'Visible TControl objects can be sized and/or moved with arrow keys (changeable)'
       Layout = tlCenter
@@ -1396,7 +1397,7 @@ object MainForm: TMainForm
     object Panel4: TPanel
       Left = 0
       Height = 60
-      Top = 239
+      Top = 128
       Width = 496
       Align = alBottom
       ClientHeight = 60
