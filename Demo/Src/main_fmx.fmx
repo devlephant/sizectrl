@@ -1,0 +1,30 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 404
+  ClientWidth = 476
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object Selection1: TSelection
+    GripSize = 5.000000000000000000
+    HideSelection = False
+    Proportional = False
+    Position.X = 104.000000000000000000
+    Position.Y = 120.000000000000000000
+    Size.Width = 105.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    ShowHandles = True
+  end
+  object SelectionPoint1: TSelectionPoint
+    GripSize = 3.000000000000000000
+    Position.X = 104.000000000000000000
+    Position.Y = 184.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 41.000000000000000000
+    Size.PlatformDefault = False
+  end
+end
