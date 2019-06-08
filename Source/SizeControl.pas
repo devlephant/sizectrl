@@ -1,7 +1,7 @@
 ﻿unit SizeControl;
 {$IFDEF FPC}       {$MODE Delphi}       {$ENDIF}
 (*
- ---------------------------------------------------------------------------
+----------------------------------------------------------------------------
 Component Name:  TSizeCtrl
 Module:          SizeControl
 Description:     Enables both moving and resizing of controls at runtime.
@@ -11,7 +11,8 @@ Author:          Leu Zenin, kashaket@protonmail.com
                  Angus Johnson,   angusj@myrealbox.com
 Copyright:      © 2019 Leu Zenin
                 {near 94.45% code is refactored}
- --------------------------------------------------------------------------- *)
+----------------------------------------------------------------------------
+*)
 
 interface
 {$R SIZECONTROL}
@@ -103,6 +104,7 @@ type
   TSizeCtrlBtnCount = (szctrl4btns, szctrl8btns);
   TRecursionVector = (trecChild, trecParent, trecBoth);
   TSCState = (scsReady, scsMoving, scsSizing);
+  TCarryFrameType = (Show, Hide, SizingOnly, MovingOnly);
 
   TStartEndEvent = procedure(Sender: TObject; State: TSCState) of object;
   TDuringEvent = procedure(Sender: TObject; dx, dy: integer; State: TSCState) of object;
@@ -338,6 +340,7 @@ type
     fReSizeType: TReSizeFrameType;
     fReIgnBtn: TReSizeHideType;
     fShowFrame, fApplySizes: boolean;
+    fCarryFrame: TCarryFrameType;
     fBtnCount: TSizeCtrlBtnCount;
     FSelKey,
       fSelActionSPKey,
@@ -604,8 +607,18 @@ type
     property MovePanelAlphaBlend: Integer read fMovePanelAlpha write setMovePanelAlphaBlend;
     //Apply sizes when moving
     property ApplySizes: boolean read fApplySizes write fApplySizes default false;
+
     //Show selection frame
-    property ShowFrame: boolean read fShowFrame write fShowFrame default true;
+    property ShowFrame : boolean read fShowFrame write fShowFrame default true;
+    {$IFDEF FPC}
+
+     deprecated 'Use .CarryFrame=>show/hide';
+     {$ELSE}
+      {$MESSAGE WARN 'This property is deprecated and delphi creators may eat a portion of shit because of poor syntax'}
+     {$ENDIF}
+    //Show selection frame
+    property CarryFrame: TCarryFrameType read fCarryFrame write fCarryFrame default TCarryFrameType.Show;
+
     //Resize showing type
     property ResizeFrameType: TReSizeFrameType read fReSizeType write fReSizeType;
     //Ignoring method for unwanted btns
@@ -2094,14 +2107,60 @@ begin
   if fSizeCtrl.ApplySizes then
   obj.Update;//reduce object flicker
   {$ELSE}
-  if (panel.Visible = False) and (fSizeCtrl.ShowFrame) then
+  if
+    (panel.Visible = False)
+    and
+    (fSizeCtrl.fCarryFrame = TCarryFrameType.Show)
+    or
+    (
+    (fSizeCtrl.fCarryFrame = TCarryFrameType.MovingOnly)
+       and
+    (fSizeCtrl.fState = TSCState.scsMoving)
+    )
+    or
+    (
+      (fSizeCtrl.fCarryFrame = TCarryFrameType.SizingOnly)
+         and
+      (fSizeCtrl.fState = TSCState.scsSizing)
+    )
+  then
   begin
        panel.BringToFront;
        panel.Show;
-  end;
+  end
+  else
+  if
+    (fSizeCtrl.fCarryFrame = TCarryFrameType.Hide)
+    or
+    (
+    (fSizeCtrl.fCarryFrame = TCarryFrameType.MovingOnly)
+       and
+    (fSizeCtrl.fState = TSCState.scsSizing)
+    )
+    or
+    (
+      (fSizeCtrl.fCarryFrame = TCarryFrameType.SizingOnly)
+         and
+      (fSizeCtrl.fState = TSCState.scsMoving)
+    )
+    then panel.Hide;
   {$ENDIF}
   {$IFDEF FPC}
-  if not fSizeCtrl.ShowFrame then
+  if
+    (fSizeCtrl.fCarryFrame = TCarryFrameType.Hide)
+    or
+    (
+    (fSizeCtrl.fCarryFrame = TCarryFrameType.MovingOnly)
+       and
+    (fSizeCtrl.fState = TSCState.scsSizing)
+    )
+    or
+    (
+      (fSizeCtrl.fCarryFrame = TCarryFrameType.SizingOnly)
+         and
+      (fSizeCtrl.fState = TSCState.scsMoving)
+    )
+    then
   Exit;
   if fLastRect <> fFocusRect then
   fSizeCtrl.FForm.Invalidate;//Finally, repaint the panel

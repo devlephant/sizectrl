@@ -1,7 +1,7 @@
 unit main;
 
 {$IFDEF FPC}
-  {$MODE Delphi}
+  {$MODE DELPHI}
 {$ENDIF}
 
 interface
@@ -392,7 +392,10 @@ end;
 
 procedure TMainForm.CheckBox6Click(Sender: TObject);
 begin
-  SizeCtrl.ShowFrame := TCheckBox(Sender).Checked;
+  if TCheckBox(Sender).Checked then
+     SizeCtrl.CarryFrame := TCarryFrameType.Show
+  else
+    SizeCtrl.CarryFrame := TCarryFrameType.Hide;
 end;
 
 procedure TMainForm.CheckBox7Click(Sender: TObject);

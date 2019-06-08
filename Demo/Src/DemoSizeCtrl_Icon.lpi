@@ -19,33 +19,11 @@
       </XPManifest>
       <Icon Value="0"/>
     </General>
-    <MacroValues Count="10">
+    <MacroValues Count="1">
       <Macro1 Name="LCLWidgetType" Value="gtk2"/>
-      <Macro3 Name="LCLWidgetType" Value="gtk3"/>
-      <Macro4 Name="LCLWidgetType" Value="win32"/>
-      <Macro5 Name="LCLWidgetType" Value="gtk"/>
-      <Macro6 Name="LCLWidgetType" Value="gtk2"/>
-      <Macro7 Name="LCLWidgetType" Value="win32"/>
-      <Macro8 Name="LCLWidgetType" Value="gtk2"/>
-      <Macro9 Name="LCLWidgetType" Value="win32"/>
-      <Macro10 Name="LCLWidgetType" Value="gtk2"/>
-      <Macro11 Name="LCLWidgetType" Value="win32"/>
     </MacroValues>
     <BuildModes>
       <Item Name="Default" Default="True"/>
-      <SharedMatrixOptions Count="11">
-        <Item1 ID="233570912205" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
-        <Item2 ID="088933904513" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
-        <Item3 ID="970096801389" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk3"/>
-        <Item4 ID="549294149281" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
-        <Item5 ID="345486835110" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk"/>
-        <Item6 ID="307447695551" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
-        <Item7 ID="264270717478" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
-        <Item8 ID="068628634623" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
-        <Item9 ID="756970287823" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
-        <Item10 ID="504520359544" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
-        <Item11 ID="474959374930" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
-      </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
@@ -92,6 +70,9 @@
       <IncludeFiles Value="$(ProjOutDir)"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
+    <CodeGeneration>
+      <TargetOS Value="linux"/>
+    </CodeGeneration>
     <Linking>
       <Debugging>
         <GenerateDebugInfo Value="False"/>
